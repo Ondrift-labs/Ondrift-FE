@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { getVisiblePages } from '../lib/pagination'
 
 interface PaginationProps {
   page: number
@@ -6,13 +7,6 @@ interface PaginationProps {
   total: number
   size: number
   onPageChange: (page: number) => void
-}
-
-export function getVisiblePages(page: number, pages: number) {
-  if (pages <= 0) return []
-  const start = Math.max(1, Math.min(page - 2, pages - 4))
-  const end = Math.min(pages, start + 4)
-  return Array.from({ length: end - start + 1 }, (_, index) => start + index)
 }
 
 export function Pagination({ page, pages, total, size, onPageChange }: PaginationProps) {

@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { getVisiblePages, Pagination } from './Pagination'
+import { Pagination } from './Pagination'
+import { getVisiblePages } from '../lib/pagination'
 
 describe('Pagination', () => {
   it('keeps visible page numbers inside server page boundaries', () => {
