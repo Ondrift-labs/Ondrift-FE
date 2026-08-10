@@ -11,7 +11,7 @@ export function AppShell() {
       <aside className={`sidebar ${open ? 'is-open' : ''}`} aria-label="주요 메뉴">
         <div className="brand">
           <span className="brand-mark"><img src="/assets/ondrift.png" alt="" /></span>
-          <span><strong>Ondrift</strong><small>EEC Control Tower</small></span>
+          <span><strong>Ondrift</strong><small>Manufacturing Control Tower</small></span>
           <button className="icon-button mobile-close" onClick={() => setOpen(false)} aria-label="메뉴 닫기"><X size={20} /></button>
         </div>
         <div className="tenant"><span className="tenant-dot" /><span><strong>이피씨전자(주)</strong><small>PCB/PCBA · SMT</small></span></div>

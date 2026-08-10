@@ -1,4 +1,4 @@
-# Ondrift EEC Control Tower
+# Ondrift Control Tower
 
 전기·전자부품 제조사의 수주부터 출하·서비스까지 연결하는 React 기반 통합 제조 대시보드 MVP입니다.
 

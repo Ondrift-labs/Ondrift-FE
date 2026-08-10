@@ -1,5 +1,5 @@
 {
-  "name": "ondrift-eec-dashboard",
+  "name": "ondrift-dashboard",
   "private": true,
   "version": "0.1.0",
   "type": "module",
