@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { usePrefersReducedMotion } from './useReveal'
 
 const BEFORE_PROMPT = '회의 녹취 정리해줘'
@@ -90,27 +90,27 @@ function usePromptDemo(reducedMotion: boolean) {
   return { phase, score, displayedPrompt }
 }
 
-export function PromptDemo() {
-  const reducedMotion = usePrefersReducedMotion()
-  const { phase, score, displayedPrompt } = usePromptDemo(reducedMotion)
-  const showResult = phase === 'result'
+function DemoCardContent({ phase, prompt, score, showResult, showCaret }: {
+  phase: Phase
+  prompt: string
+  score: number
+  showResult: boolean
+  showCaret: boolean
+}) {
   const offset = RING_LENGTH - (RING_LENGTH * score) / 100
 
   return (
-    <div className={`demo-card demo-card--${phase}`}>
+    <>
       <div className="demo-chrome">
         <span className="demo-dot" /><span className="demo-dot" /><span className="demo-dot" />
         <span className="demo-url">chatgpt.com</span>
         <span className="demo-model">Gemini 3.6 Flash 기준</span>
       </div>
       <div className="demo-body">
-        <div className="demo-editor-stack">
-          <p className="demo-editor demo-editor--measure" aria-hidden="true">{AFTER_PROMPT}</p>
-          <p className="demo-editor demo-editor--live">
-            {displayedPrompt}
-            {(phase === 'draft' || phase === 'typing') && <span className="demo-caret" aria-hidden="true" />}
-          </p>
-        </div>
+        <p className="demo-editor">
+          {prompt}
+          {showCaret && <span className="demo-caret" aria-hidden="true" />}
+        </p>
         <div className={`demo-result ${showResult ? 'is-shown' : ''}`} aria-hidden={!showResult}>
           <div className="demo-score">
             <svg viewBox="0 0 64 64" aria-hidden="true">
@@ -128,6 +128,66 @@ export function PromptDemo() {
         <span className={`demo-status demo-status--${phase}`}>
           {phase === 'draft' ? '작성 중' : phase === 'scoring' ? 'Ondrift가 검토하는 중…' : phase === 'typing' ? '개선된 프롬프트 작성 중…' : '재작성 완료 · 적용 대기'}
         </span>
+      </div>
+    </>
+  )
+}
+
+export function PromptDemo() {
+  const reducedMotion = usePrefersReducedMotion()
+  const { phase, score, displayedPrompt } = usePromptDemo(reducedMotion)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const heightRef = useRef<number | null>(null)
+  const showResult = phase === 'result'
+
+  useLayoutEffect(() => {
+    const card = cardRef.current
+    if (!card) return
+
+    const previousHeight = heightRef.current ?? card.offsetHeight
+    card.style.height = 'auto'
+    const nextHeight = card.offsetHeight
+    heightRef.current = nextHeight
+
+    if (reducedMotion || Math.abs(previousHeight - nextHeight) < 1) {
+      card.style.height = `${nextHeight}px`
+      return
+    }
+
+    card.style.height = `${previousHeight}px`
+    void card.offsetHeight
+    const frame = requestAnimationFrame(() => {
+      card.style.height = `${nextHeight}px`
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [displayedPrompt, phase, reducedMotion])
+
+  useEffect(() => {
+    const syncHeight = () => {
+      const card = cardRef.current
+      if (!card) return
+      card.style.height = 'auto'
+      const nextHeight = card.offsetHeight
+      heightRef.current = nextHeight
+      card.style.height = `${nextHeight}px`
+    }
+    window.addEventListener('resize', syncHeight)
+    return () => window.removeEventListener('resize', syncHeight)
+  }, [])
+
+  return (
+    <div className="demo-stage">
+      <div className="demo-card demo-card--spacer" aria-hidden="true">
+        <DemoCardContent phase="result" prompt={AFTER_PROMPT} score={SCORE_AFTER} showResult showCaret={false} />
+      </div>
+      <div ref={cardRef} className={`demo-card demo-card--live demo-card--${phase}`}>
+        <DemoCardContent
+          phase={phase}
+          prompt={displayedPrompt}
+          score={score}
+          showResult={showResult}
+          showCaret={phase === 'draft' || phase === 'typing'}
+        />
       </div>
     </div>
   )
