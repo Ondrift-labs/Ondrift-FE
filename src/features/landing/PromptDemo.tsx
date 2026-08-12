@@ -22,15 +22,17 @@ const RING_LENGTH = 170
 // Each phase gets enough hold time to actually read it before the loop moves on.
 const DRAFT_HOLD_MS = 3800
 const SCORING_HOLD_MS = 1000
+const TYPING_MS = 3600
 const RESULT_HOLD_MS = 5400
-const CYCLE_MS = DRAFT_HOLD_MS + SCORING_HOLD_MS + RESULT_HOLD_MS
+const CYCLE_MS = DRAFT_HOLD_MS + SCORING_HOLD_MS + TYPING_MS + RESULT_HOLD_MS
 
-type Phase = 'draft' | 'scoring' | 'result'
+type Phase = 'draft' | 'scoring' | 'typing' | 'result'
 
-/** Drives the hero's before/after loop: draft -> scoring -> result -> (hold) -> repeat. */
+/** Drives the hero's before/after loop: draft -> scoring -> typing -> result -> repeat. */
 function usePromptDemo(reducedMotion: boolean) {
   const [phase, setPhase] = useState<Phase>(reducedMotion ? 'result' : 'draft')
   const [score, setScore] = useState(reducedMotion ? SCORE_AFTER : SCORE_BEFORE)
+  const [displayedPrompt, setDisplayedPrompt] = useState(reducedMotion ? AFTER_PROMPT : BEFORE_PROMPT)
   const rafRef = useRef(0)
 
   useEffect(() => {
@@ -39,12 +41,36 @@ function usePromptDemo(reducedMotion: boolean) {
     function cycle() {
       setPhase('draft')
       timers.push(window.setTimeout(() => setPhase('scoring'), DRAFT_HOLD_MS))
-      timers.push(window.setTimeout(() => setPhase('result'), DRAFT_HOLD_MS + SCORING_HOLD_MS))
+      timers.push(window.setTimeout(() => setPhase('typing'), DRAFT_HOLD_MS + SCORING_HOLD_MS))
+      timers.push(window.setTimeout(() => setPhase('result'), DRAFT_HOLD_MS + SCORING_HOLD_MS + TYPING_MS))
     }
     cycle()
     const loop = window.setInterval(cycle, CYCLE_MS)
     return () => { timers.forEach(window.clearTimeout); window.clearInterval(loop) }
   }, [reducedMotion])
+
+  useEffect(() => {
+    if (reducedMotion) return
+    if (phase === 'draft' || phase === 'scoring') {
+      setDisplayedPrompt(BEFORE_PROMPT)
+      return
+    }
+    if (phase === 'result') {
+      setDisplayedPrompt(AFTER_PROMPT)
+      return
+    }
+
+    const characters = Array.from(AFTER_PROMPT)
+    const start = performance.now()
+    const timer = window.setInterval(() => {
+      const progress = Math.min(1, (performance.now() - start) / TYPING_MS)
+      const length = Math.max(1, Math.floor(characters.length * progress))
+      setDisplayedPrompt(characters.slice(0, length).join(''))
+      if (progress >= 1) window.clearInterval(timer)
+    }, 24)
+    setDisplayedPrompt('')
+    return () => window.clearInterval(timer)
+  }, [phase, reducedMotion])
 
   useEffect(() => {
     if (reducedMotion) return
@@ -61,15 +87,15 @@ function usePromptDemo(reducedMotion: boolean) {
     return () => cancelAnimationFrame(rafRef.current)
   }, [phase, reducedMotion])
 
-  return { phase, score }
+  return { phase, score, displayedPrompt }
 }
 
 export function PromptDemo() {
   const reducedMotion = usePrefersReducedMotion()
-  const { phase, score } = usePromptDemo(reducedMotion)
+  const { phase, score, displayedPrompt } = usePromptDemo(reducedMotion)
   const cardRef = useRef<HTMLDivElement>(null)
   const heightRef = useRef<number | null>(null)
-  const showResult = phase !== 'draft'
+  const showResult = phase === 'result'
   const offset = RING_LENGTH - (RING_LENGTH * score) / 100
 
   useLayoutEffect(() => {
@@ -92,7 +118,7 @@ export function PromptDemo() {
       card.style.height = `${nextHeight}px`
     })
     return () => cancelAnimationFrame(frame)
-  }, [phase, reducedMotion])
+  }, [displayedPrompt, phase, reducedMotion])
 
   useEffect(() => {
     const syncHeight = () => {
@@ -116,8 +142,8 @@ export function PromptDemo() {
       </div>
       <div className="demo-body">
         <p className="demo-editor">
-          {phase === 'result' ? AFTER_PROMPT : BEFORE_PROMPT}
-          {phase === 'draft' && <span className="demo-caret" aria-hidden="true" />}
+          {displayedPrompt}
+          {(phase === 'draft' || phase === 'typing') && <span className="demo-caret" aria-hidden="true" />}
         </p>
         <div className={`demo-result ${showResult ? 'is-shown' : ''}`} aria-hidden={!showResult}>
           <div className="demo-score">
@@ -134,7 +160,7 @@ export function PromptDemo() {
       </div>
       <div className="demo-foot">
         <span className={`demo-status demo-status--${phase}`}>
-          {phase === 'draft' ? '작성 중' : phase === 'scoring' ? 'Ondrift가 검토하는 중…' : '재작성 완료 · 적용 대기'}
+          {phase === 'draft' ? '작성 중' : phase === 'scoring' ? 'Ondrift가 검토하는 중…' : phase === 'typing' ? '개선된 프롬프트 작성 중…' : '재작성 완료 · 적용 대기'}
         </span>
       </div>
     </div>

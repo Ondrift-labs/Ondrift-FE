@@ -93,7 +93,7 @@ body:has(.landing) { background: #f6f6f2; }
 .demo-rationale svg { flex: 0 0 auto; color: var(--accent); }
 .demo-foot { padding: 10px 20px 16px; }
 .demo-status { font-size: 11px; color: var(--faint); }
-.demo-status--scoring { color: var(--accent); }
+.demo-status--scoring, .demo-status--typing { color: var(--accent); }
 .demo-status--result { color: var(--accent); font-weight: 600; }
 
 /* compat strip */
