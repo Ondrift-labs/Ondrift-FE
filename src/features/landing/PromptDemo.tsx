@@ -9,6 +9,12 @@ const SCORE_BEFORE = 42
 const SCORE_AFTER = 91
 const RING_LENGTH = 170
 
+// Each phase gets enough hold time to actually read it before the loop moves on.
+const DRAFT_HOLD_MS = 3800
+const SCORING_HOLD_MS = 1000
+const RESULT_HOLD_MS = 5400
+const CYCLE_MS = DRAFT_HOLD_MS + SCORING_HOLD_MS + RESULT_HOLD_MS
+
 type Phase = 'draft' | 'scoring' | 'result'
 
 /** Drives the hero's before/after loop: draft -> scoring -> result -> (hold) -> repeat. */
@@ -22,11 +28,11 @@ function usePromptDemo(reducedMotion: boolean) {
     const timers: number[] = []
     function cycle() {
       setPhase('draft')
-      timers.push(window.setTimeout(() => setPhase('scoring'), 2600))
-      timers.push(window.setTimeout(() => setPhase('result'), 3300))
+      timers.push(window.setTimeout(() => setPhase('scoring'), DRAFT_HOLD_MS))
+      timers.push(window.setTimeout(() => setPhase('result'), DRAFT_HOLD_MS + SCORING_HOLD_MS))
     }
     cycle()
-    const loop = window.setInterval(cycle, 7300)
+    const loop = window.setInterval(cycle, CYCLE_MS)
     return () => { timers.forEach(window.clearTimeout); window.clearInterval(loop) }
   }, [reducedMotion])
 
@@ -34,7 +40,7 @@ function usePromptDemo(reducedMotion: boolean) {
     if (reducedMotion) return
     if (phase !== 'result') { setScore(SCORE_BEFORE); return }
     const start = performance.now()
-    const duration = 800
+    const duration = 1100
     function tick(now: number) {
       const t = Math.min(1, (now - start) / duration)
       const eased = 1 - Math.pow(1 - t, 3)
@@ -54,7 +60,7 @@ export function PromptDemo() {
   const showResult = phase !== 'draft'
   const offset = RING_LENGTH - (RING_LENGTH * score) / 100
   return (
-    <div className={`demo-card demo-${phase}`}>
+    <div className={`demo-card demo-card--${phase}`}>
       <div className="demo-chrome">
         <span className="demo-dot" /><span className="demo-dot" /><span className="demo-dot" />
         <span className="demo-url">chatgpt.com</span>

@@ -99,7 +99,7 @@ export function LandingPage() {
           </Reveal>
           <div className="landing-steps">
             {STEPS.map((step, index) => (
-              <Reveal key={step.n} delay={index * 90} className="landing-step">
+              <Reveal key={step.n} delay={index * 140} className="landing-step">
                 <span className="landing-step-n">{step.n}</span>
                 <h3>{step.title}</h3>
                 <p>{step.body}</p>

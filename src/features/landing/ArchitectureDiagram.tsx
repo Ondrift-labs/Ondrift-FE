@@ -22,12 +22,12 @@ export function ArchitectureDiagram() {
           <text x="64" y="126">프롬프트</text>
           <text x="64" y="144" className="arch-node-sub">편집기</text>
         </g>
-        <g className="arch-node arch-node--accent">
+        <g className="arch-node arch-node--accent arch-node--gemini">
           <rect x="350" y="34" width="120" height="56" rx="10" />
           <text x="410" y="58">Gemini API</text>
           <text x="410" y="76" className="arch-node-sub">내 API 키로 직접 호출</text>
         </g>
-        <g className="arch-node arch-node--accent">
+        <g className="arch-node arch-node--accent arch-node--storage">
           <rect x="350" y="170" width="120" height="56" rx="10" />
           <text x="410" y="194">로컬 저장소</text>
           <text x="410" y="212" className="arch-node-sub">storage · IndexedDB</text>
