@@ -1,20 +1,8 @@
 import { Check } from 'lucide-react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import type { LandingCopy } from './landingCopy'
 import { usePrefersReducedMotion } from './useReveal'
 
-const BEFORE_PROMPT = '회의 녹취 정리해줘'
-const AFTER_PROMPT = `## **회의록 작성 목표**
-다음 회의 녹취를 실행 가능한 회의록으로 정리해줘.
-
-## **출력 형식**
-1. **참석자별 핵심 발언**
-2. **결정 사항과 근거**
-3. **후속 조치** — 담당자 | 할 일 | 기한 마크다운 표
-
-## **작성 규칙**
-- 불명확한 담당자·기한은 추측하지 말고 **확인 필요**로 표시
-- 수치와 날짜는 원문 그대로 유지`
-const RATIONALE = ['업무 목적을 실행 중심으로 구체화', '마크다운 제목·강조·표 형식 적용', '누락 정보 처리·정확성 규칙 추가']
 const SCORE_BEFORE = 42
 const SCORE_AFTER = 91
 const RING_LENGTH = 170
@@ -29,10 +17,10 @@ const CYCLE_MS = DRAFT_HOLD_MS + SCORING_HOLD_MS + TYPING_MS + RESULT_HOLD_MS
 type Phase = 'draft' | 'scoring' | 'typing' | 'result'
 
 /** Drives the hero's before/after loop: draft -> scoring -> typing -> result -> repeat. */
-function usePromptDemo(reducedMotion: boolean) {
+function usePromptDemo(reducedMotion: boolean, beforePrompt: string, afterPrompt: string) {
   const [phase, setPhase] = useState<Phase>(reducedMotion ? 'result' : 'draft')
   const [score, setScore] = useState(reducedMotion ? SCORE_AFTER : SCORE_BEFORE)
-  const [displayedPrompt, setDisplayedPrompt] = useState(reducedMotion ? AFTER_PROMPT : BEFORE_PROMPT)
+  const [displayedPrompt, setDisplayedPrompt] = useState(reducedMotion ? afterPrompt : beforePrompt)
   const rafRef = useRef(0)
 
   useEffect(() => {
@@ -52,15 +40,15 @@ function usePromptDemo(reducedMotion: boolean) {
   useEffect(() => {
     if (reducedMotion) return
     if (phase === 'draft' || phase === 'scoring') {
-      setDisplayedPrompt(BEFORE_PROMPT)
+      setDisplayedPrompt(beforePrompt)
       return
     }
     if (phase === 'result') {
-      setDisplayedPrompt(AFTER_PROMPT)
+      setDisplayedPrompt(afterPrompt)
       return
     }
 
-    const characters = Array.from(AFTER_PROMPT)
+    const characters = Array.from(afterPrompt)
     const start = performance.now()
     const timer = window.setInterval(() => {
       const progress = Math.min(1, (performance.now() - start) / TYPING_MS)
@@ -70,7 +58,7 @@ function usePromptDemo(reducedMotion: boolean) {
     }, 24)
     setDisplayedPrompt('')
     return () => window.clearInterval(timer)
-  }, [phase, reducedMotion])
+  }, [afterPrompt, beforePrompt, phase, reducedMotion])
 
   useEffect(() => {
     if (reducedMotion) return
@@ -90,12 +78,13 @@ function usePromptDemo(reducedMotion: boolean) {
   return { phase, score, displayedPrompt }
 }
 
-function DemoCardContent({ phase, prompt, score, showResult, showCaret }: {
+function DemoCardContent({ phase, prompt, score, showResult, showCaret, copy }: {
   phase: Phase
   prompt: string
   score: number
   showResult: boolean
   showCaret: boolean
+  copy: LandingCopy['demo']
 }) {
   const offset = RING_LENGTH - (RING_LENGTH * score) / 100
 
@@ -104,7 +93,7 @@ function DemoCardContent({ phase, prompt, score, showResult, showCaret }: {
       <div className="demo-chrome">
         <span className="demo-dot" /><span className="demo-dot" /><span className="demo-dot" />
         <span className="demo-url">chatgpt.com</span>
-        <span className="demo-model">Gemini 3.6 Flash 기준</span>
+        <span className="demo-model">{copy.model}</span>
       </div>
       <div className="demo-body">
         <p className="demo-editor">
@@ -120,22 +109,22 @@ function DemoCardContent({ phase, prompt, score, showResult, showCaret }: {
             <strong>{score}</strong>
           </div>
           <ul className="demo-rationale">
-            {RATIONALE.map((reason) => <li key={reason}><Check size={13} aria-hidden="true" />{reason}</li>)}
+            {copy.rationale.map((reason) => <li key={reason}><Check size={13} aria-hidden="true" />{reason}</li>)}
           </ul>
         </div>
       </div>
       <div className="demo-foot">
         <span className={`demo-status demo-status--${phase}`}>
-          {phase === 'draft' ? '작성 중' : phase === 'scoring' ? 'Ondrift가 검토하는 중…' : phase === 'typing' ? '개선된 프롬프트 작성 중…' : '재작성 완료 · 적용 대기'}
+          {copy.status[phase]}
         </span>
       </div>
     </>
   )
 }
 
-export function PromptDemo() {
+export function PromptDemo({ copy }: { copy: LandingCopy['demo'] }) {
   const reducedMotion = usePrefersReducedMotion()
-  const { phase, score, displayedPrompt } = usePromptDemo(reducedMotion)
+  const { phase, score, displayedPrompt } = usePromptDemo(reducedMotion, copy.before, copy.after)
   const cardRef = useRef<HTMLDivElement>(null)
   const heightRef = useRef<number | null>(null)
   const showResult = phase === 'result'
@@ -178,7 +167,7 @@ export function PromptDemo() {
   return (
     <div className="demo-stage">
       <div className="demo-card demo-card--spacer" aria-hidden="true">
-        <DemoCardContent phase="result" prompt={AFTER_PROMPT} score={SCORE_AFTER} showResult showCaret={false} />
+        <DemoCardContent phase="result" prompt={copy.after} score={SCORE_AFTER} showResult showCaret={false} copy={copy} />
       </div>
       <div ref={cardRef} className={`demo-card demo-card--live demo-card--${phase}`}>
         <DemoCardContent
@@ -187,6 +176,7 @@ export function PromptDemo() {
           score={score}
           showResult={showResult}
           showCaret={phase === 'draft' || phase === 'typing'}
+          copy={copy}
         />
       </div>
     </div>

@@ -1,0 +1,28 @@
+import { fireEvent, render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { LandingPage } from './LandingPage'
+
+describe('LandingPage language switcher', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+    document.documentElement.lang = 'en'
+  })
+
+  it('uses English by default', () => {
+    render(<LandingPage />)
+
+    expect(screen.getByRole('heading', { name: /Write it once/ })).toBeInTheDocument()
+    expect(screen.getByRole('combobox', { name: 'Page language' })).toHaveValue('en')
+    expect(document.documentElement.lang).toBe('en')
+  })
+
+  it('switches the full landing page and persists the selection', () => {
+    render(<LandingPage />)
+
+    fireEvent.change(screen.getByRole('combobox', { name: 'Page language' }), { target: { value: 'ko' } })
+
+    expect(screen.getByRole('heading', { name: /보내기 전에/ })).toBeInTheDocument()
+    expect(document.documentElement.lang).toBe('ko')
+    expect(window.localStorage.getItem('ondrift-landing-language')).toBe('ko')
+  })
+})

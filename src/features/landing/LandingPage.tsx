@@ -1,30 +1,28 @@
-import { ArrowRight, ArrowUpRight, Check, Database, Github, KeyRound, ShieldOff } from 'lucide-react'
-import { useEffect, type ReactNode } from 'react'
+import { ArrowRight, ArrowUpRight, Check, ChevronDown, Database, Github, KeyRound, Languages, ShieldOff } from 'lucide-react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { ArchitectureDiagram } from './ArchitectureDiagram'
 import { PromptDemo } from './PromptDemo'
 import { trackLandingCta, trackLandingPageView } from './analytics'
+import { LANDING_COPY, LANGUAGE_OPTIONS, type LandingLanguage } from './landingCopy'
 import { useReveal } from './useReveal'
 import './landing.css'
 
 const REPO_URL = 'https://github.com/Ondrift-labs/Ondrift-Extension'
 const RELEASE_URL = `${REPO_URL}/releases/latest`
+const LANGUAGE_STORAGE_KEY = 'ondrift-landing-language'
 
 const SITES = ['ChatGPT', 'Claude', 'Gemini', 'Perplexity']
-const LANGUAGES = [
-  { code: 'EN', label: 'English · 기본' },
-  { code: 'KO', label: '한국어' },
-  { code: 'JA', label: '日本語' },
-]
-const STEPS = [
-  { n: '01', title: '그대로 씁니다', body: '평소처럼 ChatGPT, Claude, Gemini, Perplexity에 프롬프트를 작성합니다. 확장을 켜둔 것도 잊게 됩니다.' },
-  { n: '02', title: '점수와 재작성', body: 'Ondrift 위젯에서 재작성을 요청하면 명확성·맥락·제약을 검토해 점수, 근거, 다시 쓴 버전을 함께 보여줍니다.' },
-  { n: '03', title: '검토 후 적용', body: '마음에 들면 한 클릭으로 적용하고, 아니면 그대로 무시합니다. 프롬프트 편집기 안에서 계속 고칠 수 있습니다.' },
-]
-const PRIVACY_POINTS = [
-  { icon: Database, text: '설정은 chrome.storage.local에, 선택한 경우의 기록은 로컬 IndexedDB에만 남습니다.' },
-  { icon: ShieldOff, text: '재작성을 요청한 프롬프트만 전송되며, AI 응답 본문은 수집하거나 저장하지 않습니다.' },
-  { icon: KeyRound, text: '필요한 건 내 Gemini API 키뿐입니다 — 그만큼 키 관리도 내 몫이라는 뜻이기도 합니다.' },
-]
+const PRIVACY_ICONS = [Database, ShieldOff, KeyRound]
+
+function getInitialLanguage(): LandingLanguage {
+  try {
+    const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
+    if (saved === 'en' || saved === 'ko' || saved === 'ja') return saved
+  } catch {
+    // Storage can be unavailable in privacy-restricted browser contexts.
+  }
+  return 'en'
+}
 
 function Reveal({ children, className = '', delay }: { children: ReactNode; className?: string; delay?: number }) {
   const { ref, visible } = useReveal<HTMLDivElement>()
@@ -44,9 +42,23 @@ function RisingBars() {
 }
 
 export function LandingPage() {
+  const [language, setLanguage] = useState<LandingLanguage>(getInitialLanguage)
+  const copy = LANDING_COPY[language]
+
   useEffect(() => {
     trackLandingPageView()
   }, [])
+
+  useEffect(() => {
+    document.documentElement.lang = language
+    document.title = copy.meta.title
+    document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', copy.meta.description)
+    try {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
+    } catch {
+      // The language still applies for the current session when storage is unavailable.
+    }
+  }, [copy, language])
 
   return (
     <div className="landing">
@@ -58,12 +70,23 @@ export function LandingPage() {
           Ondrift
         </a>
         <nav className="landing-nav-links">
-          <a href="#how">동작 방식</a>
-          <a href="#privacy">프라이버시</a>
+          <a href="#how">{copy.nav.how}</a>
+          <a href="#privacy">{copy.nav.privacy}</a>
           <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub<ArrowUpRight size={13} /></a>
         </nav>
+        <label className="landing-language-select">
+          <Languages size={15} aria-hidden="true" />
+          <select
+            aria-label={copy.nav.languageLabel}
+            value={language}
+            onChange={(event) => setLanguage(event.target.value as LandingLanguage)}
+          >
+            {LANGUAGE_OPTIONS.map((option) => <option key={option.code} value={option.code}>{option.label}</option>)}
+          </select>
+          <ChevronDown size={13} aria-hidden="true" />
+        </label>
         <a className="ui-button ui-button--primary landing-nav-cta" href={RELEASE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_nav')}>
-          확장 설치하기<ArrowRight size={15} />
+          <span>{copy.nav.install}</span><ArrowRight size={15} />
         </a>
       </header>
 
@@ -71,27 +94,24 @@ export function LandingPage() {
         <section className="landing-hero">
           <RisingBars />
           <div className="landing-hero-copy">
-            <p className="ui-eyebrow">로컬 우선 프롬프트 도구</p>
-            <h1>보내기 전에,<br />한 번 더 다듬습니다.</h1>
-            <p className="landing-hero-sub">
-              ChatGPT, Claude, Gemini, Perplexity의 입력창 안에서 프롬프트를 검토하고 점수와 근거를 보여준 뒤,
-              원하면 한 클릭으로 다시 씁니다. 계정도 서버도 없이 내 Gemini 키로 동작합니다.
-            </p>
+            <p className="ui-eyebrow">{copy.hero.eyebrow}</p>
+            <h1>{copy.hero.line1}<br />{copy.hero.line2}</h1>
+            <p className="landing-hero-sub">{copy.hero.body}</p>
             <div className="landing-hero-actions">
               <a className="ui-button ui-button--primary" href={RELEASE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_hero')}>
-                <Github size={16} />GitHub에서 설치 (무료)
+                <Github size={16} />{copy.hero.install}
               </a>
-              <a className="ui-button ui-button--secondary" href="#how" onClick={() => trackLandingCta('how_it_works')}>동작 방식 보기</a>
+              <a className="ui-button ui-button--secondary" href="#how" onClick={() => trackLandingCta('how_it_works')}>{copy.hero.how}</a>
             </div>
-            <p className="landing-hero-meta">Chrome 확장 · 기본 언어 English · 한국어·日本語 지원 · Gemini API 키 필요</p>
+            <p className="landing-hero-meta">{copy.hero.meta}</p>
           </div>
           <div className="landing-hero-demo">
-            <PromptDemo />
+            <PromptDemo key={language} copy={copy.demo} />
           </div>
         </section>
 
-        <section className="landing-compat" aria-label="지원 사이트">
-          <span className="landing-compat-label">지원 사이트</span>
+        <section className="landing-compat" aria-label={copy.supportedSites}>
+          <span className="landing-compat-label">{copy.supportedSites}</span>
           <ul className="landing-compat-list">
             {SITES.map((site) => <li key={site}>{site}</li>)}
           </ul>
@@ -99,11 +119,11 @@ export function LandingPage() {
 
         <section id="how" className="landing-section">
           <Reveal className="landing-section-head">
-            <span className="ui-eyebrow">HOW IT WORKS</span>
-            <h2>세 단계면 충분합니다</h2>
+            <span className="ui-eyebrow">{copy.how.eyebrow}</span>
+            <h2>{copy.how.title}</h2>
           </Reveal>
           <div className="landing-steps">
-            {STEPS.map((step, index) => (
+            {copy.how.steps.map((step, index) => (
               <Reveal key={step.n} delay={index * 140} className="landing-step">
                 <span className="landing-step-n">{step.n}</span>
                 <h3>{step.title}</h3>
@@ -115,51 +135,50 @@ export function LandingPage() {
 
         <section id="privacy" className="landing-section landing-section--privacy">
           <Reveal className="landing-privacy-copy">
-            <span className="ui-eyebrow">왜 서버가 없나요</span>
-            <h2>계정도, Ondrift 서버도 없습니다</h2>
-            <p>
-              다시 쓸 프롬프트를 직접 고르면, 그 프롬프트만 내 브라우저에서 Gemini로 곧장 전송됩니다.
-              그 사이에 Ondrift가 운영하는 서버는 없습니다.
-            </p>
+            <span className="ui-eyebrow">{copy.privacy.eyebrow}</span>
+            <h2>{copy.privacy.title}</h2>
+            <p>{copy.privacy.body}</p>
             <ul className="landing-privacy-list">
-              {PRIVACY_POINTS.map(({ icon: Icon, text }) => (
+              {copy.privacy.points.map((text, index) => {
+                const Icon = PRIVACY_ICONS[index]
+                return (
                 <li key={text}><Icon size={17} aria-hidden="true" /><span>{text}</span></li>
-              ))}
+                )
+              })}
             </ul>
           </Reveal>
           <Reveal delay={120} className="landing-privacy-diagram">
-            <ArchitectureDiagram />
+            <ArchitectureDiagram copy={copy.architecture} />
           </Reveal>
         </section>
 
-        <section className="landing-langs" aria-label="지원 언어">
+        <section className="landing-langs" aria-label={copy.languages.eyebrow}>
           <Reveal className="landing-langs-inner">
-            <span className="ui-eyebrow">지원 언어</span>
+            <span className="ui-eyebrow">{copy.languages.eyebrow}</span>
             <div className="landing-langs-pills">
-              {LANGUAGES.map((lang) => <span key={lang.code}>{lang.label}</span>)}
+              {LANGUAGE_OPTIONS.map((option) => (
+                <span key={option.code}>{option.label}{option.code === 'en' ? ` · ${copy.languages.defaultLabel}` : ''}</span>
+              ))}
             </div>
-            <p>기본 언어는 영어이며, 설정에서 한국어와 일본어로 변경할 수 있습니다.</p>
+            <p>{copy.languages.body}</p>
           </Reveal>
         </section>
 
         <section className="landing-cta">
           <Reveal className="landing-cta-inner">
-            <h2>지금 브라우저에 설치하세요</h2>
+            <h2>{copy.cta.title}</h2>
             <ol className="landing-cta-steps">
-              <li><Check size={14} aria-hidden="true" />최신 릴리스 ZIP을 내려받고 전체 압축 해제</li>
-              <li><Check size={14} aria-hidden="true" /><code>chrome://extensions</code>에서 개발자 모드 켜기</li>
-              <li><Check size={14} aria-hidden="true" />“압축해제된 확장 프로그램을 로드”로 폴더 선택</li>
-              <li><Check size={14} aria-hidden="true" />내 Gemini API 키를 등록하고 사용 시작</li>
+              {copy.cta.steps.map((step) => <li key={step}><Check size={14} aria-hidden="true" />{step}</li>)}
             </ol>
             <div className="landing-hero-actions">
               <a className="ui-button ui-button--primary" href={RELEASE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_final')}>
-                <Github size={16} />최신 릴리스 받기
+                <Github size={16} />{copy.cta.release}
               </a>
               <a className="ui-button ui-button--secondary" href={REPO_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('guide_final')}>
-                설치 가이드 전체 보기<ArrowUpRight size={14} />
+                {copy.cta.guide}<ArrowUpRight size={14} />
               </a>
             </div>
-            <p className="landing-hero-meta">Chrome 웹 스토어 등록 준비 중 — 지금은 GitHub 릴리스로 설치합니다.</p>
+            <p className="landing-hero-meta">{copy.cta.note}</p>
           </Reveal>
         </section>
       </main>
@@ -171,11 +190,11 @@ export function LandingPage() {
         </div>
         <nav className="landing-footer-links">
           <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub</a>
-          <a href={`${REPO_URL}/blob/main/PRIVACY.md`} target="_blank" rel="noreferrer">개인정보 처리방침</a>
-          <a href={`${REPO_URL}#install-from-a-github-zip`} target="_blank" rel="noreferrer">설치 가이드</a>
+          <a href={`${REPO_URL}/blob/main/PRIVACY.md`} target="_blank" rel="noreferrer">{copy.footer.privacy}</a>
+          <a href={`${REPO_URL}#install-from-a-github-zip`} target="_blank" rel="noreferrer">{copy.footer.guide}</a>
         </nav>
         <p className="landing-footer-note">
-          Google, Gemini, ChatGPT, Claude, Perplexity는 각 소유자의 상표이며 Ondrift와 제휴 관계가 없습니다.
+          {copy.footer.note}
         </p>
       </footer>
     </div>

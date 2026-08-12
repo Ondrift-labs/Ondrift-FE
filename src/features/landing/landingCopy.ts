@@ -1,0 +1,228 @@
+export type LandingLanguage = 'en' | 'ko' | 'ja'
+
+export interface LandingCopy {
+  meta: { title: string; description: string }
+  nav: { how: string; privacy: string; install: string; languageLabel: string }
+  hero: { eyebrow: string; line1: string; line2: string; body: string; install: string; how: string; meta: string }
+  supportedSites: string
+  how: { eyebrow: string; title: string; steps: Array<{ n: string; title: string; body: string }> }
+  privacy: { eyebrow: string; title: string; body: string; points: string[] }
+  languages: { eyebrow: string; body: string; defaultLabel: string }
+  cta: { title: string; steps: string[]; release: string; guide: string; note: string }
+  footer: { privacy: string; guide: string; note: string }
+  demo: {
+    before: string
+    after: string
+    rationale: string[]
+    model: string
+    status: { draft: string; scoring: string; typing: string; result: string }
+  }
+  architecture: {
+    label: string
+    noServer: string
+    prompt: string
+    editor: string
+    provider: string
+    providerSub: string
+    storage: string
+    storageSub: string
+  }
+}
+
+export const LANGUAGE_OPTIONS: Array<{ code: LandingLanguage; short: string; label: string }> = [
+  { code: 'en', short: 'EN', label: 'English' },
+  { code: 'ko', short: 'KO', label: '한국어' },
+  { code: 'ja', short: 'JA', label: '日本語' },
+]
+
+export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
+  en: {
+    meta: {
+      title: 'Ondrift — Improve prompts before you send',
+      description: 'A local-first Chrome extension that scores and rewrites prompts inside ChatGPT, Claude, Gemini, and Perplexity using your own AI provider API key.',
+    },
+    nav: { how: 'How it works', privacy: 'Privacy', install: 'Install extension', languageLabel: 'Page language' },
+    hero: {
+      eyebrow: 'LOCAL-FIRST PROMPT TOOL', line1: 'Write it once.', line2: 'Send it better.',
+      body: 'Review prompts inside ChatGPT, Claude, Gemini, and Perplexity. See a score and rationale, then rewrite with one click. No account and no Ondrift server — just your own AI provider API key.',
+      install: 'Install from GitHub (Free)', how: 'See how it works',
+      meta: 'Chrome extension · English by default · Korean & Japanese supported · AI provider API key required',
+    },
+    supportedSites: 'Supported sites',
+    how: {
+      eyebrow: 'HOW IT WORKS', title: 'Three steps. That’s it.',
+      steps: [
+        { n: '01', title: 'Write as usual', body: 'Type your prompt in ChatGPT, Claude, Gemini, or Perplexity just like you always do. Ondrift stays out of the way.' },
+        { n: '02', title: 'Score and rewrite', body: 'Ask the Ondrift widget to review clarity, context, and constraints. It returns a score, rationale, and an improved version.' },
+        { n: '03', title: 'Review and apply', body: 'Apply the rewrite with one click, ignore it, or keep editing directly in the prompt box. You stay in control.' },
+      ],
+    },
+    privacy: {
+      eyebrow: 'WHY NO SERVER?', title: 'No account. No Ondrift server.',
+      body: 'When you choose to rewrite a prompt, your browser sends only that prompt directly to your selected AI provider. No Ondrift-operated server sits in between.',
+      points: [
+        'Settings stay in chrome.storage.local. Optional history stays in your browser’s local IndexedDB.',
+        'Only prompts you explicitly ask to rewrite are sent. AI response content is never collected or stored.',
+        'Your AI provider API keys stay under your control — and keeping them secure remains your responsibility.',
+      ],
+    },
+    languages: { eyebrow: 'SUPPORTED LANGUAGES', body: 'English is the default. Use the header control to switch languages anytime.', defaultLabel: 'Default' },
+    cta: {
+      title: 'Install it in your browser',
+      steps: ['Download and fully extract the latest release ZIP', 'Enable Developer mode at chrome://extensions', 'Choose the folder with “Load unpacked”', 'Add your AI provider API key and start using Ondrift'],
+      release: 'Get the latest release', guide: 'View the full install guide',
+      note: 'Chrome Web Store listing in progress — install from the GitHub release for now.',
+    },
+    footer: {
+      privacy: 'Privacy policy', guide: 'Install guide',
+      note: 'Google, Gemini, ChatGPT, Claude, and Perplexity are trademarks of their respective owners. Ondrift is not affiliated with them.',
+    },
+    demo: {
+      before: 'Turn this meeting transcript into notes',
+      after: `## **Meeting notes goal**
+Turn the transcript below into actionable meeting notes.
+
+## **Output format**
+1. **Key points by participant**
+2. **Decisions and rationale**
+3. **Action items** — owner | task | due date in a Markdown table
+
+## **Rules**
+- Mark unclear owners or deadlines as **Needs confirmation**
+- Preserve all numbers and dates exactly`,
+      rationale: ['Turns a vague request into an actionable goal', 'Specifies Markdown headings, emphasis, and a table', 'Adds rules for missing details and accuracy'],
+      model: 'Based on Gemini 3.6 Flash',
+      status: { draft: 'Drafting', scoring: 'Ondrift is reviewing…', typing: 'Writing the improved prompt…', result: 'Rewrite complete · Ready to apply' },
+    },
+    architecture: {
+      label: 'The extension calls your selected AI provider directly from the browser. Settings and optional history stay in local storage, with no Ondrift server in the data path.',
+      noServer: 'No Ondrift server', prompt: 'Prompt', editor: 'editor', provider: 'AI provider', providerSub: 'Your API key', storage: 'Local storage', storageSub: 'storage · IndexedDB',
+    },
+  },
+  ko: {
+    meta: {
+      title: 'Ondrift — 보내기 전에 프롬프트를 다듬는 확장 프로그램',
+      description: 'ChatGPT, Claude, Gemini, Perplexity 안에서 프롬프트를 점수화하고 다시 써주는 로컬 우선 Chrome 확장 프로그램입니다.',
+    },
+    nav: { how: '동작 방식', privacy: '프라이버시', install: '확장 설치하기', languageLabel: '페이지 언어' },
+    hero: {
+      eyebrow: '로컬 우선 프롬프트 도구', line1: '보내기 전에,', line2: '한 번 더 다듬습니다.',
+      body: 'ChatGPT, Claude, Gemini, Perplexity의 입력창 안에서 프롬프트를 검토하고 점수와 근거를 보여준 뒤, 원하면 한 클릭으로 다시 씁니다. 계정도 Ondrift 서버도 없이 내 AI 제공자 API 키로 동작합니다.',
+      install: 'GitHub에서 설치 (무료)', how: '동작 방식 보기',
+      meta: 'Chrome 확장 · 기본 언어 English · 한국어·日本語 지원 · AI 제공자 API 키 필요',
+    },
+    supportedSites: '지원 사이트',
+    how: {
+      eyebrow: '동작 방식', title: '세 단계면 충분합니다',
+      steps: [
+        { n: '01', title: '그대로 씁니다', body: '평소처럼 ChatGPT, Claude, Gemini, Perplexity에 프롬프트를 작성합니다. Ondrift는 방해하지 않습니다.' },
+        { n: '02', title: '점수와 재작성', body: 'Ondrift 위젯이 명확성·맥락·제약을 검토해 점수, 근거, 다시 쓴 버전을 함께 보여줍니다.' },
+        { n: '03', title: '검토 후 적용', body: '마음에 들면 한 클릭으로 적용하고, 아니면 무시하거나 입력창에서 계속 수정할 수 있습니다.' },
+      ],
+    },
+    privacy: {
+      eyebrow: '왜 서버가 없나요', title: '계정도, Ondrift 서버도 없습니다',
+      body: '재작성을 선택하면 해당 프롬프트만 브라우저에서 선택한 AI 제공자로 직접 전송됩니다. 그 사이에 Ondrift가 운영하는 서버는 없습니다.',
+      points: [
+        '설정은 chrome.storage.local에, 선택한 경우의 기록은 브라우저의 로컬 IndexedDB에만 남습니다.',
+        '재작성을 요청한 프롬프트만 전송되며, AI 응답 본문은 수집하거나 저장하지 않습니다.',
+        'AI 제공자 API 키는 사용자가 직접 관리하며, 안전하게 보관할 책임도 사용자에게 있습니다.',
+      ],
+    },
+    languages: { eyebrow: '지원 언어', body: '기본 언어는 영어이며, 헤더에서 언제든 한국어와 일본어로 변경할 수 있습니다.', defaultLabel: '기본' },
+    cta: {
+      title: '지금 브라우저에 설치하세요',
+      steps: ['최신 릴리스 ZIP을 내려받고 전체 압축 해제', 'chrome://extensions에서 개발자 모드 켜기', '“압축해제된 확장 프로그램을 로드”로 폴더 선택', 'AI 제공자 API 키를 등록하고 사용 시작'],
+      release: '최신 릴리스 받기', guide: '설치 가이드 전체 보기',
+      note: 'Chrome 웹 스토어 등록 준비 중 — 지금은 GitHub 릴리스로 설치합니다.',
+    },
+    footer: {
+      privacy: '개인정보 처리방침', guide: '설치 가이드',
+      note: 'Google, Gemini, ChatGPT, Claude, Perplexity는 각 소유자의 상표이며 Ondrift와 제휴 관계가 없습니다.',
+    },
+    demo: {
+      before: '회의 녹취 정리해줘',
+      after: `## **회의록 작성 목표**
+다음 회의 녹취를 실행 가능한 회의록으로 정리해줘.
+
+## **출력 형식**
+1. **참석자별 핵심 발언**
+2. **결정 사항과 근거**
+3. **후속 조치** — 담당자 | 할 일 | 기한 마크다운 표
+
+## **작성 규칙**
+- 불명확한 담당자·기한은 추측하지 말고 **확인 필요**로 표시
+- 수치와 날짜는 원문 그대로 유지`,
+      rationale: ['업무 목적을 실행 중심으로 구체화', '마크다운 제목·강조·표 형식 적용', '누락 정보 처리·정확성 규칙 추가'],
+      model: 'Gemini 3.6 Flash 기준',
+      status: { draft: '작성 중', scoring: 'Ondrift가 검토하는 중…', typing: '개선된 프롬프트 작성 중…', result: '재작성 완료 · 적용 대기' },
+    },
+    architecture: {
+      label: '확장 프로그램이 브라우저에서 선택한 AI 제공자를 직접 호출하고, 설정과 기록은 로컬 저장소에만 남기는 구조도입니다. Ondrift 서버는 이 경로에 없습니다.',
+      noServer: 'Ondrift 서버 없음', prompt: '프롬프트', editor: '편집기', provider: 'AI 제공자', providerSub: '내 API 키', storage: '로컬 저장소', storageSub: 'storage · IndexedDB',
+    },
+  },
+  ja: {
+    meta: {
+      title: 'Ondrift — 送信前にプロンプトを改善',
+      description: 'ChatGPT、Claude、Gemini、Perplexityの入力欄でプロンプトを評価・改善するローカルファーストのChrome拡張機能です。',
+    },
+    nav: { how: '仕組み', privacy: 'プライバシー', install: '拡張機能を追加', languageLabel: 'ページの言語' },
+    hero: {
+      eyebrow: 'ローカルファーストのプロンプトツール', line1: '送信する前に、', line2: 'もう一度磨く。',
+      body: 'ChatGPT、Claude、Gemini、Perplexityの入力欄でプロンプトを確認し、スコアと根拠を表示してワンクリックで改善します。アカウントもOndriftサーバーも不要です。',
+      install: 'GitHubから無料でインストール', how: '仕組みを見る',
+      meta: 'Chrome拡張 · デフォルトは英語 · 韓国語・日本語対応 · AIプロバイダーのAPIキーが必要',
+    },
+    supportedSites: '対応サイト',
+    how: {
+      eyebrow: '仕組み', title: 'わずか3ステップ',
+      steps: [
+        { n: '01', title: 'いつも通り書く', body: 'ChatGPT、Claude、Gemini、Perplexityに、いつも通りプロンプトを入力します。' },
+        { n: '02', title: '評価して改善', body: 'Ondriftが明確さ、文脈、制約を確認し、スコア、根拠、改善案を表示します。' },
+        { n: '03', title: '確認して適用', body: '気に入ればワンクリックで適用。無視することも、入力欄でさらに編集することもできます。' },
+      ],
+    },
+    privacy: {
+      eyebrow: 'なぜサーバーがないのか', title: 'アカウントもOndriftサーバーも不要',
+      body: '改善を選択すると、そのプロンプトだけがブラウザから選択したAIプロバイダーへ直接送信されます。Ondriftのサーバーは介在しません。',
+      points: [
+        '設定はchrome.storage.localに、任意の履歴はブラウザのIndexedDBにのみ保存されます。',
+        '明示的に改善を依頼したプロンプトだけを送信し、AIの回答本文は収集・保存しません。',
+        'AIプロバイダーのAPIキーはユーザー自身が管理し、安全に保管する責任もユーザーにあります。',
+      ],
+    },
+    languages: { eyebrow: '対応言語', body: 'デフォルトは英語です。ヘッダーからいつでも韓国語または日本語に切り替えられます。', defaultLabel: 'デフォルト' },
+    cta: {
+      title: 'ブラウザにインストール',
+      steps: ['最新リリースのZIPをダウンロードして展開', 'chrome://extensionsでデベロッパーモードを有効化', '「パッケージ化されていない拡張機能を読み込む」でフォルダーを選択', 'AIプロバイダーのAPIキーを追加して利用開始'],
+      release: '最新リリースを入手', guide: 'インストールガイドを見る',
+      note: 'Chromeウェブストアへの登録準備中 — 現在はGitHubリリースからインストールできます。',
+    },
+    footer: {
+      privacy: 'プライバシーポリシー', guide: 'インストールガイド',
+      note: 'Google、Gemini、ChatGPT、Claude、Perplexityは各社の商標です。Ondriftは各社と提携していません。',
+    },
+    demo: {
+      before: '会議の文字起こしを議事録にまとめて',
+      after: `## **議事録の目的**
+以下の文字起こしを、実行可能な議事録にまとめてください。
+
+## **出力形式**
+1. **参加者ごとの主な発言**
+2. **決定事項と根拠**
+3. **フォローアップ** — 担当者 | タスク | 期限のMarkdown表
+
+## **作成ルール**
+- 不明な担当者や期限は推測せず、**要確認**と表示
+- 数値と日付は原文のまま維持`,
+      rationale: ['目的を実行中心に具体化', 'Markdownの見出し・強調・表を指定', '不足情報と正確性のルールを追加'],
+      model: 'Gemini 3.6 Flashを基準',
+      status: { draft: '入力中', scoring: 'Ondriftが確認中…', typing: '改善したプロンプトを作成中…', result: '改善完了 · 適用可能' },
+    },
+    architecture: {
+      label: '拡張機能はブラウザから選択したAIプロバイダーを直接呼び出します。設定と任意の履歴はローカルに保存され、Ondriftサーバーは介在しません。',
+      noServer: 'Ondriftサーバーなし', prompt: 'プロンプト', editor: 'エディター', provider: 'AIプロバイダー', providerSub: '自分のAPIキー', storage: 'ローカル保存', storageSub: 'storage · IndexedDB',
+    },
+  },
+}
