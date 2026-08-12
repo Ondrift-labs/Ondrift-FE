@@ -11,8 +11,8 @@ const RELEASE_URL = `${REPO_URL}/releases/latest`
 
 const SITES = ['ChatGPT', 'Claude', 'Gemini', 'Perplexity']
 const LANGUAGES = [
+  { code: 'EN', label: 'English · 기본' },
   { code: 'KO', label: '한국어' },
-  { code: 'EN', label: 'English' },
   { code: 'JA', label: '日本語' },
 ]
 const STEPS = [
@@ -83,7 +83,7 @@ export function LandingPage() {
               </a>
               <a className="ui-button ui-button--secondary" href="#how" onClick={() => trackLandingCta('how_it_works')}>동작 방식 보기</a>
             </div>
-            <p className="landing-hero-meta">Chrome 확장 · 한국어 · English · 日本語 · Gemini API 키 필요</p>
+            <p className="landing-hero-meta">Chrome 확장 · 기본 언어 English · 한국어·日本語 지원 · Gemini API 키 필요</p>
           </div>
           <div className="landing-hero-demo">
             <PromptDemo />
@@ -138,7 +138,7 @@ export function LandingPage() {
             <div className="landing-langs-pills">
               {LANGUAGES.map((lang) => <span key={lang.code}>{lang.label}</span>)}
             </div>
-            <p>설정 화면, 다시 쓴 프롬프트, 근거 설명까지 선택한 언어로 표시됩니다.</p>
+            <p>기본 언어는 영어이며, 설정에서 한국어와 일본어로 변경할 수 있습니다.</p>
           </Reveal>
         </section>
 
