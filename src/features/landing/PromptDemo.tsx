@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { usePrefersReducedMotion } from './useReveal'
 
 const BEFORE_PROMPT = '회의 녹취 정리해줘'
@@ -93,58 +93,24 @@ function usePromptDemo(reducedMotion: boolean) {
 export function PromptDemo() {
   const reducedMotion = usePrefersReducedMotion()
   const { phase, score, displayedPrompt } = usePromptDemo(reducedMotion)
-  const cardRef = useRef<HTMLDivElement>(null)
-  const heightRef = useRef<number | null>(null)
   const showResult = phase === 'result'
   const offset = RING_LENGTH - (RING_LENGTH * score) / 100
 
-  useLayoutEffect(() => {
-    const card = cardRef.current
-    if (!card) return
-
-    const previousHeight = heightRef.current ?? card.offsetHeight
-    card.style.height = 'auto'
-    const nextHeight = card.offsetHeight
-    heightRef.current = nextHeight
-
-    if (reducedMotion || Math.abs(previousHeight - nextHeight) < 1) {
-      card.style.height = `${nextHeight}px`
-      return
-    }
-
-    card.style.height = `${previousHeight}px`
-    void card.offsetHeight
-    const frame = requestAnimationFrame(() => {
-      card.style.height = `${nextHeight}px`
-    })
-    return () => cancelAnimationFrame(frame)
-  }, [displayedPrompt, phase, reducedMotion])
-
-  useEffect(() => {
-    const syncHeight = () => {
-      const card = cardRef.current
-      if (!card) return
-      card.style.height = 'auto'
-      const nextHeight = card.offsetHeight
-      heightRef.current = nextHeight
-      card.style.height = `${nextHeight}px`
-    }
-    window.addEventListener('resize', syncHeight)
-    return () => window.removeEventListener('resize', syncHeight)
-  }, [])
-
   return (
-    <div ref={cardRef} className={`demo-card demo-card--${phase}`}>
+    <div className={`demo-card demo-card--${phase}`}>
       <div className="demo-chrome">
         <span className="demo-dot" /><span className="demo-dot" /><span className="demo-dot" />
         <span className="demo-url">chatgpt.com</span>
         <span className="demo-model">Gemini 3.6 Flash 기준</span>
       </div>
       <div className="demo-body">
-        <p className="demo-editor">
-          {displayedPrompt}
-          {(phase === 'draft' || phase === 'typing') && <span className="demo-caret" aria-hidden="true" />}
-        </p>
+        <div className="demo-editor-stack">
+          <p className="demo-editor demo-editor--measure" aria-hidden="true">{AFTER_PROMPT}</p>
+          <p className="demo-editor demo-editor--live">
+            {displayedPrompt}
+            {(phase === 'draft' || phase === 'typing') && <span className="demo-caret" aria-hidden="true" />}
+          </p>
+        </div>
         <div className={`demo-result ${showResult ? 'is-shown' : ''}`} aria-hidden={!showResult}>
           <div className="demo-score">
             <svg viewBox="0 0 64 64" aria-hidden="true">
