@@ -16,6 +16,8 @@ const CYCLE_MS = DRAFT_HOLD_MS + SCORING_HOLD_MS + TYPING_MS + RESULT_HOLD_MS
 
 type Phase = 'draft' | 'scoring' | 'typing' | 'result'
 
+const useBrowserLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
+
 /** Drives the hero's before/after loop: draft -> scoring -> typing -> result -> repeat. */
 function usePromptDemo(reducedMotion: boolean, beforePrompt: string, afterPrompt: string) {
   const [phase, setPhase] = useState<Phase>(reducedMotion ? 'result' : 'draft')
@@ -129,7 +131,7 @@ export function PromptDemo({ copy }: { copy: LandingCopy['demo'] }) {
   const heightRef = useRef<number | null>(null)
   const showResult = phase === 'result'
 
-  useLayoutEffect(() => {
+  useBrowserLayoutEffect(() => {
     const card = cardRef.current
     if (!card) return
 

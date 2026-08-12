@@ -4,6 +4,7 @@ import { LandingPage } from './LandingPage'
 
 describe('LandingPage language switcher', () => {
   beforeEach(() => {
+    window.history.replaceState({}, '', '/')
     window.localStorage.clear()
     document.documentElement.lang = 'en'
   })
@@ -24,5 +25,6 @@ describe('LandingPage language switcher', () => {
     expect(screen.getByRole('heading', { name: /보내기 전에/ })).toBeInTheDocument()
     expect(document.documentElement.lang).toBe('ko')
     expect(window.localStorage.getItem('ondrift-landing-language')).toBe('ko')
+    expect(window.location.pathname).toBe('/ko/')
   })
 })

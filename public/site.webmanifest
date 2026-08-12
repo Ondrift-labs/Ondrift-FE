@@ -1,0 +1,16 @@
+{
+  "name": "Ondrift",
+  "short_name": "Ondrift",
+  "description": "Improve prompts before sending them to ChatGPT, Claude, Gemini, or Perplexity.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f6f1",
+  "theme_color": "#256b57",
+  "icons": [
+    {
+      "src": "/ondrift-mark.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ]
+}

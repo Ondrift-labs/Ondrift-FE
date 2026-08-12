@@ -4,6 +4,7 @@ import { ArchitectureDiagram } from './ArchitectureDiagram'
 import { PromptDemo } from './PromptDemo'
 import { trackLandingCta, trackLandingPageView } from './analytics'
 import { LANDING_COPY, LANGUAGE_OPTIONS, type LandingLanguage } from './landingCopy'
+import { LANGUAGE_PATHS, languageFromPathname, languageUrl } from './seo'
 import { useReveal } from './useReveal'
 import './landing.css'
 
@@ -14,7 +15,13 @@ const LANGUAGE_STORAGE_KEY = 'ondrift-landing-language'
 const SITES = ['ChatGPT', 'Claude', 'Gemini', 'Perplexity']
 const PRIVACY_ICONS = [Database, ShieldOff, KeyRound]
 
-function getInitialLanguage(): LandingLanguage {
+function getInitialLanguage(initialLanguage?: LandingLanguage): LandingLanguage {
+  if (initialLanguage) return initialLanguage
+  if (typeof window === 'undefined') return 'en'
+
+  const pathLanguage = languageFromPathname(window.location.pathname)
+  if (pathLanguage !== 'en' || window.location.pathname === '/') return pathLanguage
+
   try {
     const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
     if (saved === 'en' || saved === 'ko' || saved === 'ja') return saved
@@ -41,9 +48,14 @@ function RisingBars() {
   )
 }
 
-export function LandingPage() {
-  const [language, setLanguage] = useState<LandingLanguage>(getInitialLanguage)
+export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLanguage } = {}) {
+  const [language, setLanguage] = useState<LandingLanguage>(() => getInitialLanguage(initialLanguage))
   const copy = LANDING_COPY[language]
+
+  function changeLanguage(nextLanguage: LandingLanguage) {
+    window.history.pushState({}, '', LANGUAGE_PATHS[nextLanguage])
+    setLanguage(nextLanguage)
+  }
 
   useEffect(() => {
     trackLandingPageView()
@@ -53,6 +65,12 @@ export function LandingPage() {
     document.documentElement.lang = language
     document.title = copy.meta.title
     document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', copy.meta.description)
+    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', languageUrl(language))
+    document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute('content', languageUrl(language))
+    document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute('content', copy.meta.title)
+    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute('content', copy.meta.description)
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute('content', copy.meta.title)
+    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute('content', copy.meta.description)
     try {
       window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
     } catch {
@@ -79,7 +97,7 @@ export function LandingPage() {
           <select
             aria-label={copy.nav.languageLabel}
             value={language}
-            onChange={(event) => setLanguage(event.target.value as LandingLanguage)}
+            onChange={(event) => changeLanguage(event.target.value as LandingLanguage)}
           >
             {LANGUAGE_OPTIONS.map((option) => <option key={option.code} value={option.code}>{option.label}</option>)}
           </select>
