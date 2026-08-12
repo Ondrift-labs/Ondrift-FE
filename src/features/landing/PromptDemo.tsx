@@ -3,15 +3,18 @@ import { useEffect, useRef, useState } from 'react'
 import { usePrefersReducedMotion } from './useReveal'
 
 const BEFORE_PROMPT = '회의 녹취 정리해줘'
-const AFTER_PROMPT = `다음 회의 녹취를 실행 가능한 회의록으로 바꿔줘.
+const AFTER_PROMPT = `## **회의록 작성 목표**
+다음 회의 녹취를 실행 가능한 회의록으로 정리해줘.
 
-출력:
-1. 참석자별 핵심 발언
-2. 결정 사항과 근거
-3. 후속 조치 — 담당자 | 할 일 | 기한 표
+## **출력 형식**
+1. **참석자별 핵심 발언**
+2. **결정 사항과 근거**
+3. **후속 조치** — 담당자 | 할 일 | 기한 마크다운 표
 
-불명확한 담당자·기한은 추측하지 말고 ‘확인 필요’로 표시하고, 수치와 날짜는 원문 그대로 유지해줘.`
-const RATIONALE = ['업무 목적을 실행 중심으로 구체화', '결과를 세 가지 섹션으로 구조화', '누락 정보 처리·정확성 규칙 추가']
+## **작성 규칙**
+- 불명확한 담당자·기한은 추측하지 말고 **확인 필요**로 표시
+- 수치와 날짜는 원문 그대로 유지`
+const RATIONALE = ['업무 목적을 실행 중심으로 구체화', '마크다운 제목·강조·표 형식 적용', '누락 정보 처리·정확성 규칙 추가']
 const SCORE_BEFORE = 42
 const SCORE_AFTER = 91
 const RING_LENGTH = 170
@@ -71,6 +74,7 @@ export function PromptDemo() {
       <div className="demo-chrome">
         <span className="demo-dot" /><span className="demo-dot" /><span className="demo-dot" />
         <span className="demo-url">chatgpt.com</span>
+        <span className="demo-model">Gemini 3.6 Flash 기준</span>
       </div>
       <div className="demo-body">
         <p className="demo-editor">
@@ -92,7 +96,7 @@ export function PromptDemo() {
       </div>
       <div className="demo-foot">
         <span className={`demo-status demo-status--${phase}`}>
-          {phase === 'draft' ? '작성 중' : phase === 'scoring' ? 'Ondrift가 검토하는 중…' : '재작성 완료 · 적용 대기 · 결과는 모델에 따라 달라질 수 있어요'}
+          {phase === 'draft' ? '작성 중' : phase === 'scoring' ? 'Ondrift가 검토하는 중…' : '재작성 완료 · 적용 대기'}
         </span>
       </div>
     </div>
