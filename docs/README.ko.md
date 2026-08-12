@@ -36,3 +36,14 @@ npm run build
 ```
 
 개발 규칙은 [DEVELOPMENT_CONVENTIONS.md](DEVELOPMENT_CONVENTIONS.md)를 참고하세요.
+
+## 배포
+
+랜딩 페이지는 Cloudflare Pages의
+[ondrift.pages.dev](https://ondrift.pages.dev/)에 배포되어 있습니다.
+
+Wrangler 로그인 후 현재 `main` 빌드를 배포하는 명령:
+
+```bash
+npm run deploy:pages
+```

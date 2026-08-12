@@ -37,3 +37,14 @@ npm run build
 
 See [docs/DEVELOPMENT_CONVENTIONS.md](docs/DEVELOPMENT_CONVENTIONS.md) for the
 development rules.
+
+## Deployment
+
+The landing page is deployed to Cloudflare Pages at
+[ondrift.pages.dev](https://ondrift.pages.dev/).
+
+After logging in to Wrangler, deploy the current `main` build with:
+
+```bash
+npm run deploy:pages
+```
