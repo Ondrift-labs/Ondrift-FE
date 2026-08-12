@@ -72,7 +72,7 @@ body:has(.landing) { background: #f6f6f2; }
 
 /* demo card — pops in once on mount (it's above the fold, so no scroll trigger needed) */
 @keyframes cardIntro { 0% { opacity: 0; transform: translateY(26px) scale(0.95); } 100% { opacity: 1; transform: none; } }
-.demo-card { border: 1px solid var(--line-strong); border-radius: 12px; background: var(--paper); box-shadow: var(--shadow); overflow: hidden; animation: cardIntro 720ms cubic-bezier(.16,1,.3,1) 150ms both; }
+.demo-card { border: 1px solid var(--line-strong); border-radius: 12px; background: var(--paper); box-shadow: var(--shadow); overflow: hidden; transition: height 680ms cubic-bezier(.16,1,.3,1); animation: cardIntro 720ms cubic-bezier(.16,1,.3,1) 150ms both; }
 .demo-chrome { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
 .demo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line-strong); }
 .demo-url { margin-left: 10px; color: var(--faint); font-size: 11px; font-family: ui-monospace, monospace; }
