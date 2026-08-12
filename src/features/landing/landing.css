@@ -192,7 +192,7 @@ body:has(.landing) { background: #f6f6f2; }
 .landing-cta-steps li { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--ink); }
 .landing-cta-steps svg { flex: 0 0 auto; color: var(--accent); }
 .landing-cta .landing-hero-actions { justify-content: center; margin-top: 26px; }
-.landing-cta .landing-hero-meta { text-align: center; }
+.landing-cta .landing-hero-meta { margin-top: 22px; text-align: center; }
 
 /* footer */
 .landing-footer { max-width: 1180px; margin: 0 auto; padding: 32px clamp(20px, 5vw, 64px) 56px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
