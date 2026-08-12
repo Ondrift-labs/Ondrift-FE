@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ondrift",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-08-12",
+  "analytics_engine_datasets": [
+    {
+      "binding": "LANDING_ANALYTICS",
+      "dataset": "ondrift_landing_events"
+    }
+  ]
+}

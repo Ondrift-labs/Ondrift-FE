@@ -27,4 +27,8 @@ export default tseslint.config(
     files: ['src/**/*.test.{ts,tsx}', 'src/test/**/*.{ts,tsx}'],
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
   },
+  {
+    files: ['functions/**/*.js'],
+    languageOptions: { globals: globals.serviceworker },
+  },
 )

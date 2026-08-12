@@ -1,7 +1,8 @@
 import { ArrowRight, ArrowUpRight, Check, Database, Github, KeyRound, ShieldOff } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { ArchitectureDiagram } from './ArchitectureDiagram'
 import { PromptDemo } from './PromptDemo'
+import { trackLandingCta, trackLandingPageView } from './analytics'
 import { useReveal } from './useReveal'
 import './landing.css'
 
@@ -43,6 +44,10 @@ function RisingBars() {
 }
 
 export function LandingPage() {
+  useEffect(() => {
+    trackLandingPageView()
+  }, [])
+
   return (
     <div className="landing">
       <div className="landing-grain" aria-hidden="true" />
@@ -57,7 +62,7 @@ export function LandingPage() {
           <a href="#privacy">프라이버시</a>
           <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub<ArrowUpRight size={13} /></a>
         </nav>
-        <a className="ui-button ui-button--primary landing-nav-cta" href={RELEASE_URL} target="_blank" rel="noreferrer">
+        <a className="ui-button ui-button--primary landing-nav-cta" href={RELEASE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_nav')}>
           확장 설치하기<ArrowRight size={15} />
         </a>
       </header>
@@ -73,10 +78,10 @@ export function LandingPage() {
               원하면 한 클릭으로 다시 씁니다. 계정도 서버도 없이 내 Gemini 키로 동작합니다.
             </p>
             <div className="landing-hero-actions">
-              <a className="ui-button ui-button--primary" href={RELEASE_URL} target="_blank" rel="noreferrer">
+              <a className="ui-button ui-button--primary" href={RELEASE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_hero')}>
                 <Github size={16} />GitHub에서 설치 (무료)
               </a>
-              <a className="ui-button ui-button--secondary" href="#how">동작 방식 보기</a>
+              <a className="ui-button ui-button--secondary" href="#how" onClick={() => trackLandingCta('how_it_works')}>동작 방식 보기</a>
             </div>
             <p className="landing-hero-meta">Chrome 확장 · 한국어 · English · 日本語 · Gemini API 키 필요</p>
           </div>
@@ -147,10 +152,10 @@ export function LandingPage() {
               <li><Check size={14} aria-hidden="true" />내 Gemini API 키를 등록하고 사용 시작</li>
             </ol>
             <div className="landing-hero-actions">
-              <a className="ui-button ui-button--primary" href={RELEASE_URL} target="_blank" rel="noreferrer">
+              <a className="ui-button ui-button--primary" href={RELEASE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_final')}>
                 <Github size={16} />최신 릴리스 받기
               </a>
-              <a className="ui-button ui-button--secondary" href={REPO_URL} target="_blank" rel="noreferrer">
+              <a className="ui-button ui-button--secondary" href={REPO_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('guide_final')}>
                 설치 가이드 전체 보기<ArrowUpRight size={14} />
               </a>
             </div>

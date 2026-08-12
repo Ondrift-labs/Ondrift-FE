@@ -48,3 +48,20 @@ After logging in to Wrangler, deploy the current `main` build with:
 ```bash
 npm run deploy:pages
 ```
+
+Landing page views and primary CTA clicks are stored as anonymous aggregate
+events in the `ondrift_landing_events` Cloudflare Analytics Engine dataset.
+The event payload contains only the event type and CTA location; it does not
+include cookies, user identifiers, IP addresses, or prompt content.
+
+Useful Analytics Engine SQL queries:
+
+```sql
+-- Visits and CTA clicks for the last 7 days
+SELECT blob1 AS event, blob2 AS target,
+       SUM(_sample_interval * double1) AS total
+FROM ondrift_landing_events
+WHERE timestamp >= NOW() - INTERVAL '7' DAY
+GROUP BY event, target
+ORDER BY total DESC
+```
