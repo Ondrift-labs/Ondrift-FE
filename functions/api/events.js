@@ -15,7 +15,9 @@ function response(status) {
   })
 }
 
-export async function onRequestPost({ request, env }) {
+export async function onRequest({ request, env }) {
+  if (request.method !== 'POST') return response(405)
+
   const requestUrl = new URL(request.url)
   const origin = request.headers.get('origin')
 
@@ -45,8 +47,4 @@ export async function onRequestPost({ request, env }) {
   })
 
   return response(204)
-}
-
-export function onRequest() {
-  return response(405)
 }
