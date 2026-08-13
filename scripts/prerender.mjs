@@ -36,7 +36,7 @@ function seoHead(data) {
         inLanguage: data.language,
         applicationCategory: 'BrowserApplication',
         operatingSystem: 'Chrome',
-        image: `${data.siteOrigin}/assets/ondrift-share-20260812.png`,
+        image: `${data.siteOrigin}/assets/ondrift-share-20260813.jpg`,
         downloadUrl: 'https://github.com/Ondrift-labs/Ondrift-Extension/releases/latest',
         softwareRequirements: 'Google Chrome with an API key for a supported AI provider',
         isPartOf: { '@id': `${data.siteOrigin}/#website` },
@@ -65,16 +65,16 @@ function seoHead(data) {
     <meta property="og:url" content="${data.url}" />
     <meta property="og:locale" content="${data.openGraphLocale}" />
 ${data.alternateLocales.map((locale) => `    <meta property="og:locale:alternate" content="${locale}" />`).join('\n')}
-    <meta property="og:image" content="${data.siteOrigin}/assets/ondrift-share-20260812.png" />
-    <meta property="og:image:secure_url" content="${data.siteOrigin}/assets/ondrift-share-20260812.png" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1254" />
-    <meta property="og:image:height" content="1254" />
+    <meta property="og:image" content="${data.siteOrigin}/assets/ondrift-share-20260813.jpg" />
+    <meta property="og:image:secure_url" content="${data.siteOrigin}/assets/ondrift-share-20260813.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="560" />
     <meta property="og:image:alt" content="Ondrift prompt improvement Chrome extension" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapeAttribute(data.title)}" />
     <meta name="twitter:description" content="${escapeAttribute(data.description)}" />
-    <meta name="twitter:image" content="${data.siteOrigin}/assets/ondrift-share-20260812.png" />
+    <meta name="twitter:image" content="${data.siteOrigin}/assets/ondrift-share-20260813.jpg" />
     <script type="application/ld+json">${JSON.stringify(structuredData).replaceAll('<', '\\u003c')}</script>
     <title>${escapeAttribute(data.title)}</title>
     <!-- SEO_META_END -->`
