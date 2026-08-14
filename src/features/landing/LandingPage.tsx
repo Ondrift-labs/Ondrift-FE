@@ -90,6 +90,7 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
         <nav className="landing-nav-links">
           <a href="#how">{copy.nav.how}</a>
           <a href="#privacy">{copy.nav.privacy}</a>
+          <a href="#faq">{copy.nav.faq}</a>
           <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub<ArrowUpRight size={13} /></a>
         </nav>
         <label className="landing-language-select">
@@ -180,6 +181,21 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
             </div>
             <p>{copy.languages.body}</p>
           </Reveal>
+        </section>
+
+        <section id="faq" className="landing-section landing-faq">
+          <Reveal className="landing-section-head">
+            <span className="ui-eyebrow">{copy.faq.eyebrow}</span>
+            <h2>{copy.faq.title}</h2>
+          </Reveal>
+          <div className="landing-faq-list">
+            {copy.faq.items.map((item) => (
+              <details key={item.q}>
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
+          </div>
         </section>
 
         <section className="landing-cta">

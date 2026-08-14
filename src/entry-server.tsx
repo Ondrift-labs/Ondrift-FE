@@ -24,5 +24,6 @@ export function getSeoData(language: LandingLanguage) {
     openGraphLocale: OPEN_GRAPH_LOCALES[language],
     alternateLocales: Object.values(OPEN_GRAPH_LOCALES).filter((locale) => locale !== OPEN_GRAPH_LOCALES[language]),
     siteOrigin: SITE_ORIGIN,
+    faqItems: copy.faq.items,
   }
 }

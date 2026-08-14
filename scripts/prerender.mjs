@@ -47,6 +47,16 @@ function seoHead(data) {
         },
         sameAs: ['https://github.com/Ondrift-labs/Ondrift-Extension'],
       },
+      {
+        '@type': 'FAQPage',
+        '@id': `${data.url}#faq`,
+        inLanguage: data.language,
+        mainEntity: data.faqItems.map((item) => ({
+          '@type': 'Question',
+          name: item.q,
+          acceptedAnswer: { '@type': 'Answer', text: item.a },
+        })),
+      },
     ],
   }
 

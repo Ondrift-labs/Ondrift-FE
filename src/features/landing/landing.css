@@ -197,6 +197,15 @@ html[lang='ja'] .landing h1, html[lang='ja'] .landing h2, html[lang='ja'] .landi
 .landing-langs-pills span:nth-child(3) { transition-delay: 320ms; }
 .landing-langs-inner > p { color: var(--muted); font-size: 13px; flex-basis: 100%; }
 
+/* faq */
+.landing-faq-list { display: grid; gap: 1px; max-width: 760px; background: var(--line); border: 1px solid var(--line); }
+.landing-faq-list details { background: var(--paper); padding: 16px 20px; }
+.landing-faq-list summary { cursor: pointer; font-weight: 650; font-size: 15px; list-style: none; }
+.landing-faq-list summary::-webkit-details-marker { display: none; }
+.landing-faq-list summary::before { content: '+'; display: inline-block; width: 1em; color: var(--accent); }
+.landing-faq-list details[open] summary::before { content: '−'; }
+.landing-faq-list p { margin: 10px 0 0 1em; color: var(--muted); font-size: 14px; line-height: 1.55; }
+
 /* final cta */
 .landing-cta { border-top: 1px solid var(--line); background: var(--paper); }
 .landing-cta-inner { max-width: 640px; margin: 0 auto; padding: 80px clamp(20px, 5vw, 64px); text-align: center; }

@@ -27,4 +27,12 @@ describe('LandingPage language switcher', () => {
     expect(window.localStorage.getItem('ondrift-landing-language')).toBe('ko')
     expect(window.location.pathname).toBe('/ko/')
   })
+
+  it('lists an FAQ section reachable from the nav', () => {
+    render(<LandingPage />)
+
+    expect(screen.getByRole('link', { name: 'FAQ' })).toHaveAttribute('href', '#faq')
+    expect(screen.getByText('Is Ondrift free to use?')).toBeInTheDocument()
+    expect(screen.getByText(/Ondrift itself is free and open source/)).toBeInTheDocument()
+  })
 })
