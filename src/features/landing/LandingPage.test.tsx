@@ -35,4 +35,11 @@ describe('LandingPage language switcher', () => {
     expect(screen.getByText('Is Ondrift free to use?')).toBeInTheDocument()
     expect(screen.getByText(/Ondrift itself is free and open source/)).toBeInTheDocument()
   })
+
+  it('links the Ondrift brand to the localized home page', () => {
+    window.history.replaceState({}, '', '/ko/')
+    render(<LandingPage />)
+
+    expect(screen.getByRole('link', { name: 'Ondrift home' })).toHaveAttribute('href', '/ko/')
+  })
 })

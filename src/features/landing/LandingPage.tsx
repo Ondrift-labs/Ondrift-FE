@@ -4,11 +4,11 @@ import { ArchitectureDiagram } from './ArchitectureDiagram'
 import { PromptDemo } from './PromptDemo'
 import { trackLandingCta, trackLandingPageView } from './analytics'
 import { LANDING_COPY, LANGUAGE_OPTIONS, type LandingLanguage } from './landingCopy'
-import { LANGUAGE_PATHS, languageFromPathname, languageUrl } from './seo'
+import { LANGUAGE_PATHS, SITE_REPOSITORY_URL, languageFromPathname, languageUrl } from './seo'
 import { useReveal } from './useReveal'
 import './landing.css'
 
-const REPO_URL = 'https://github.com/Ondrift-labs/Ondrift-Extension'
+const REPO_URL = SITE_REPOSITORY_URL
 const RELEASE_URL = `${REPO_URL}/releases/latest`
 const LANGUAGE_STORAGE_KEY = 'ondrift-landing-language'
 
@@ -83,7 +83,7 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
       <div className="landing-grain" aria-hidden="true" />
 
       <header className="landing-nav">
-        <a className="landing-brand" href="#top">
+        <a className="landing-brand" href={LANGUAGE_PATHS[language]} aria-label="Ondrift home">
           <img src="/ondrift-mark.png" alt="" width={26} height={26} />
           Ondrift
         </a>

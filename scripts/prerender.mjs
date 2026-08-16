@@ -17,6 +17,7 @@ function escapeAttribute(value) {
 }
 
 function seoHead(data) {
+  const organizationId = `${data.siteOrigin}/#organization`
   const structuredData = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -24,28 +25,43 @@ function seoHead(data) {
         '@type': 'WebSite',
         '@id': `${data.siteOrigin}/#website`,
         url: `${data.siteOrigin}/`,
-        name: 'Ondrift',
+        name: data.siteName,
         inLanguage: ['en', 'ko', 'ja'],
+        publisher: { '@id': organizationId },
+      },
+      {
+        '@type': 'Organization',
+        '@id': organizationId,
+        name: data.siteName,
+        url: `${data.siteOrigin}/`,
+        logo: {
+          '@type': 'ImageObject',
+          url: data.siteLogoUrl,
+          width: 1254,
+          height: 1254,
+        },
+        sameAs: [data.siteRepositoryUrl],
       },
       {
         '@type': 'SoftwareApplication',
         '@id': `${data.url}#software`,
-        name: 'Ondrift',
+        name: data.siteName,
         url: data.url,
         description: data.description,
         inLanguage: data.language,
         applicationCategory: 'BrowserApplication',
         operatingSystem: 'Chrome',
         image: `${data.siteOrigin}/assets/ondrift-share-20260813.jpg`,
-        downloadUrl: 'https://github.com/Ondrift-labs/Ondrift-Extension/releases/latest',
+        downloadUrl: `${data.siteRepositoryUrl}/releases/latest`,
         softwareRequirements: 'Google Chrome with an API key for a supported AI provider',
         isPartOf: { '@id': `${data.siteOrigin}/#website` },
+        publisher: { '@id': organizationId },
         offers: {
           '@type': 'Offer',
           price: '0',
           priceCurrency: 'USD',
         },
-        sameAs: ['https://github.com/Ondrift-labs/Ondrift-Extension'],
+        sameAs: [data.siteRepositoryUrl],
       },
       {
         '@type': 'FAQPage',
@@ -61,8 +77,10 @@ function seoHead(data) {
   }
 
   return `<!-- SEO_META_START -->
+    <meta name="application-name" content="${data.siteName}" />
     <meta name="description" content="${escapeAttribute(data.description)}" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="home" href="${data.siteOrigin}/" />
     <link rel="canonical" href="${data.url}" />
     <link rel="alternate" hreflang="en" href="${data.siteOrigin}/" />
     <link rel="alternate" hreflang="ko" href="${data.siteOrigin}/ko/" />
@@ -90,6 +108,38 @@ ${data.alternateLocales.map((locale) => `    <meta property="og:locale:alternate
     <!-- SEO_META_END -->`
 }
 
+function notFoundPage(siteOrigin) {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="application-name" content="Ondrift" />
+    <link rel="icon" href="/favicon.ico" sizes="128x128" />
+    <link rel="icon" type="image/png" href="/ondrift-mark.png" sizes="128x128" />
+    <link rel="home" href="${siteOrigin}/" />
+    <title>Page not found — Ondrift</title>
+    <style>
+      :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #17342b; background: #f7f6f1; }
+      body { min-height: 100vh; margin: 0; display: grid; place-items: center; }
+      main { width: min(560px, calc(100% - 48px)); text-align: center; }
+      img { width: 56px; height: 56px; }
+      p { color: #5d6f68; line-height: 1.65; }
+      a { display: inline-block; margin-top: 12px; padding: 11px 18px; border-radius: 999px; color: white; background: #256b57; text-decoration: none; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/ondrift-mark.png" alt="Ondrift" />
+      <h1>Page not found</h1>
+      <p>The page you requested does not exist. Return to Ondrift to improve your prompts before you send them.</p>
+      <a href="/">Go to Ondrift</a>
+    </main>
+  </body>
+</html>`
+}
+
 for (const language of languages) {
   const data = getSeoData(language)
   const document = template
@@ -101,5 +151,7 @@ for (const language of languages) {
   await mkdir(dirname(outputPath), { recursive: true })
   await writeFile(outputPath, document)
 }
+
+await writeFile(resolve(distDirectory, '404.html'), notFoundPage('https://ondrift.pages.dev'))
 
 await rm(resolve(projectRoot, '.ssr'), { recursive: true, force: true })

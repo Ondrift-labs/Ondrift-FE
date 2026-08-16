@@ -1,6 +1,9 @@
 import type { LandingLanguage } from './landingCopy'
 
 export const SITE_ORIGIN = 'https://ondrift.pages.dev'
+export const SITE_NAME = 'Ondrift'
+export const SITE_LOGO_URL = `${SITE_ORIGIN}/assets/ondrift.png`
+export const SITE_REPOSITORY_URL = 'https://github.com/Ondrift-labs/Ondrift-Extension'
 
 export const LANGUAGE_PATHS: Record<LandingLanguage, string> = {
   en: '/',

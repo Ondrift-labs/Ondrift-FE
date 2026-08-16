@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir .ssr && node scripts/prerender.mjs",
-    "deploy:pages": "npm run build && npx wrangler@4.121.0 pages deploy dist --project-name ondrift --branch main",
+    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir .ssr && node scripts/prerender.mjs && node scripts/verify-seo.mjs",
+    "deploy:pages": "npm run build && npx wrangler@4.123.0 pages deploy dist --project-name ondrift --branch main",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint ."
