@@ -45,7 +45,7 @@ html[lang='ja'] .landing h1, html[lang='ja'] .landing h2, html[lang='ja'] .landi
 .landing .ui-button--primary:hover { background: #1e5949; }
 .landing .ui-button--secondary { color: var(--ink); background: var(--paper); border-color: var(--line-strong); }
 .landing .ui-button--secondary:hover { background: #f0f0ea; border-color: var(--faint); }
-.landing .ui-eyebrow { margin: 0 0 10px; color: var(--accent); font-size: 11px; font-weight: 750; letter-spacing: 0.12em; text-transform: uppercase; }
+.landing .ui-eyebrow { display: block; margin: 0 0 10px; color: var(--accent); font-size: 11px; font-weight: 750; letter-spacing: 0.12em; text-transform: uppercase; }
 
 /* nav */
 .landing-nav { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 24px; padding: 16px clamp(20px, 5vw, 64px); background: rgb(255 254 249 / 88%); border-bottom: 1px solid var(--line); backdrop-filter: blur(10px); }
@@ -185,7 +185,7 @@ html[lang='ja'] .landing h1, html[lang='ja'] .landing h2, html[lang='ja'] .landi
 
 /* language strip */
 .landing-langs { max-width: 1180px; margin: 0 auto; padding: 56px clamp(20px, 5vw, 64px); border-top: 1px solid var(--line); }
-.landing-langs-inner { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+.landing-langs-inner { display: grid; justify-items: start; }
 .landing-langs-pills { display: flex; gap: 8px; }
 .landing-langs-pills span {
   border: 1px solid var(--line-strong); border-radius: 99px; padding: 5px 13px; font-size: 12px; font-weight: 650; background: var(--accent-soft); color: var(--accent);
@@ -195,7 +195,7 @@ html[lang='ja'] .landing h1, html[lang='ja'] .landing h2, html[lang='ja'] .landi
 .landing-langs-pills span:nth-child(1) { transition-delay: 80ms; }
 .landing-langs-pills span:nth-child(2) { transition-delay: 200ms; }
 .landing-langs-pills span:nth-child(3) { transition-delay: 320ms; }
-.landing-langs-inner > p { color: var(--muted); font-size: 13px; flex-basis: 100%; }
+.landing-langs-inner > p { margin-top: 18px; color: var(--muted); font-size: 13px; }
 
 /* faq */
 .landing-faq-list { display: grid; gap: 1px; max-width: 760px; background: var(--line); border: 1px solid var(--line); }
