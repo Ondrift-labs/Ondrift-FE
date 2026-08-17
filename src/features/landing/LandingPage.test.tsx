@@ -12,7 +12,7 @@ describe('LandingPage language switcher', () => {
   it('uses English by default', () => {
     render(<LandingPage />)
 
-    expect(screen.getByRole('heading', { name: /Write it once/ })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Start with a rough prompt/ })).toBeInTheDocument()
     expect(screen.getByRole('combobox', { name: 'Page language' })).toHaveValue('en')
     expect(document.documentElement.lang).toBe('en')
   })
@@ -22,7 +22,7 @@ describe('LandingPage language switcher', () => {
 
     fireEvent.change(screen.getByRole('combobox', { name: 'Page language' }), { target: { value: 'ko' } })
 
-    expect(screen.getByRole('heading', { name: /보내기 전에/ })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /대충 써도 괜찮습니다/ })).toBeInTheDocument()
     expect(document.documentElement.lang).toBe('ko')
     expect(window.localStorage.getItem('ondrift-landing-language')).toBe('ko')
     expect(window.location.pathname).toBe('/ko/')
