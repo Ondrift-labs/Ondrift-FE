@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, Check, ChevronDown, Database, Github, KeyRound, Languages, ShieldOff } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Bug, Check, ChevronDown, Database, Github, KeyRound, Languages, Lightbulb, MessageCircleQuestion, ShieldOff } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 import { ArchitectureDiagram } from './ArchitectureDiagram'
 import { PromptDemo } from './PromptDemo'
@@ -10,6 +10,11 @@ import './landing.css'
 
 const REPO_URL = SITE_REPOSITORY_URL
 const RELEASE_URL = `${REPO_URL}/releases/latest`
+const CONTACT_CHANNELS = [
+  { href: `${REPO_URL}/issues/new?template=bug_report.yml`, icon: Bug, target: 'contact_bug' as const },
+  { href: `${REPO_URL}/issues/new?template=feature_request.yml`, icon: Lightbulb, target: 'contact_feature' as const },
+  { href: `${REPO_URL}/discussions`, icon: MessageCircleQuestion, target: 'contact_question' as const },
+]
 const LANGUAGE_STORAGE_KEY = 'ondrift-landing-language'
 
 const SITES = ['ChatGPT', 'Claude', 'Gemini', 'Perplexity']
@@ -198,6 +203,37 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
           </div>
         </section>
 
+        <section id="contact" className="landing-section landing-contact">
+          <Reveal className="landing-section-head">
+            <span className="ui-eyebrow">{copy.contact.eyebrow}</span>
+            <h2>{copy.contact.title}</h2>
+            <p>{copy.contact.body}</p>
+          </Reveal>
+          <div className="landing-contact-grid">
+            {copy.contact.cards.map((card, index) => {
+              const channel = CONTACT_CHANNELS[index]
+              const Icon = channel.icon
+              return (
+                <Reveal key={card.title} delay={index * 120} className="landing-contact-card">
+                  <Icon size={20} aria-hidden="true" />
+                  <h3>{card.title}</h3>
+                  <p>{card.body}</p>
+                  <a
+                    className="ui-button ui-button--secondary"
+                    href={channel.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => trackLandingCta(channel.target)}
+                  >
+                    {card.action}<ArrowUpRight size={14} aria-hidden="true" />
+                  </a>
+                  <span>{card.note}</span>
+                </Reveal>
+              )
+            })}
+          </div>
+        </section>
+
         <section className="landing-cta">
           <Reveal className="landing-cta-inner">
             <h2>{copy.cta.title}</h2>
@@ -226,6 +262,7 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
           <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub</a>
           <a href={`${REPO_URL}/blob/main/PRIVACY.md`} target="_blank" rel="noreferrer">{copy.footer.privacy}</a>
           <a href={`${REPO_URL}#install-from-a-github-zip`} target="_blank" rel="noreferrer">{copy.footer.guide}</a>
+          <a href="#contact">{copy.footer.contact}</a>
         </nav>
         <p className="landing-footer-note">
           {copy.footer.note}

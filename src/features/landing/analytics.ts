@@ -4,6 +4,9 @@ export type LandingCta =
   | 'how_it_works'
   | 'install_final'
   | 'guide_final'
+  | 'contact_bug'
+  | 'contact_feature'
+  | 'contact_question'
 
 type LandingEvent =
   | { event: 'page_view'; target: 'landing' }

@@ -36,6 +36,25 @@ describe('LandingPage language switcher', () => {
     expect(screen.getByText(/Ondrift itself is free and open source/)).toBeInTheDocument()
   })
 
+  it('offers free GitHub channels for bugs, feature requests, and questions', () => {
+    render(<LandingPage />)
+
+    expect(screen.getByRole('heading', { name: 'Still have a question?' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Report a bug' })).toHaveAttribute(
+      'href',
+      'https://github.com/Ondrift-labs/Ondrift-Extension/issues/new?template=bug_report.yml',
+    )
+    expect(screen.getByRole('link', { name: 'Suggest a feature' })).toHaveAttribute(
+      'href',
+      'https://github.com/Ondrift-labs/Ondrift-Extension/issues/new?template=feature_request.yml',
+    )
+    expect(screen.getByRole('link', { name: 'Ask the community' })).toHaveAttribute(
+      'href',
+      'https://github.com/Ondrift-labs/Ondrift-Extension/discussions',
+    )
+    expect(screen.getByRole('link', { name: 'Contact' })).toHaveAttribute('href', '#contact')
+  })
+
   it('links the Ondrift brand to the localized home page', () => {
     window.history.replaceState({}, '', '/ko/')
     render(<LandingPage />)

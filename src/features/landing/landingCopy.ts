@@ -9,8 +9,14 @@ export interface LandingCopy {
   privacy: { eyebrow: string; title: string; body: string; points: string[] }
   languages: { eyebrow: string; body: string; defaultLabel: string }
   faq: { eyebrow: string; title: string; items: Array<{ q: string; a: string }> }
+  contact: {
+    eyebrow: string
+    title: string
+    body: string
+    cards: Array<{ title: string; body: string; action: string; note: string }>
+  }
   cta: { title: string; steps: string[]; release: string; guide: string; note: string }
-  footer: { privacy: string; guide: string; note: string }
+  footer: { privacy: string; guide: string; contact: string; note: string }
   demo: {
     before: string
     after: string
@@ -79,6 +85,16 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
         { q: 'Can I keep a history of my prompt rewrites?', a: 'Yes, optionally. History is stored locally in your browser’s IndexedDB only — never on a server — and you can clear it anytime from the Options page.' },
       ],
     },
+    contact: {
+      eyebrow: 'CONTACT & FEEDBACK',
+      title: 'Still have a question?',
+      body: 'Choose the channel that fits. Everything runs through GitHub, with no Ondrift server or support fee.',
+      cards: [
+        { title: 'Found a bug?', body: 'Tell us what happened and how to reproduce it.', action: 'Report a bug', note: 'Public GitHub issue' },
+        { title: 'Have an idea?', body: 'Suggest a feature or improvement for Ondrift.', action: 'Suggest a feature', note: 'Public GitHub issue' },
+        { title: 'Need help?', body: 'Ask a general question and share answers with the community.', action: 'Ask the community', note: 'Public GitHub discussion' },
+      ],
+    },
     cta: {
       title: 'Install it in your browser',
       steps: ['Download and fully extract the latest release ZIP', 'Enable Developer mode at chrome://extensions', 'Choose the folder with “Load unpacked”', 'Add your AI provider API key and start using Ondrift'],
@@ -86,7 +102,7 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
       note: 'Chrome Web Store listing in progress — install from the GitHub release for now.',
     },
     footer: {
-      privacy: 'Privacy policy', guide: 'Install guide',
+      privacy: 'Privacy policy', guide: 'Install guide', contact: 'Contact',
       note: 'Google, Gemini, ChatGPT, Claude, and Perplexity are trademarks of their respective owners. Ondrift is not affiliated with them.',
     },
     demo: {
@@ -153,6 +169,16 @@ Turn the transcript below into actionable meeting notes.
         { q: '재작성 기록을 남길 수 있나요?', a: '네, 선택 사항입니다. 기록은 서버가 아닌 브라우저의 로컬 IndexedDB에만 저장되며, Options 페이지에서 언제든 삭제할 수 있습니다.' },
       ],
     },
+    contact: {
+      eyebrow: '문의 및 피드백',
+      title: '아직 궁금한 점이 있나요?',
+      body: '문의 유형에 맞는 채널을 선택하세요. 모두 GitHub에서 무료로 운영되며 Ondrift 서버를 거치지 않습니다.',
+      cards: [
+        { title: '문제가 발생했나요?', body: '발생한 현상과 재현 방법을 알려주세요.', action: '버그 제보하기', note: '공개 GitHub 이슈' },
+        { title: '아이디어가 있나요?', body: 'Ondrift에 필요한 기능이나 개선점을 제안해 주세요.', action: '기능 제안하기', note: '공개 GitHub 이슈' },
+        { title: '도움이 필요한가요?', body: '일반 질문을 남기고 커뮤니티와 답변을 공유하세요.', action: '커뮤니티에 질문하기', note: '공개 GitHub 토론' },
+      ],
+    },
     cta: {
       title: '지금 브라우저에 설치하세요',
       steps: ['최신 릴리스 ZIP을 내려받고 전체 압축 해제', 'chrome://extensions에서 개발자 모드 켜기', '“압축해제된 확장 프로그램을 로드”로 폴더 선택', 'AI 제공자 API 키를 등록하고 사용 시작'],
@@ -160,7 +186,7 @@ Turn the transcript below into actionable meeting notes.
       note: 'Chrome 웹 스토어 등록 준비 중 — 지금은 GitHub 릴리스로 설치합니다.',
     },
     footer: {
-      privacy: '개인정보 처리방침', guide: '설치 가이드',
+      privacy: '개인정보 처리방침', guide: '설치 가이드', contact: '문의하기',
       note: 'Google, Gemini, ChatGPT, Claude, Perplexity는 각 소유자의 상표이며 Ondrift와 제휴 관계가 없습니다.',
     },
     demo: {
@@ -227,6 +253,16 @@ Turn the transcript below into actionable meeting notes.
         { q: '改善履歴を残せますか？', a: 'はい、任意で残せます。履歴はサーバーではなくブラウザのローカルIndexedDBにのみ保存され、Optionsページからいつでも削除できます。' },
       ],
     },
+    contact: {
+      eyebrow: 'お問い合わせ・フィードバック',
+      title: 'まだ質問がありますか？',
+      body: '内容に合う窓口を選んでください。すべてGitHub上で無料運用され、Ondriftサーバーは使用しません。',
+      cards: [
+        { title: '不具合を見つけましたか？', body: '発生した問題と再現手順をお知らせください。', action: '不具合を報告', note: '公開GitHub Issue' },
+        { title: 'アイデアがありますか？', body: 'Ondriftの新機能や改善案をご提案ください。', action: '機能を提案', note: '公開GitHub Issue' },
+        { title: 'サポートが必要ですか？', body: '一般的な質問を投稿し、コミュニティと回答を共有できます。', action: 'コミュニティに質問', note: '公開GitHub Discussion' },
+      ],
+    },
     cta: {
       title: 'ブラウザにインストール',
       steps: ['最新リリースのZIPをダウンロードして展開', 'chrome://extensionsでデベロッパーモードを有効化', '「パッケージ化されていない拡張機能を読み込む」でフォルダーを選択', 'AIプロバイダーのAPIキーを追加して利用開始'],
@@ -234,7 +270,7 @@ Turn the transcript below into actionable meeting notes.
       note: 'Chromeウェブストアへの登録準備中 — 現在はGitHubリリースからインストールできます。',
     },
     footer: {
-      privacy: 'プライバシーポリシー', guide: 'インストールガイド',
+      privacy: 'プライバシーポリシー', guide: 'インストールガイド', contact: 'お問い合わせ',
       note: 'Google、Gemini、ChatGPT、Claude、Perplexityは各社の商標です。Ondriftは各社と提携していません。',
     },
     demo: {
