@@ -48,9 +48,9 @@ describe('LandingPage language switcher', () => {
       'href',
       'https://github.com/Ondrift-labs/Ondrift-Extension/issues/new?template=feature_request.yml',
     )
-    expect(screen.getByRole('link', { name: 'Ask the community' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Ask in Q&A' })).toHaveAttribute(
       'href',
-      'https://github.com/Ondrift-labs/Ondrift-Extension/discussions',
+      'https://github.com/Ondrift-labs/Ondrift-Extension/discussions/new?category=q-a',
     )
     expect(screen.getByRole('link', { name: 'Contact' })).toHaveAttribute('href', '#contact')
   })

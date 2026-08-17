@@ -13,7 +13,7 @@ const RELEASE_URL = `${REPO_URL}/releases/latest`
 const CONTACT_CHANNELS = [
   { href: `${REPO_URL}/issues/new?template=bug_report.yml`, icon: Bug, target: 'contact_bug' as const },
   { href: `${REPO_URL}/issues/new?template=feature_request.yml`, icon: Lightbulb, target: 'contact_feature' as const },
-  { href: `${REPO_URL}/discussions`, icon: MessageCircleQuestion, target: 'contact_question' as const },
+  { href: `${REPO_URL}/discussions/new?category=q-a`, icon: MessageCircleQuestion, target: 'contact_question' as const },
 ]
 const LANGUAGE_STORAGE_KEY = 'ondrift-landing-language'
 

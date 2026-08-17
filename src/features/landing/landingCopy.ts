@@ -92,7 +92,7 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
       cards: [
         { title: 'Found a bug?', body: 'Tell us what happened and how to reproduce it.', action: 'Report a bug', note: 'Public GitHub issue' },
         { title: 'Have an idea?', body: 'Suggest a feature or improvement for Ondrift.', action: 'Suggest a feature', note: 'Public GitHub issue' },
-        { title: 'Need help?', body: 'Ask a general question and share answers with the community.', action: 'Ask the community', note: 'Public GitHub discussion' },
+        { title: 'Need help?', body: 'GitHub Discussions is just getting started. General questions and first posts are welcome.', action: 'Ask in Q&A', note: 'Public GitHub discussion' },
       ],
     },
     cta: {
@@ -176,7 +176,7 @@ Turn the transcript below into actionable meeting notes.
       cards: [
         { title: '문제가 발생했나요?', body: '발생한 현상과 재현 방법을 알려주세요.', action: '버그 제보하기', note: '공개 GitHub 이슈' },
         { title: '아이디어가 있나요?', body: 'Ondrift에 필요한 기능이나 개선점을 제안해 주세요.', action: '기능 제안하기', note: '공개 GitHub 이슈' },
-        { title: '도움이 필요한가요?', body: '일반 질문을 남기고 커뮤니티와 답변을 공유하세요.', action: '커뮤니티에 질문하기', note: '공개 GitHub 토론' },
+        { title: '도움이 필요한가요?', body: 'GitHub Discussions에 일반 질문을 남겨주세요. 첫 질문도 환영합니다.', action: 'Q&A에 질문하기', note: '공개 GitHub 토론' },
       ],
     },
     cta: {
@@ -260,7 +260,7 @@ Turn the transcript below into actionable meeting notes.
       cards: [
         { title: '不具合を見つけましたか？', body: '発生した問題と再現手順をお知らせください。', action: '不具合を報告', note: '公開GitHub Issue' },
         { title: 'アイデアがありますか？', body: 'Ondriftの新機能や改善案をご提案ください。', action: '機能を提案', note: '公開GitHub Issue' },
-        { title: 'サポートが必要ですか？', body: '一般的な質問を投稿し、コミュニティと回答を共有できます。', action: 'コミュニティに質問', note: '公開GitHub Discussion' },
+        { title: 'サポートが必要ですか？', body: 'GitHub Discussionsに一般的な質問を投稿してください。最初の質問も歓迎します。', action: 'Q&Aで質問する', note: '公開GitHub Discussion' },
       ],
     },
     cta: {
