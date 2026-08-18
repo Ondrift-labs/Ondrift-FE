@@ -141,7 +141,7 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
             value={preference}
             onChange={(event) => changeLanguage(event.target.value as LanguagePreference)}
           >
-            <option value={LANGUAGE_SYSTEM}>{copy.nav.systemLanguage}</option>
+            <option value={LANGUAGE_SYSTEM}>{copy.nav.systemLanguage} ({copy.languages.defaultLabel})</option>
             {LANGUAGE_OPTIONS.map((option) => <option key={option.code} value={option.code}>{option.label}</option>)}
           </select>
           <ChevronDown size={13} aria-hidden="true" />
