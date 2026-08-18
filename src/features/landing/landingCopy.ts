@@ -4,7 +4,7 @@ interface ContactCard { title: string; body: string; action: string; note: strin
 
 export interface LandingCopy {
   meta: { title: string; description: string }
-  nav: { how: string; privacy: string; faq: string; install: string; languageLabel: string }
+  nav: { how: string; privacy: string; faq: string; install: string; languageLabel: string; systemLanguage: string }
   hero: { eyebrow: string; line1: string; line2: string; body: string; install: string; how: string; meta: string }
   supportedSites: string
   how: { eyebrow: string; title: string; steps: Array<{ n: string; title: string; body: string }> }
@@ -56,7 +56,7 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
       title: 'Ondrift — A clearer prompt before you send',
       description: 'A free Chrome extension that makes rough prompts clearer and more specific before you send them in ChatGPT, Claude, Gemini, or Perplexity.',
     },
-    nav: { how: 'How it works', privacy: 'Privacy', faq: 'FAQ', install: 'Add to Chrome', languageLabel: 'Page language' },
+    nav: { how: 'How it works', privacy: 'Privacy', faq: 'FAQ', install: 'Add to Chrome', languageLabel: 'Page language', systemLanguage: 'System' },
     hero: {
       eyebrow: 'A CLEARER PROMPT, RIGHT WHERE YOU TYPE', line1: 'Start with a rough prompt.', line2: 'Send a clearer one.',
       body: 'Write as usual in ChatGPT, Claude, Gemini, or Perplexity. Ondrift highlights what is missing, explains the score, and lets you apply a clearer version in one click. No account or Ondrift server required.',
@@ -140,7 +140,7 @@ Turn the transcript below into actionable meeting notes.
       title: 'Ondrift — 보내기 전에 더 명확한 프롬프트로',
       description: '대충 쓴 프롬프트도 ChatGPT, Claude, Gemini, Perplexity에 보내기 전에 더 명확하고 구체적으로 개선하는 무료 Chrome 확장 프로그램입니다.',
     },
-    nav: { how: '동작 방식', privacy: '프라이버시', faq: '자주 묻는 질문', install: 'Chrome에 추가', languageLabel: '페이지 언어' },
+    nav: { how: '동작 방식', privacy: '프라이버시', faq: '자주 묻는 질문', install: 'Chrome에 추가', languageLabel: '페이지 언어', systemLanguage: '시스템 언어' },
     hero: {
       eyebrow: '쓰던 입력창에서 바로 더 명확하게', line1: '대충 써도 괜찮습니다.', line2: '보내기 전에 더 명확하게.',
       body: 'ChatGPT, Claude, Gemini, Perplexity에서 평소처럼 작성하세요. Ondrift가 빠진 내용을 짚고 점수의 이유를 설명한 뒤, 더 명확한 프롬프트를 한 번에 적용해 줍니다. 계정이나 Ondrift 서버는 필요 없습니다.',
@@ -224,7 +224,7 @@ Turn the transcript below into actionable meeting notes.
       title: 'Ondrift — 送信前に、もっと明確なプロンプトへ',
       description: 'ラフなプロンプトも、ChatGPT、Claude、Gemini、Perplexityへ送信する前に、より明確で具体的に改善できる無料のChrome拡張機能です。',
     },
-    nav: { how: '仕組み', privacy: 'プライバシー', faq: 'よくある質問', install: 'Chromeに追加', languageLabel: 'ページの言語' },
+    nav: { how: '仕組み', privacy: 'プライバシー', faq: 'よくある質問', install: 'Chromeに追加', languageLabel: 'ページの言語', systemLanguage: 'システム言語' },
     hero: {
       eyebrow: 'いつもの入力欄で、もっと明確に', line1: 'ラフに書いても大丈夫。', line2: '送信前に、もっと明確に。',
       body: 'ChatGPT、Claude、Gemini、Perplexityでいつも通り入力してください。Ondriftが不足している内容とスコアの理由を示し、より明確なプロンプトをワンクリックで適用します。アカウントもOndriftサーバーも不要です。',
@@ -308,7 +308,7 @@ Turn the transcript below into actionable meeting notes.
       title: 'Ondrift — 发送前先打磨你的提示词',
       description: '一款本地优先的 Chrome 扩展程序,在 ChatGPT、Claude、Gemini 和 Perplexity 中为提示词打分并重写,使用你自己的 AI 提供商 API 密钥。',
     },
-    nav: { how: '工作原理', privacy: '隐私', faq: '常见问题', install: '添加到 Chrome', languageLabel: '页面语言' },
+    nav: { how: '工作原理', privacy: '隐私', faq: '常见问题', install: '添加到 Chrome', languageLabel: '页面语言', systemLanguage: '系统语言' },
     hero: {
       eyebrow: '本地优先的提示词工具', line1: '先写一次,', line2: '发送前更进一步。',
       body: '在 ChatGPT、Claude、Gemini 和 Perplexity 的输入框中检查提示词,查看评分和理由,然后一键重写。无需账号,也没有 Ondrift 服务器 — 只需要你自己的 AI 提供商 API 密钥。',

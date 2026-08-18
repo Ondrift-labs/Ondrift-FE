@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { LandingPage } from './LandingPage'
 
 describe('LandingPage language switcher', () => {
@@ -9,12 +9,41 @@ describe('LandingPage language switcher', () => {
     document.documentElement.lang = 'en'
   })
 
-  it('uses English by default', () => {
+  // Guaranteed even if an assertion above throws mid-test -- otherwise a failed
+  // expectation skips the manual vi.unstubAllGlobals() call and a stubbed
+  // navigator.language leaks into every test that runs after it in this file.
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('uses English by default, matching the test environment\'s browser language', () => {
     render(<LandingPage />)
 
     expect(screen.getByRole('heading', { name: /Start with a rough prompt/ })).toBeInTheDocument()
-    expect(screen.getByRole('combobox', { name: 'Page language' })).toHaveValue('en')
+    expect(screen.getByRole('combobox')).toHaveValue('system')
     expect(document.documentElement.lang).toBe('en')
+  })
+
+  it('matches the browser language automatically when no language has been chosen', () => {
+    vi.stubGlobal('navigator', { language: 'ko-KR', languages: ['ko-KR', 'ko'], sendBeacon: () => true })
+
+    render(<LandingPage />)
+
+    expect(screen.getByRole('heading', { name: /대충 써도 괜찮습니다/ })).toBeInTheDocument()
+    expect(screen.getByRole('combobox')).toHaveValue('system')
+    expect(document.documentElement.lang).toBe('ko')
+    // The URL stays at "/" -- only an explicit pick from the dropdown should navigate.
+    expect(window.location.pathname).toBe('/')
+  })
+
+  it('remembers an explicit language choice over the browser language', () => {
+    window.localStorage.setItem('ondrift-landing-language', 'ko')
+    vi.stubGlobal('navigator', { language: 'ja-JP', languages: ['ja-JP', 'ja'], sendBeacon: () => true })
+
+    render(<LandingPage />)
+
+    expect(screen.getByRole('heading', { name: /대충 써도 괜찮습니다/ })).toBeInTheDocument()
+    expect(screen.getByRole('combobox')).toHaveValue('ko')
   })
 
   it('switches the full landing page and persists the selection', () => {

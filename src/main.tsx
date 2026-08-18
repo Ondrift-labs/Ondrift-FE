@@ -5,10 +5,19 @@ import { App } from './app/App'
 import { languageFromPathname } from './features/landing/seo'
 import './styles/global.css'
 
+const pathLanguage = languageFromPathname(window.location.pathname)
+// A URL that already encodes a language (a shared /ko/ link, a search result) must
+// hydrate with that exact language to match the prerendered markup byte-for-byte.
+// The root path is ambiguous -- prerendered in English for crawlers -- so leave
+// initialLanguage unset there and let LandingPage pick the visitor's saved choice
+// or their browser language instead. A returning non-English visitor may see one
+// hydration content swap; that's the accepted cost of matching the browser by default.
+const initialLanguage = pathLanguage === 'en' ? undefined : pathLanguage
+
 hydrateRoot(document.getElementById('root')!,
   <React.StrictMode>
     <BrowserRouter>
-      <App initialLanguage={languageFromPathname(window.location.pathname)} />
+      <App initialLanguage={initialLanguage} />
     </BrowserRouter>
   </React.StrictMode>,
 )

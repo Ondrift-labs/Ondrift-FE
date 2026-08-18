@@ -20,23 +20,51 @@ const LANGUAGE_STORAGE_KEY = 'ondrift-landing-language'
 // this used to be a second, separately-hardcoded list of the same four codes.
 const LANDING_LANGUAGES = new Set<LandingLanguage>(LANGUAGE_OPTIONS.map((option) => option.code))
 
+// 'system' is a preference, not a piece of content -- there's no LANDING_COPY['system'].
+// It means "keep matching the browser's language", as opposed to a visitor having
+// explicitly pinned one of the four concrete languages from the dropdown.
+const LANGUAGE_SYSTEM = 'system'
+type LanguagePreference = LandingLanguage | typeof LANGUAGE_SYSTEM
+
 const SITES = ['ChatGPT', 'Claude', 'Gemini', 'Perplexity']
 const PRIVACY_ICONS = [Database, ShieldOff, KeyRound]
 
-function getInitialLanguage(initialLanguage?: LandingLanguage): LandingLanguage {
-  if (initialLanguage) return initialLanguage
-  if (typeof window === 'undefined') return 'en'
-
-  const pathLanguage = languageFromPathname(window.location.pathname)
-  if (pathLanguage !== 'en' || window.location.pathname === '/') return pathLanguage
-
-  try {
-    const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
-    if (LANDING_LANGUAGES.has(saved as LandingLanguage)) return saved as LandingLanguage
-  } catch {
-    // Storage can be unavailable in privacy-restricted browser contexts.
+function detectBrowserLanguage(): LandingLanguage {
+  if (typeof navigator === 'undefined') return 'en'
+  const candidates = navigator.languages?.length ? navigator.languages : [navigator.language]
+  for (const raw of candidates) {
+    const code = raw?.split('-')[0]?.toLowerCase()
+    if (code && LANDING_LANGUAGES.has(code as LandingLanguage)) return code as LandingLanguage
   }
   return 'en'
+}
+
+function resolveLanguage(preference: LanguagePreference): LandingLanguage {
+  return preference === LANGUAGE_SYSTEM ? detectBrowserLanguage() : preference
+}
+
+function readSavedPreference(): string | null {
+  try {
+    return window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
+  } catch {
+    // Storage can be unavailable in privacy-restricted browser contexts.
+    return null
+  }
+}
+
+function getInitialPreference(initialLanguage?: LandingLanguage): LanguagePreference {
+  if (initialLanguage) return initialLanguage
+  if (typeof window === 'undefined') return LANGUAGE_SYSTEM
+
+  // A URL that already encodes a language -- a shared /ko/ link, a search result --
+  // always wins over any saved preference or the browser's language.
+  const pathLanguage = languageFromPathname(window.location.pathname)
+  if (pathLanguage !== 'en') return pathLanguage
+
+  const saved = readSavedPreference()
+  if (saved && LANDING_LANGUAGES.has(saved as LandingLanguage)) return saved as LandingLanguage
+  // Nothing explicitly chosen yet (or the visitor picked "System"): match the browser.
+  return LANGUAGE_SYSTEM
 }
 
 function Reveal({ children, className = '', delay }: { children: ReactNode; className?: string; delay?: number }) {
@@ -61,12 +89,13 @@ function RisingBars() {
 }
 
 export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLanguage } = {}) {
-  const [language, setLanguage] = useState<LandingLanguage>(() => getInitialLanguage(initialLanguage))
+  const [preference, setPreference] = useState<LanguagePreference>(() => getInitialPreference(initialLanguage))
+  const language = resolveLanguage(preference)
   const copy = LANDING_COPY[language]
 
-  function changeLanguage(nextLanguage: LandingLanguage) {
-    window.history.pushState({}, '', LANGUAGE_PATHS[nextLanguage])
-    setLanguage(nextLanguage)
+  function changeLanguage(nextPreference: LanguagePreference) {
+    window.history.pushState({}, '', LANGUAGE_PATHS[resolveLanguage(nextPreference)])
+    setPreference(nextPreference)
   }
 
   useEffect(() => {
@@ -84,11 +113,11 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
     setAttr('meta[name="twitter:title"]', 'content', copy.meta.title)
     setAttr('meta[name="twitter:description"]', 'content', copy.meta.description)
     try {
-      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, preference)
     } catch {
       // The language still applies for the current session when storage is unavailable.
     }
-  }, [copy, language])
+  }, [copy, language, preference])
 
   return (
     <div className="landing">
@@ -109,9 +138,10 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
           <Languages size={15} aria-hidden="true" />
           <select
             aria-label={copy.nav.languageLabel}
-            value={language}
-            onChange={(event) => changeLanguage(event.target.value as LandingLanguage)}
+            value={preference}
+            onChange={(event) => changeLanguage(event.target.value as LanguagePreference)}
           >
+            <option value={LANGUAGE_SYSTEM}>{copy.nav.systemLanguage}</option>
             {LANGUAGE_OPTIONS.map((option) => <option key={option.code} value={option.code}>{option.label}</option>)}
           </select>
           <ChevronDown size={13} aria-hidden="true" />
