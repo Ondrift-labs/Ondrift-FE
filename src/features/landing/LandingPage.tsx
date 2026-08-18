@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, Bug, Check, ChevronDown, Database, Github, KeyRound, Languages, Lightbulb, MessageCircleQuestion, ShieldOff } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Bug, Check, Chrome, ChevronDown, Database, KeyRound, Languages, Lightbulb, MessageCircleQuestion, ShieldOff } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 import { ArchitectureDiagram } from './ArchitectureDiagram'
 import { PromptDemo } from './PromptDemo'
@@ -9,7 +9,7 @@ import { useReveal } from './useReveal'
 import './landing.css'
 
 const REPO_URL = SITE_REPOSITORY_URL
-const RELEASE_URL = `${REPO_URL}/releases/latest`
+const CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/aonkgefdmgjcnhopbkeehmoacncpkeje'
 const CONTACT_CHANNELS = [
   { href: `${REPO_URL}/issues/new?template=bug_report.yml`, icon: Bug, target: 'contact_bug' as const },
   { href: `${REPO_URL}/issues/new?template=feature_request.yml`, icon: Lightbulb, target: 'contact_feature' as const },
@@ -116,7 +116,7 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
           </select>
           <ChevronDown size={13} aria-hidden="true" />
         </label>
-        <a className="ui-button ui-button--primary landing-nav-cta" href={RELEASE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_nav')}>
+        <a className="ui-button ui-button--primary landing-nav-cta" href={CHROME_STORE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_nav')}>
           <span>{copy.nav.install}</span><ArrowRight size={15} />
         </a>
       </header>
@@ -129,8 +129,8 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
             <h1>{copy.hero.line1}<br />{copy.hero.line2}</h1>
             <p className="landing-hero-sub">{copy.hero.body}</p>
             <div className="landing-hero-actions">
-              <a className="ui-button ui-button--primary" href={RELEASE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_hero')}>
-                <Github size={16} />{copy.hero.install}
+              <a className="ui-button ui-button--primary" href={CHROME_STORE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_hero')}>
+                <Chrome size={16} />{copy.hero.install}
               </a>
               <a className="ui-button ui-button--secondary" href="#how" onClick={() => trackLandingCta('how_it_works')}>{copy.hero.how}</a>
             </div>
@@ -248,8 +248,8 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
               {copy.cta.steps.map((step) => <li key={step}><Check size={14} aria-hidden="true" />{step}</li>)}
             </ol>
             <div className="landing-hero-actions">
-              <a className="ui-button ui-button--primary" href={RELEASE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_final')}>
-                <Github size={16} />{copy.cta.release}
+              <a className="ui-button ui-button--primary" href={CHROME_STORE_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('install_final')}>
+                <Chrome size={16} />{copy.cta.release}
               </a>
               <a className="ui-button ui-button--secondary" href={REPO_URL} target="_blank" rel="noreferrer" onClick={() => trackLandingCta('guide_final')}>
                 {copy.cta.guide}<ArrowUpRight size={14} />
