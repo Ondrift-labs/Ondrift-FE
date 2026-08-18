@@ -1,3 +1,5 @@
+// Keep in sync with ALLOWED_TARGETS in functions/api/events.js -- that's a plain JS file
+// and can't import this type directly.
 export type LandingCta =
   | 'install_nav'
   | 'install_hero'

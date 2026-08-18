@@ -16,6 +16,9 @@ const CONTACT_CHANNELS = [
   { href: `${REPO_URL}/discussions/new?category=q-a`, icon: MessageCircleQuestion, target: 'contact_question' as const },
 ]
 const LANGUAGE_STORAGE_KEY = 'ondrift-landing-language'
+// Derived once from LANGUAGE_OPTIONS so a future language only needs to be added there --
+// this used to be a second, separately-hardcoded list of the same four codes.
+const LANDING_LANGUAGES = new Set<LandingLanguage>(LANGUAGE_OPTIONS.map((option) => option.code))
 
 const SITES = ['ChatGPT', 'Claude', 'Gemini', 'Perplexity']
 const PRIVACY_ICONS = [Database, ShieldOff, KeyRound]
@@ -29,7 +32,7 @@ function getInitialLanguage(initialLanguage?: LandingLanguage): LandingLanguage 
 
   try {
     const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
-    if (saved === 'en' || saved === 'ko' || saved === 'ja' || saved === 'zh') return saved
+    if (LANDING_LANGUAGES.has(saved as LandingLanguage)) return saved as LandingLanguage
   } catch {
     // Storage can be unavailable in privacy-restricted browser contexts.
   }
@@ -43,6 +46,10 @@ function Reveal({ children, className = '', delay }: { children: ReactNode; clas
       {children}
     </div>
   )
+}
+
+function setAttr(selector: string, attr: string, value: string): void {
+  document.querySelector(selector)?.setAttribute(attr, value)
 }
 
 function RisingBars() {
@@ -69,13 +76,13 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
   useEffect(() => {
     document.documentElement.lang = language
     document.title = copy.meta.title
-    document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute('content', copy.meta.description)
-    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute('href', languageUrl(language))
-    document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute('content', languageUrl(language))
-    document.querySelector<HTMLMetaElement>('meta[property="og:title"]')?.setAttribute('content', copy.meta.title)
-    document.querySelector<HTMLMetaElement>('meta[property="og:description"]')?.setAttribute('content', copy.meta.description)
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')?.setAttribute('content', copy.meta.title)
-    document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')?.setAttribute('content', copy.meta.description)
+    setAttr('meta[name="description"]', 'content', copy.meta.description)
+    setAttr('link[rel="canonical"]', 'href', languageUrl(language))
+    setAttr('meta[property="og:url"]', 'content', languageUrl(language))
+    setAttr('meta[property="og:title"]', 'content', copy.meta.title)
+    setAttr('meta[property="og:description"]', 'content', copy.meta.description)
+    setAttr('meta[name="twitter:title"]', 'content', copy.meta.title)
+    setAttr('meta[name="twitter:description"]', 'content', copy.meta.description)
     try {
       window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
     } catch {

@@ -13,6 +13,8 @@ const SCORING_HOLD_MS = 1000
 const TYPING_MS = 3600
 const RESULT_HOLD_MS = 5400
 const CYCLE_MS = DRAFT_HOLD_MS + SCORING_HOLD_MS + TYPING_MS + RESULT_HOLD_MS
+// How often the typing effect advances by one character.
+const TYPING_TICK_MS = 24
 
 type Phase = 'draft' | 'scoring' | 'typing' | 'result'
 
@@ -57,7 +59,7 @@ function usePromptDemo(reducedMotion: boolean, beforePrompt: string, afterPrompt
       const length = Math.max(1, Math.floor(characters.length * progress))
       setDisplayedPrompt(characters.slice(0, length).join(''))
       if (progress >= 1) window.clearInterval(timer)
-    }, 24)
+    }, TYPING_TICK_MS)
     setDisplayedPrompt('')
     return () => window.clearInterval(timer)
   }, [afterPrompt, beforePrompt, phase, reducedMotion])

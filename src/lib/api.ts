@@ -1,11 +1,23 @@
 import type { PaginatedResponse } from '../types/api'
 
 export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1').replace(/\/$/, '')
-const TOKEN_KEY = 'ondrift_access_token'
 
-export function getAccessToken() { return sessionStorage.getItem(TOKEN_KEY) }
-export function setAccessToken(token: string) { sessionStorage.setItem(TOKEN_KEY, token) }
-export function clearAccessToken() { sessionStorage.removeItem(TOKEN_KEY) }
+// Single source of truth for the sessionStorage keys and window events this module and
+// AppShell/LoginPage share, so a rename in one spot can't silently desync the other.
+export const STORAGE_KEYS = {
+  accessToken: 'ondrift_access_token',
+  demoMode: 'ondrift_demo_mode',
+} as const
+export const APP_EVENTS = {
+  logout: 'ondrift:logout',
+  unauthorized: 'ondrift:unauthorized',
+} as const
+
+// Not exported: nothing outside this module reads or writes the token directly, it only
+// ever goes through fetchPage (read) and login (write).
+function getAccessToken() { return sessionStorage.getItem(STORAGE_KEYS.accessToken) }
+function setAccessToken(token: string) { sessionStorage.setItem(STORAGE_KEYS.accessToken, token) }
+export function clearAccessToken() { sessionStorage.removeItem(STORAGE_KEYS.accessToken) }
 
 export class ApiError extends Error {
   constructor(
@@ -31,7 +43,7 @@ export async function fetchPage<T>(endpoint: string, page: number, size: number,
   }
   if (response.status === 401) {
     clearAccessToken()
-    window.dispatchEvent(new Event('ondrift:unauthorized'))
+    window.dispatchEvent(new Event(APP_EVENTS.unauthorized))
     throw new ApiError('인증이 만료되었습니다. 다시 로그인해 주세요.', 401)
   }
   if (!response.ok) throw new ApiError(`API 요청 실패: ${response.status} ${response.statusText}`, response.status)

@@ -1,3 +1,4 @@
+// Part of the unreached prototype dashboard, kept for reference -- see README "Status of this repository".
 import { Filter, Search } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { ModuleDefinition } from '../../app/modules'
@@ -11,17 +12,14 @@ import { makeDemoItems } from '../../lib/demoData'
 import { toWorkItem } from '../../lib/adapters'
 import type { WorkItem } from '../../types/api'
 
-const metricValues: Record<string, string[]> = {
-  sales: ['203건', '60.4%', '13건'], projects: ['124건', '68.2%', '17건'], design: ['240건', '194건', '31건'], procurement: ['390건', '83.7%', '48개'], production: ['86건', '93.9%', '12건'], inventory: ['1,842 LOT', '364 LOT', '28건'], quality: ['439건', '255건', '19건'], service: ['24건', '31건', '8건'], cost: ['₩18.9억', '18.7%', '7건'], rnd: ['240건', '38건', '74.1%'],
-}
+const PAGE_SIZE = 10
 
 export function ModulePage({ module }: { module: ModuleDefinition }) {
   const [page, setPage] = useState(1)
   const [query, setQuery] = useState('')
-  const size = 10
   const demoItems = useMemo(() => makeDemoItems(module.key.slice(0, 3)), [module.key])
-  const { data, loading, error, isDemo } = usePaginatedResource<WorkItem>(module.endpoint, page, size, demoItems, toWorkItem)
-  const values = metricValues[module.key] ?? ['-', '-', '-']
+  const { data, loading, error, isDemo } = usePaginatedResource<WorkItem>(module.endpoint, page, PAGE_SIZE, demoItems, toWorkItem)
+  const values = module.metricValues
   useEffect(() => setPage(1), [module.key])
 
   return (

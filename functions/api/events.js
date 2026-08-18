@@ -1,4 +1,6 @@
 const ALLOWED_EVENTS = new Set(['page_view', 'cta_click'])
+// Keep in sync with `LandingCta` in src/features/landing/analytics.ts -- this is a plain
+// JS file (Cloudflare Pages Function) so it can't import that type directly.
 const ALLOWED_TARGETS = new Set([
   'landing',
   'install_nav',

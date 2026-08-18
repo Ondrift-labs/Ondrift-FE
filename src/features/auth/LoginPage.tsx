@@ -1,19 +1,31 @@
+// Part of the unreached prototype dashboard, kept for reference -- see README "Status of this repository".
 import { ArrowRight, LockKeyhole, UserRound } from 'lucide-react'
-import { FormEvent, useState } from 'react'
-import { login } from '../../lib/api'
+import { useState, type FormEvent } from 'react'
+import { login, STORAGE_KEYS } from '../../lib/api'
+
+// Prefilled demo credentials for the review account -- not real secrets.
+const DEMO_USERNAME = 'admin'
+const DEMO_PASSWORD = 'ondrift-admin'
 
 export function LoginPage({ onAuthenticated }: { onAuthenticated: () => void }) {
-  const [username, setUsername] = useState('admin')
-  const [password, setPassword] = useState('ondrift-admin')
+  const [username, setUsername] = useState(DEMO_USERNAME)
+  const [password, setPassword] = useState(DEMO_PASSWORD)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   async function submit(event: FormEvent) {
-    event.preventDefault(); setError(''); setLoading(true)
-    try { await login(username, password); onAuthenticated() }
-    catch (reason) { setError(reason instanceof Error ? reason.message : '로그인에 실패했습니다.') }
-    finally { setLoading(false) }
+    event.preventDefault()
+    setError('')
+    setLoading(true)
+    try {
+      await login(username, password)
+      onAuthenticated()
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : '로그인에 실패했습니다.')
+    } finally {
+      setLoading(false)
+    }
   }
-  function enterDemo() { sessionStorage.setItem('ondrift_demo_mode', 'true'); onAuthenticated() }
+  function enterDemo() { sessionStorage.setItem(STORAGE_KEYS.demoMode, 'true'); onAuthenticated() }
   return <main className="login-page">
     <section className="login-brand"><div className="login-copy"><span className="login-logo"><img src="/assets/ondrift.png" alt="Ondrift" /> Ondrift</span><span className="eyebrow">MANUFACTURING CLOUD</span><h1>흩어진 제조 흐름을<br />하나의 맥락으로.</h1><p>영업, 설계, 조달, 생산, 품질과 출하를 프로젝트 Digital Thread로 연결합니다.</p><div className="login-process"><span>수주</span><i /><span>설계</span><i /><span>조달</span><i /><span>생산</span><i /><span>품질</span></div></div></section>
     <section className="login-form-wrap"><form className="login-form" onSubmit={submit}><div><span className="eyebrow">SECURE ACCESS</span><h2>Control Tower 로그인</h2><p>발급받은 데모 계정으로 접속하세요.</p></div>

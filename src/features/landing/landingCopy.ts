@@ -1,19 +1,26 @@
 export type LandingLanguage = 'en' | 'ko' | 'ja' | 'zh'
 
+interface ContactCard { title: string; body: string; action: string; note: string }
+
 export interface LandingCopy {
   meta: { title: string; description: string }
   nav: { how: string; privacy: string; faq: string; install: string; languageLabel: string }
   hero: { eyebrow: string; line1: string; line2: string; body: string; install: string; how: string; meta: string }
   supportedSites: string
   how: { eyebrow: string; title: string; steps: Array<{ n: string; title: string; body: string }> }
-  privacy: { eyebrow: string; title: string; body: string; points: string[] }
+  // A fixed-length tuple, not `string[]`: LandingPage pairs each point with one of 3 fixed
+  // icons positionally (PRIVACY_ICONS[index]), so a locale with a different count would
+  // silently render `undefined` for the extra/missing icon -- the tuple type catches that
+  // at compile time instead.
+  privacy: { eyebrow: string; title: string; body: string; points: [string, string, string] }
   languages: { eyebrow: string; body: string; defaultLabel: string }
   faq: { eyebrow: string; title: string; items: Array<{ q: string; a: string }> }
   contact: {
     eyebrow: string
     title: string
     body: string
-    cards: Array<{ title: string; body: string; action: string; note: string }>
+    // Same reasoning as `privacy.points`: paired positionally with CONTACT_CHANNELS (3 entries).
+    cards: [ContactCard, ContactCard, ContactCard]
   }
   cta: { title: string; steps: string[]; release: string; guide: string; note: string }
   footer: { privacy: string; guide: string; contact: string; note: string }

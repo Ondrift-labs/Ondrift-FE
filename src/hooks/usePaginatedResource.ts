@@ -15,8 +15,13 @@ export function usePaginatedResource<T>(endpoint: string, page: number, size: nu
   useEffect(() => {
     const controller = new AbortController()
     setState((current) => ({ ...current, loading: true }))
-    fetchPage<T | Record<string, unknown>>(endpoint, page, size, controller.signal)
-      .then((data) => setState({ data: mapItem ? { ...data, items: data.items.map((item, index) => mapItem(item as Record<string, unknown>, index)) } : data as PaginatedResponse<T>, loading: false, error: null, isDemo: false }))
+    fetchPage<Record<string, unknown>>(endpoint, page, size, controller.signal)
+      .then((data) => {
+        const mapped: PaginatedResponse<T> = mapItem
+          ? { ...data, items: data.items.map((item, index) => mapItem(item, index)) }
+          : data as unknown as PaginatedResponse<T>
+        setState({ data: mapped, loading: false, error: null, isDemo: false })
+      })
       .catch((error: unknown) => {
         if (error instanceof DOMException && error.name === 'AbortError') return
         const message = error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.'
