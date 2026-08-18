@@ -28,6 +28,17 @@ describe('LandingPage language switcher', () => {
     expect(window.location.pathname).toBe('/ko/')
   })
 
+  it('switches to Chinese', () => {
+    render(<LandingPage />)
+
+    fireEvent.change(screen.getByRole('combobox', { name: 'Page language' }), { target: { value: 'zh' } })
+
+    expect(screen.getByRole('heading', { name: /先写一次/ })).toBeInTheDocument()
+    expect(document.documentElement.lang).toBe('zh')
+    expect(window.localStorage.getItem('ondrift-landing-language')).toBe('zh')
+    expect(window.location.pathname).toBe('/zh/')
+  })
+
   it('lists an FAQ section reachable from the nav', () => {
     render(<LandingPage />)
 

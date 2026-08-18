@@ -1,4 +1,4 @@
-export type LandingLanguage = 'en' | 'ko' | 'ja'
+export type LandingLanguage = 'en' | 'ko' | 'ja' | 'zh'
 
 export interface LandingCopy {
   meta: { title: string; description: string }
@@ -40,6 +40,7 @@ export const LANGUAGE_OPTIONS: Array<{ code: LandingLanguage; short: string; lab
   { code: 'en', short: 'EN', label: 'English' },
   { code: 'ko', short: 'KO', label: '한국어' },
   { code: 'ja', short: 'JA', label: '日本語' },
+  { code: 'zh', short: 'ZH', label: '简体中文' },
 ]
 
 export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
@@ -53,7 +54,7 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
       eyebrow: 'A CLEARER PROMPT, RIGHT WHERE YOU TYPE', line1: 'Start with a rough prompt.', line2: 'Send a clearer one.',
       body: 'Write as usual in ChatGPT, Claude, Gemini, or Perplexity. Ondrift highlights what is missing, explains the score, and lets you apply a clearer version in one click. No account or Ondrift server required.',
       install: 'Install from GitHub (Free)', how: 'See how it works',
-      meta: 'Chrome extension · English by default · Korean & Japanese supported · AI provider API key required',
+      meta: 'Chrome extension · English by default · Korean, Japanese & Chinese supported · AI provider API key required',
     },
     supportedSites: 'Supported sites',
     how: {
@@ -137,7 +138,7 @@ Turn the transcript below into actionable meeting notes.
       eyebrow: '쓰던 입력창에서 바로 더 명확하게', line1: '대충 써도 괜찮습니다.', line2: '보내기 전에 더 명확하게.',
       body: 'ChatGPT, Claude, Gemini, Perplexity에서 평소처럼 작성하세요. Ondrift가 빠진 내용을 짚고 점수의 이유를 설명한 뒤, 더 명확한 프롬프트를 한 번에 적용해 줍니다. 계정이나 Ondrift 서버는 필요 없습니다.',
       install: 'GitHub에서 설치 (무료)', how: '동작 방식 보기',
-      meta: 'Chrome 확장 · 기본 언어 English · 한국어·日本語 지원 · AI 제공자 API 키 필요',
+      meta: 'Chrome 확장 · 기본 언어 English · 한국어·日本語·中文 지원 · AI 제공자 API 키 필요',
     },
     supportedSites: '지원 사이트',
     how: {
@@ -157,7 +158,7 @@ Turn the transcript below into actionable meeting notes.
         'AI 제공자 API 키는 사용자가 직접 관리하며, 안전하게 보관할 책임도 사용자에게 있습니다.',
       ],
     },
-    languages: { eyebrow: '지원 언어', body: '기본 언어는 영어이며, 헤더에서 언제든 한국어와 일본어로 변경할 수 있습니다.', defaultLabel: '기본' },
+    languages: { eyebrow: '지원 언어', body: '기본 언어는 영어이며, 헤더에서 언제든 한국어·일본어·중국어로 변경할 수 있습니다.', defaultLabel: '기본' },
     faq: {
       eyebrow: '자주 묻는 질문', title: '궁금한 점',
       items: [
@@ -221,7 +222,7 @@ Turn the transcript below into actionable meeting notes.
       eyebrow: 'いつもの入力欄で、もっと明確に', line1: 'ラフに書いても大丈夫。', line2: '送信前に、もっと明確に。',
       body: 'ChatGPT、Claude、Gemini、Perplexityでいつも通り入力してください。Ondriftが不足している内容とスコアの理由を示し、より明確なプロンプトをワンクリックで適用します。アカウントもOndriftサーバーも不要です。',
       install: 'GitHubから無料でインストール', how: '仕組みを見る',
-      meta: 'Chrome拡張 · デフォルトは英語 · 韓国語・日本語対応 · AIプロバイダーのAPIキーが必要',
+      meta: 'Chrome拡張 · デフォルトは英語 · 韓国語・日本語・中国語対応 · AIプロバイダーのAPIキーが必要',
     },
     supportedSites: '対応サイト',
     how: {
@@ -241,7 +242,7 @@ Turn the transcript below into actionable meeting notes.
         'AIプロバイダーのAPIキーはユーザー自身が管理し、安全に保管する責任もユーザーにあります。',
       ],
     },
-    languages: { eyebrow: '対応言語', body: 'デフォルトは英語です。ヘッダーからいつでも韓国語または日本語に切り替えられます。', defaultLabel: 'デフォルト' },
+    languages: { eyebrow: '対応言語', body: 'デフォルトは英語です。ヘッダーからいつでも韓国語・日本語・中国語に切り替えられます。', defaultLabel: 'デフォルト' },
     faq: {
       eyebrow: 'よくある質問', title: 'よくある質問',
       items: [
@@ -293,6 +294,90 @@ Turn the transcript below into actionable meeting notes.
     architecture: {
       label: '拡張機能はブラウザから選択したAIプロバイダーを直接呼び出します。設定と任意の履歴はローカルに保存され、Ondriftサーバーは介在しません。',
       noServer: 'Ondriftサーバーなし', prompt: 'プロンプト', editor: 'エディター', provider: 'AIプロバイダー', providerSub: '自分のAPIキー', storage: 'ローカル保存', storageSub: 'storage · IndexedDB',
+    },
+  },
+  zh: {
+    meta: {
+      title: 'Ondrift — 发送前先打磨你的提示词',
+      description: '一款本地优先的 Chrome 扩展程序,在 ChatGPT、Claude、Gemini 和 Perplexity 中为提示词打分并重写,使用你自己的 AI 提供商 API 密钥。',
+    },
+    nav: { how: '工作原理', privacy: '隐私', faq: '常见问题', install: '安装扩展程序', languageLabel: '页面语言' },
+    hero: {
+      eyebrow: '本地优先的提示词工具', line1: '先写一次,', line2: '发送前更进一步。',
+      body: '在 ChatGPT、Claude、Gemini 和 Perplexity 的输入框中检查提示词,查看评分和理由,然后一键重写。无需账号,也没有 Ondrift 服务器 — 只需要你自己的 AI 提供商 API 密钥。',
+      install: '从 GitHub 安装(免费)', how: '查看工作原理',
+      meta: 'Chrome 扩展程序 · 默认英文 · 支持韩语、日语与中文 · 需要 AI 提供商 API 密钥',
+    },
+    supportedSites: '支持的网站',
+    how: {
+      eyebrow: '工作原理', title: '只需三步',
+      steps: [
+        { n: '01', title: '照常输入', body: '像往常一样在 ChatGPT、Claude、Gemini 或 Perplexity 中输入提示词。Ondrift 不会打扰你。' },
+        { n: '02', title: '评分并重写', body: '让 Ondrift 小组件检查清晰度、上下文和限制条件,它会返回评分、理由和改进后的版本。' },
+        { n: '03', title: '检查并应用', body: '一键应用重写结果,忽略它,或直接在输入框中继续编辑。主导权始终在你手中。' },
+      ],
+    },
+    privacy: {
+      eyebrow: '为什么没有服务器', title: '无需账号,也没有 Ondrift 服务器',
+      body: '当你选择重写提示词时,浏览器只会把该提示词直接发送给你选择的 AI 提供商。中间没有 Ondrift 运营的服务器。',
+      points: [
+        '设置保存在 chrome.storage.local 中,可选的历史记录只保存在浏览器本地的 IndexedDB 中。',
+        '只有你明确要求重写的提示词才会被发送,AI 的回复内容不会被收集或存储。',
+        '你的 AI 提供商 API 密钥由你自己保管,安全责任也在于你。',
+      ],
+    },
+    languages: { eyebrow: '支持的语言', body: '默认语言为英语,你可以随时在页头切换为韩语、日语或中文。', defaultLabel: '默认' },
+    faq: {
+      eyebrow: '常见问题', title: '常见问题',
+      items: [
+        { q: 'Ondrift 是免费的吗?', a: '是的。Ondrift 本身是免费且开源的。你只需要直接向 AI 提供商支付 API 使用费用 — Ondrift 不收取任何费用,也不运行自己的服务器。' },
+        { q: 'Ondrift 会把我的提示词发送到服务器吗?', a: '不会。Ondrift 没有后端服务器。当你要求重写提示词时,浏览器会使用你自己的 API 密钥,把提示词直接发送给你配置的 AI 提供商。' },
+        { q: 'Ondrift 支持哪些聊天网站和 AI 提供商?', a: 'Ondrift 可在 ChatGPT、Claude、Gemini 和 Perplexity 中使用,目前使用你自己的 Gemini API 密钥来重写提示词。' },
+        { q: '如何安装 Ondrift?它上架 Chrome 网上应用店了吗?', a: '还没有 — 目前你需要下载最新的 GitHub 版本,并在 Chrome 开发者模式下以「加载已解压的扩展程序」方式安装。Chrome 网上应用店的上架工作正在进行中。' },
+        { q: '我的 API 密钥安全吗?', a: '你的密钥保存在本地的 chrome.storage.local 中,只有在直接调用你的 AI 提供商时才会被发送。和任何 API 密钥一样,安全保管的责任在于你自己。' },
+        { q: '可以保留提示词重写的历史记录吗?', a: '可以,这是可选的。历史记录只保存在浏览器本地的 IndexedDB 中 — 绝不会上传到服务器 — 你可以随时在 Options 页面中清除它。' },
+      ],
+    },
+    contact: {
+      eyebrow: '联系与反馈',
+      title: '还有其他问题?',
+      body: '选择适合你的渠道。一切都在 GitHub 上免费运行,没有 Ondrift 服务器,也不收取支持费用。',
+      cards: [
+        { title: '发现了 bug?', body: '告诉我们发生了什么,以及如何重现。', action: '报告 bug', note: '公开 GitHub issue' },
+        { title: '有新想法?', body: '为 Ondrift 提出新功能或改进建议。', action: '提出建议', note: '公开 GitHub issue' },
+        { title: '需要帮助?', body: 'GitHub Discussions 刚刚起步,欢迎提出一般性问题,也欢迎第一次发帖。', action: '在 Q&A 中提问', note: '公开 GitHub discussion' },
+      ],
+    },
+    cta: {
+      title: '在浏览器中安装',
+      steps: ['下载最新版本的 ZIP 并完整解压', '在 chrome://extensions 中开启开发者模式', '点击「加载已解压的扩展程序」并选择该文件夹', '添加你的 AI 提供商 API 密钥,开始使用 Ondrift'],
+      release: '获取最新版本', guide: '查看完整安装指南',
+      note: 'Chrome 网上应用店上架工作正在进行中 — 目前请从 GitHub 版本安装。',
+    },
+    footer: {
+      privacy: '隐私政策', guide: '安装指南', contact: '联系我们',
+      note: 'Google、Gemini、ChatGPT、Claude 和 Perplexity 是其各自所有者的商标。Ondrift 与它们没有从属关系。',
+    },
+    demo: {
+      before: '把这段会议记录整理成笔记',
+      after: `## **会议纪要目标**
+把下面的会议记录整理成可执行的会议纪要。
+
+## **输出格式**
+1. **按参与者列出的要点**
+2. **决定事项及理由**
+3. **行动项** — 负责人 | 任务 | 截止日期,使用 Markdown 表格
+
+## **规则**
+- 负责人或截止日期不明确时,标记为 **需要确认**
+- 保持所有数字和日期原样不变`,
+      rationale: ['把模糊的请求转化为可执行的目标', '指定了 Markdown 标题、强调和表格格式', '为缺失信息和准确性添加了规则'],
+      model: '基于 Gemini 3.6 Flash',
+      status: { draft: '起草中', scoring: 'Ondrift 正在审查…', typing: '正在撰写改进后的提示词…', result: '重写完成 · 可以应用' },
+    },
+    architecture: {
+      label: '扩展程序会直接从浏览器调用你选择的 AI 提供商。设置和可选的历史记录都保存在本地存储中,数据路径中没有 Ondrift 服务器。',
+      noServer: '没有 Ondrift 服务器', prompt: '提示词', editor: '编辑器', provider: 'AI 提供商', providerSub: '你的 API 密钥', storage: '本地存储', storageSub: 'storage · IndexedDB',
     },
   },
 }

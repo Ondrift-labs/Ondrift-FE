@@ -6,7 +6,7 @@ import { getSeoData, renderLandingPage } from '../.ssr/entry-server.js'
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const distDirectory = resolve(projectRoot, 'dist')
 const template = await readFile(resolve(distDirectory, 'index.html'), 'utf8')
-const languages = ['en', 'ko', 'ja']
+const languages = ['en', 'ko', 'ja', 'zh']
 
 function escapeAttribute(value) {
   return value
@@ -26,7 +26,7 @@ function seoHead(data) {
         '@id': `${data.siteOrigin}/#website`,
         url: `${data.siteOrigin}/`,
         name: data.siteName,
-        inLanguage: ['en', 'ko', 'ja'],
+        inLanguage: ['en', 'ko', 'ja', 'zh'],
         publisher: { '@id': organizationId },
       },
       {
@@ -85,6 +85,7 @@ function seoHead(data) {
     <link rel="alternate" hreflang="en" href="${data.siteOrigin}/" />
     <link rel="alternate" hreflang="ko" href="${data.siteOrigin}/ko/" />
     <link rel="alternate" hreflang="ja" href="${data.siteOrigin}/ja/" />
+    <link rel="alternate" hreflang="zh" href="${data.siteOrigin}/zh/" />
     <link rel="alternate" hreflang="x-default" href="${data.siteOrigin}/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Ondrift" />

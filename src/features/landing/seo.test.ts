@@ -6,12 +6,14 @@ describe('landing SEO language URLs', () => {
     expect(languageFromPathname('/')).toBe('en')
     expect(languageFromPathname('/ko/')).toBe('ko')
     expect(languageFromPathname('/ja/install')).toBe('ja')
+    expect(languageFromPathname('/zh/install')).toBe('zh')
   })
 
   it('builds canonical URLs for every supported language', () => {
     expect(languageUrl('en')).toBe('https://ondrift.pages.dev/')
     expect(languageUrl('ko')).toBe('https://ondrift.pages.dev/ko/')
     expect(languageUrl('ja')).toBe('https://ondrift.pages.dev/ja/')
+    expect(languageUrl('zh')).toBe('https://ondrift.pages.dev/zh/')
   })
 
   it('keeps the public brand identity consistent', () => {

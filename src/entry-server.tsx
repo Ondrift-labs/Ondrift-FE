@@ -7,6 +7,7 @@ const OPEN_GRAPH_LOCALES: Record<LandingLanguage, string> = {
   en: 'en_US',
   ko: 'ko_KR',
   ja: 'ja_JP',
+  zh: 'zh_CN',
 }
 
 export function renderLandingPage(language: LandingLanguage) {

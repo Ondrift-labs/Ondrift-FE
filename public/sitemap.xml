@@ -5,6 +5,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://ondrift.pages.dev/" />
     <xhtml:link rel="alternate" hreflang="ko" href="https://ondrift.pages.dev/ko/" />
     <xhtml:link rel="alternate" hreflang="ja" href="https://ondrift.pages.dev/ja/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://ondrift.pages.dev/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://ondrift.pages.dev/" />
   </url>
   <url>
@@ -12,6 +13,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://ondrift.pages.dev/" />
     <xhtml:link rel="alternate" hreflang="ko" href="https://ondrift.pages.dev/ko/" />
     <xhtml:link rel="alternate" hreflang="ja" href="https://ondrift.pages.dev/ja/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://ondrift.pages.dev/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://ondrift.pages.dev/" />
   </url>
   <url>
@@ -19,6 +21,15 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://ondrift.pages.dev/" />
     <xhtml:link rel="alternate" hreflang="ko" href="https://ondrift.pages.dev/ko/" />
     <xhtml:link rel="alternate" hreflang="ja" href="https://ondrift.pages.dev/ja/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://ondrift.pages.dev/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ondrift.pages.dev/" />
+  </url>
+  <url>
+    <loc>https://ondrift.pages.dev/zh/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ondrift.pages.dev/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://ondrift.pages.dev/ko/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://ondrift.pages.dev/ja/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://ondrift.pages.dev/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://ondrift.pages.dev/" />
   </url>
 </urlset>

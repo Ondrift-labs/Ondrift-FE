@@ -9,11 +9,13 @@ export const LANGUAGE_PATHS: Record<LandingLanguage, string> = {
   en: '/',
   ko: '/ko/',
   ja: '/ja/',
+  zh: '/zh/',
 }
 
 export function languageFromPathname(pathname: string): LandingLanguage {
   if (pathname === '/ko' || pathname.startsWith('/ko/')) return 'ko'
   if (pathname === '/ja' || pathname.startsWith('/ja/')) return 'ja'
+  if (pathname === '/zh' || pathname.startsWith('/zh/')) return 'zh'
   return 'en'
 }
 

@@ -29,7 +29,7 @@ function getInitialLanguage(initialLanguage?: LandingLanguage): LandingLanguage 
 
   try {
     const saved = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
-    if (saved === 'en' || saved === 'ko' || saved === 'ja') return saved
+    if (saved === 'en' || saved === 'ko' || saved === 'ja' || saved === 'zh') return saved
   } catch {
     // Storage can be unavailable in privacy-restricted browser contexts.
   }
