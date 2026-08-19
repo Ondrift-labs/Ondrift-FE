@@ -2,6 +2,7 @@ import React from 'react'
 import { hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { App } from './app/App'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { languageFromPathname } from './features/landing/seo'
 import './styles/global.css'
 
@@ -16,8 +17,10 @@ const initialLanguage = pathLanguage === 'en' ? undefined : pathLanguage
 
 hydrateRoot(document.getElementById('root')!,
   <React.StrictMode>
-    <BrowserRouter>
-      <App initialLanguage={initialLanguage} />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <App initialLanguage={initialLanguage} />
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>,
 )
