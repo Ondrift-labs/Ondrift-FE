@@ -101,7 +101,7 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
       cards: [
         { title: 'Found a bug?', body: 'Tell us what happened and how to reproduce it.', action: 'Report a bug', note: 'Public GitHub issue' },
         { title: 'Have an idea?', body: 'Suggest a feature or improvement for Ondrift.', action: 'Suggest a feature', note: 'Public GitHub issue' },
-        { title: 'Found a bug, or have a question?', body: 'Skip the formal issue if you\'d rather not -- post a quick bug report or a general question in GitHub Discussions Q&A instead. First posts welcome.', action: 'Post in Q&A', note: 'Public GitHub discussion' },
+        { title: 'Need help?', body: 'GitHub Discussions is just getting started. General questions and first posts are welcome.', action: 'Ask in Q&A', note: 'Public GitHub discussion' },
       ],
     },
     cta: {
@@ -185,7 +185,7 @@ Turn the transcript below into actionable meeting notes.
       cards: [
         { title: '문제가 발생했나요?', body: '발생한 현상과 재현 방법을 알려주세요.', action: '버그 제보하기', note: '공개 GitHub 이슈' },
         { title: '아이디어가 있나요?', body: 'Ondrift에 필요한 기능이나 개선점을 제안해 주세요.', action: '기능 제안하기', note: '공개 GitHub 이슈' },
-        { title: '버그를 발견했거나 궁금한 점이 있나요?', body: '정식 이슈 등록이 부담스럽다면 GitHub Discussions Q&A에 편하게 남겨주세요. 버그 제보든 질문이든 좋습니다. 첫 질문도 환영합니다.', action: 'Q&A에 남기기', note: '공개 GitHub 토론' },
+        { title: '도움이 필요한가요?', body: 'GitHub Discussions에 일반 질문을 남겨주세요. 첫 질문도 환영합니다.', action: 'Q&A에 질문하기', note: '공개 GitHub 토론' },
       ],
     },
     cta: {
@@ -269,7 +269,7 @@ Turn the transcript below into actionable meeting notes.
       cards: [
         { title: '不具合を見つけましたか？', body: '発生した問題と再現手順をお知らせください。', action: '不具合を報告', note: '公開GitHub Issue' },
         { title: 'アイデアがありますか？', body: 'Ondriftの新機能や改善案をご提案ください。', action: '機能を提案', note: '公開GitHub Issue' },
-        { title: '不具合や質問がありますか？', body: '正式なIssueを立てるほどでもない場合は、GitHub DiscussionsのQ&Aへ気軽にどうぞ。不具合報告でも質問でも構いません。最初の投稿も歓迎です。', action: 'Q&Aに投稿', note: '公開GitHub Discussion' },
+        { title: 'サポートが必要ですか？', body: 'GitHub Discussionsに一般的な質問を投稿してください。最初の質問も歓迎します。', action: 'Q&Aで質問する', note: '公開GitHub Discussion' },
       ],
     },
     cta: {
@@ -353,7 +353,7 @@ Turn the transcript below into actionable meeting notes.
       cards: [
         { title: '发现了 bug?', body: '告诉我们发生了什么,以及如何重现。', action: '报告 bug', note: '公开 GitHub issue' },
         { title: '有新想法?', body: '为 Ondrift 提出新功能或改进建议。', action: '提出建议', note: '公开 GitHub issue' },
-        { title: '发现了 bug,或有疑问?', body: '不想开正式 issue 的话,也可以直接发在 GitHub Discussions 的 Q&A 里 —— bug 反馈或一般提问都可以,欢迎发布你的第一条帖子。', action: '发布到 Q&A', note: '公开 GitHub discussion' },
+        { title: '需要帮助?', body: 'GitHub Discussions 刚刚起步,欢迎提出一般性问题,也欢迎第一次发帖。', action: '在 Q&A 中提问', note: '公开 GitHub discussion' },
       ],
     },
     cta: {
