@@ -103,11 +103,31 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
   }, [])
 
   useEffect(() => {
+    // window.history.pushState() in changeLanguage() doesn't fire popstate, and by design
+    // nothing else here listens for the browser's Back/Forward buttons -- without this, the
+    // address bar moves but `preference` (and everything derived from it: <html lang>,
+    // title, meta tags) stays wherever it was, permanently out of sync with the URL for the
+    // rest of the session. Re-derive it the same way the very first render did.
+    function handlePopState() {
+      setPreference(getInitialPreference())
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
+  useEffect(() => {
+    // The canonical/og:url must match the URL actually in the address bar, not the
+    // resolved *display* language -- those two diverge whenever `preference` is 'system'
+    // and the browser's language isn't English: the page renders in, say, Korean while the
+    // path is still '/' (root is intentionally left language-ambiguous; see main.tsx).
+    // Pointing canonical at a URL other than the one being served is the wrong URL to tell
+    // search engines about, not a matter of picking the "nicer" one.
+    const currentUrl = languageUrl(languageFromPathname(window.location.pathname))
     document.documentElement.lang = language
     document.title = copy.meta.title
     setAttr('meta[name="description"]', 'content', copy.meta.description)
-    setAttr('link[rel="canonical"]', 'href', languageUrl(language))
-    setAttr('meta[property="og:url"]', 'content', languageUrl(language))
+    setAttr('link[rel="canonical"]', 'href', currentUrl)
+    setAttr('meta[property="og:url"]', 'content', currentUrl)
     setAttr('meta[property="og:title"]', 'content', copy.meta.title)
     setAttr('meta[property="og:description"]', 'content', copy.meta.description)
     setAttr('meta[name="twitter:title"]', 'content', copy.meta.title)
