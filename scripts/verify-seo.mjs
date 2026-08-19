@@ -7,6 +7,7 @@ const localizedPages = [
   { file: 'index.html', language: 'en', canonical: 'https://ondrift.pages.dev/' },
   { file: 'ko/index.html', language: 'ko', canonical: 'https://ondrift.pages.dev/ko/' },
   { file: 'ja/index.html', language: 'ja', canonical: 'https://ondrift.pages.dev/ja/' },
+  { file: 'zh/index.html', language: 'zh', canonical: 'https://ondrift.pages.dev/zh/' },
 ]
 
 function requireText(document, expected, file) {
