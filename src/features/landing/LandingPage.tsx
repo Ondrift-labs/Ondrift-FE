@@ -1,5 +1,6 @@
 import { ArrowRight, ArrowUpRight, Bug, Check, Chrome, ChevronDown, Database, KeyRound, Languages, Lightbulb, MessageCircleQuestion, ShieldOff } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
+import { detectLanguage, isLanguageId } from 'ondrift-i18n'
 import { ArchitectureDiagram } from './ArchitectureDiagram'
 import { PromptDemo } from './PromptDemo'
 import { trackLandingCta, trackLandingPageView } from './analytics'
@@ -16,9 +17,6 @@ const CONTACT_CHANNELS = [
   { href: `${REPO_URL}/discussions/new?category=q-a`, icon: MessageCircleQuestion, target: 'contact_question' as const },
 ]
 const LANGUAGE_STORAGE_KEY = 'ondrift-landing-language'
-// Derived once from LANGUAGE_OPTIONS so a future language only needs to be added there --
-// this used to be a second, separately-hardcoded list of the same four codes.
-const LANDING_LANGUAGES = new Set<LandingLanguage>(LANGUAGE_OPTIONS.map((option) => option.code))
 
 // 'system' is a preference, not a piece of content -- there's no LANDING_COPY['system'].
 // It means "keep matching the browser's language", as opposed to a visitor having
@@ -31,12 +29,7 @@ const PRIVACY_ICONS = [Database, ShieldOff, KeyRound]
 
 function detectBrowserLanguage(): LandingLanguage {
   if (typeof navigator === 'undefined') return 'en'
-  const candidates = navigator.languages?.length ? navigator.languages : [navigator.language]
-  for (const raw of candidates) {
-    const code = raw?.split('-')[0]?.toLowerCase()
-    if (code && LANDING_LANGUAGES.has(code as LandingLanguage)) return code as LandingLanguage
-  }
-  return 'en'
+  return detectLanguage(navigator.languages?.length ? navigator.languages : [navigator.language])
 }
 
 function resolveLanguage(preference: LanguagePreference): LandingLanguage {
@@ -62,7 +55,7 @@ function getInitialPreference(initialLanguage?: LandingLanguage): LanguagePrefer
   if (pathLanguage !== 'en') return pathLanguage
 
   const saved = readSavedPreference()
-  if (saved && LANDING_LANGUAGES.has(saved as LandingLanguage)) return saved as LandingLanguage
+  if (isLanguageId(saved)) return saved
   // Nothing explicitly chosen yet (or the visitor picked "System"): match the browser.
   return LANGUAGE_SYSTEM
 }

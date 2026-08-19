@@ -1,4 +1,6 @@
-export type LandingLanguage = 'en' | 'ko' | 'ja' | 'zh'
+import { LANGUAGES, type LanguageId } from 'ondrift-i18n'
+
+export type LandingLanguage = LanguageId
 
 interface ContactCard { title: string; body: string; action: string; note: string }
 
@@ -43,12 +45,11 @@ export interface LandingCopy {
   }
 }
 
-export const LANGUAGE_OPTIONS: Array<{ code: LandingLanguage; short: string; label: string }> = [
-  { code: 'en', short: 'EN', label: 'English' },
-  { code: 'ko', short: 'KO', label: '한국어' },
-  { code: 'ja', short: 'JA', label: '日本語' },
-  { code: 'zh', short: 'ZH', label: '简体中文' },
-]
+// Display order here is this page's own choice (English first, for an international
+// landing page) -- it's independent of ondrift-i18n's SUPPORTED_LANGUAGES order, which
+// other consumers are free to display differently.
+export const LANGUAGE_OPTIONS: Array<{ code: LandingLanguage; short: string; label: string }> =
+  (['en', 'ko', 'ja', 'zh'] as const).map((code) => ({ code, short: LANGUAGES[code].short, label: LANGUAGES[code].nativeName }))
 
 export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
   en: {
