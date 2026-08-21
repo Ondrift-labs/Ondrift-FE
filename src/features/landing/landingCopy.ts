@@ -55,12 +55,12 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
   en: {
     meta: {
       title: 'Ondrift — A clearer prompt before you send',
-      description: 'A free Chrome extension that makes rough prompts clearer and more specific before you send them in ChatGPT, Claude, Gemini, or Perplexity.',
+      description: 'A free Chrome extension that makes rough prompts clearer and more specific before you send them in ChatGPT, Claude, Gemini, Perplexity, or Grok.',
     },
     nav: { how: 'How it works', privacy: 'Privacy', faq: 'FAQ', install: 'Add to Chrome', languageLabel: 'Page language', systemLanguage: 'System' },
     hero: {
       eyebrow: 'A CLEARER PROMPT, RIGHT WHERE YOU TYPE', line1: 'Start with a rough prompt.', line2: 'Send a clearer one.',
-      body: 'Write as usual in ChatGPT, Claude, Gemini, or Perplexity. Ondrift highlights what is missing, explains the score, and lets you apply a clearer version in one click. No account or Ondrift server required.',
+      body: 'Write as usual in ChatGPT, Claude, Gemini, Perplexity, or Grok. Ondrift highlights what is missing, explains the score, and lets you apply a clearer version in one click. No account or Ondrift server required.',
       install: 'Add to Chrome — Free', how: 'See how it works',
       meta: 'Chrome extension · English by default · Korean, Japanese & Chinese supported · AI provider API key required',
     },
@@ -68,7 +68,7 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
     how: {
       eyebrow: 'HOW IT WORKS', title: 'Three steps. That’s it.',
       steps: [
-        { n: '01', title: 'Write as usual', body: 'Type your prompt in ChatGPT, Claude, Gemini, or Perplexity just like you always do. Ondrift stays out of the way.' },
+        { n: '01', title: 'Write as usual', body: 'Type your prompt in ChatGPT, Claude, Gemini, Perplexity, or Grok just like you always do. Ondrift stays out of the way.' },
         { n: '02', title: 'Score and rewrite', body: 'Ask the Ondrift widget to review clarity, context, and constraints. It returns a score, rationale, and an improved version.' },
         { n: '03', title: 'Review and apply', body: 'Apply the rewrite with one click, ignore it, or keep editing directly in the prompt box. You stay in control.' },
       ],
@@ -88,7 +88,7 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
       items: [
         { q: 'Is Ondrift free to use?', a: 'Yes. Ondrift itself is free and open source. You only ever pay your AI provider directly for API usage — Ondrift never charges a fee or runs its own server.' },
         { q: 'Does Ondrift send my prompts to a server?', a: 'No. Ondrift has no backend. When you ask it to rewrite a prompt, your browser sends that prompt directly to the AI provider you configured, using your own API key.' },
-        { q: 'Which chat sites and AI providers does Ondrift support?', a: 'Ondrift works inside ChatGPT, Claude, Gemini, and Perplexity, and currently rewrites prompts using your own Gemini API key.' },
+        { q: 'Which chat sites and AI providers does Ondrift support?', a: 'Ondrift works inside ChatGPT, Claude, Gemini, Perplexity, and Grok, and currently rewrites prompts using your own Gemini API key.' },
         { q: 'How do I install Ondrift? Is it on the Chrome Web Store?', a: 'Yes — Ondrift is on the Chrome Web Store. Click Add to Chrome above, pin the extension, and add your AI provider API key to get started.' },
         { q: 'Is my API key safe?', a: 'Your key is stored locally in chrome.storage.local and is only ever sent in direct calls to your AI provider. Keeping it secure remains your responsibility, the same as any API key.' },
         { q: 'Can I keep a history of my prompt rewrites?', a: 'Yes, optionally. History is stored locally in your browser’s IndexedDB only — never on a server — and you can clear it anytime from the Options page.' },
@@ -112,7 +112,7 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
     },
     footer: {
       privacy: 'Privacy policy', guide: 'Install guide', contact: 'Contact',
-      note: 'Google, Gemini, ChatGPT, Claude, and Perplexity are trademarks of their respective owners. Ondrift is not affiliated with them.',
+      note: 'Google, Gemini, ChatGPT, Claude, Perplexity, and Grok are trademarks of their respective owners. Ondrift is not affiliated with them.',
     },
     demo: {
       before: 'Turn this meeting transcript into notes',
@@ -139,12 +139,12 @@ Turn the transcript below into actionable meeting notes.
   ko: {
     meta: {
       title: 'Ondrift — 보내기 전에 더 명확한 프롬프트로',
-      description: '대충 쓴 프롬프트도 ChatGPT, Claude, Gemini, Perplexity에 보내기 전에 더 명확하고 구체적으로 개선하는 무료 Chrome 확장 프로그램입니다.',
+      description: '대충 쓴 프롬프트도 ChatGPT, Claude, Gemini, Perplexity, Grok에 보내기 전에 더 명확하고 구체적으로 개선하는 무료 Chrome 확장 프로그램입니다.',
     },
     nav: { how: '동작 방식', privacy: '프라이버시', faq: '자주 묻는 질문', install: 'Chrome에 추가', languageLabel: '페이지 언어', systemLanguage: '시스템 언어' },
     hero: {
       eyebrow: '쓰던 입력창에서 바로 더 명확하게', line1: '대충 써도 괜찮습니다.', line2: '보내기 전에 더 명확하게.',
-      body: 'ChatGPT, Claude, Gemini, Perplexity에서 평소처럼 작성하세요. Ondrift가 빠진 내용을 짚고 점수의 이유를 설명한 뒤, 더 명확한 프롬프트를 한 번에 적용해 줍니다. 계정이나 Ondrift 서버는 필요 없습니다.',
+      body: 'ChatGPT, Claude, Gemini, Perplexity, Grok에서 평소처럼 작성하세요. Ondrift가 빠진 내용을 짚고 점수의 이유를 설명한 뒤, 더 명확한 프롬프트를 한 번에 적용해 줍니다. 계정이나 Ondrift 서버는 필요 없습니다.',
       install: 'Chrome에 추가 (무료)', how: '동작 방식 보기',
       meta: 'Chrome 확장 · 기본 언어 English · 한국어·日本語·中文 지원 · AI 제공자 API 키 필요',
     },
@@ -152,7 +152,7 @@ Turn the transcript below into actionable meeting notes.
     how: {
       eyebrow: '동작 방식', title: '세 단계면 충분합니다',
       steps: [
-        { n: '01', title: '그대로 씁니다', body: '평소처럼 ChatGPT, Claude, Gemini, Perplexity에 프롬프트를 작성합니다. Ondrift는 방해하지 않습니다.' },
+        { n: '01', title: '그대로 씁니다', body: '평소처럼 ChatGPT, Claude, Gemini, Perplexity, Grok에 프롬프트를 작성합니다. Ondrift는 방해하지 않습니다.' },
         { n: '02', title: '점수와 재작성', body: 'Ondrift 위젯이 명확성·맥락·제약을 검토해 점수, 근거, 다시 쓴 버전을 함께 보여줍니다.' },
         { n: '03', title: '검토 후 적용', body: '마음에 들면 한 클릭으로 적용하고, 아니면 무시하거나 입력창에서 계속 수정할 수 있습니다.' },
       ],
@@ -172,7 +172,7 @@ Turn the transcript below into actionable meeting notes.
       items: [
         { q: 'Ondrift는 무료인가요?', a: '네. Ondrift 자체는 무료이며 오픈소스입니다. AI 제공자에게 지불하는 API 사용 비용만 발생하며, Ondrift는 별도 요금이나 자체 서버를 두지 않습니다.' },
         { q: 'Ondrift가 제 프롬프트를 서버로 전송하나요?', a: '아니요. Ondrift에는 백엔드 서버가 없습니다. 재작성을 요청하면 브라우저가 설정한 AI 제공자에게 직접 프롬프트를 전송하며, 이때 사용자의 API 키가 사용됩니다.' },
-        { q: 'Ondrift는 어떤 사이트와 AI 제공자를 지원하나요?', a: 'ChatGPT, Claude, Gemini, Perplexity 안에서 동작하며, 현재는 사용자의 Gemini API 키로 프롬프트를 재작성합니다.' },
+        { q: 'Ondrift는 어떤 사이트와 AI 제공자를 지원하나요?', a: 'ChatGPT, Claude, Gemini, Perplexity, Grok 안에서 동작하며, 현재는 사용자의 Gemini API 키로 프롬프트를 재작성합니다.' },
         { q: 'Ondrift는 어떻게 설치하나요? 크롬 웹 스토어에 있나요?', a: '네, Ondrift는 Chrome 웹 스토어에 있습니다. 위의 "Chrome에 추가" 버튼을 눌러 확장 프로그램을 추가하고 AI 제공자 API 키를 등록하면 바로 사용할 수 있습니다.' },
         { q: '제 API 키는 안전한가요?', a: 'API 키는 chrome.storage.local에 로컬로 저장되며, 선택한 AI 제공자로 직접 전송될 때만 사용됩니다. 다른 API 키와 마찬가지로 안전하게 보관하는 책임은 사용자에게 있습니다.' },
         { q: '재작성 기록을 남길 수 있나요?', a: '네, 선택 사항입니다. 기록은 서버가 아닌 브라우저의 로컬 IndexedDB에만 저장되며, Options 페이지에서 언제든 삭제할 수 있습니다.' },
@@ -196,7 +196,7 @@ Turn the transcript below into actionable meeting notes.
     },
     footer: {
       privacy: '개인정보 처리방침', guide: '설치 가이드', contact: '문의하기',
-      note: 'Google, Gemini, ChatGPT, Claude, Perplexity는 각 소유자의 상표이며 Ondrift와 제휴 관계가 없습니다.',
+      note: 'Google, Gemini, ChatGPT, Claude, Perplexity, Grok은 각 소유자의 상표이며 Ondrift와 제휴 관계가 없습니다.',
     },
     demo: {
       before: '회의 녹취 정리해줘',
@@ -223,12 +223,12 @@ Turn the transcript below into actionable meeting notes.
   ja: {
     meta: {
       title: 'Ondrift — 送信前に、もっと明確なプロンプトへ',
-      description: 'ラフなプロンプトも、ChatGPT、Claude、Gemini、Perplexityへ送信する前に、より明確で具体的に改善できる無料のChrome拡張機能です。',
+      description: 'ラフなプロンプトも、ChatGPT、Claude、Gemini、Perplexity、Grokへ送信する前に、より明確で具体的に改善できる無料のChrome拡張機能です。',
     },
     nav: { how: '仕組み', privacy: 'プライバシー', faq: 'よくある質問', install: 'Chromeに追加', languageLabel: 'ページの言語', systemLanguage: 'システム言語' },
     hero: {
       eyebrow: 'いつもの入力欄で、もっと明確に', line1: 'ラフに書いても大丈夫。', line2: '送信前に、もっと明確に。',
-      body: 'ChatGPT、Claude、Gemini、Perplexityでいつも通り入力してください。Ondriftが不足している内容とスコアの理由を示し、より明確なプロンプトをワンクリックで適用します。アカウントもOndriftサーバーも不要です。',
+      body: 'ChatGPT、Claude、Gemini、Perplexity、Grokでいつも通り入力してください。Ondriftが不足している内容とスコアの理由を示し、より明確なプロンプトをワンクリックで適用します。アカウントもOndriftサーバーも不要です。',
       install: 'Chromeに追加(無料)', how: '仕組みを見る',
       meta: 'Chrome拡張 · デフォルトは英語 · 韓国語・日本語・中国語対応 · AIプロバイダーのAPIキーが必要',
     },
@@ -236,7 +236,7 @@ Turn the transcript below into actionable meeting notes.
     how: {
       eyebrow: '仕組み', title: 'わずか3ステップ',
       steps: [
-        { n: '01', title: 'いつも通り書く', body: 'ChatGPT、Claude、Gemini、Perplexityに、いつも通りプロンプトを入力します。' },
+        { n: '01', title: 'いつも通り書く', body: 'ChatGPT、Claude、Gemini、Perplexity、Grokに、いつも通りプロンプトを入力します。' },
         { n: '02', title: '評価して改善', body: 'Ondriftが明確さ、文脈、制約を確認し、スコア、根拠、改善案を表示します。' },
         { n: '03', title: '確認して適用', body: '気に入ればワンクリックで適用。無視することも、入力欄でさらに編集することもできます。' },
       ],
@@ -256,7 +256,7 @@ Turn the transcript below into actionable meeting notes.
       items: [
         { q: 'Ondriftは無料ですか？', a: 'はい。Ondrift自体は無料でオープンソースです。かかるのはAIプロバイダーへのAPI利用料のみで、Ondriftが料金を請求したり自前のサーバーを運用したりすることはありません。' },
         { q: 'Ondriftはプロンプトをサーバーに送信しますか？', a: 'いいえ。Ondriftにバックエンドはありません。プロンプトの改善を依頼すると、ブラウザが設定したAIプロバイダーへ直接そのプロンプトを送信します。その際に使われるのは自分のAPIキーです。' },
-        { q: 'Ondriftはどのサイトとプロバイダーに対応していますか？', a: 'ChatGPT、Claude、Gemini、Perplexityの中で動作し、現在は自分のGemini APIキーでプロンプトを改善します。' },
+        { q: 'Ondriftはどのサイトとプロバイダーに対応していますか？', a: 'ChatGPT、Claude、Gemini、Perplexity、Grokの中で動作し、現在は自分のGemini APIキーでプロンプトを改善します。' },
         { q: 'Ondriftはどうやってインストールしますか？Chromeウェブストアにありますか？', a: 'はい、OndriftはChromeウェブストアで公開されています。上の「Chromeに追加」ボタンから追加し、AIプロバイダーのAPIキーを登録すればすぐに使えます。' },
         { q: 'APIキーは安全ですか？', a: 'APIキーはchrome.storage.localにローカル保存され、選択したAIプロバイダーへの直接通信でのみ使用されます。他のAPIキーと同様、安全な管理はユーザーの責任です。' },
         { q: '改善履歴を残せますか？', a: 'はい、任意で残せます。履歴はサーバーではなくブラウザのローカルIndexedDBにのみ保存され、Optionsページからいつでも削除できます。' },
@@ -280,7 +280,7 @@ Turn the transcript below into actionable meeting notes.
     },
     footer: {
       privacy: 'プライバシーポリシー', guide: 'インストールガイド', contact: 'お問い合わせ',
-      note: 'Google、Gemini、ChatGPT、Claude、Perplexityは各社の商標です。Ondriftは各社と提携していません。',
+      note: 'Google、Gemini、ChatGPT、Claude、Perplexity、Grokは各社の商標です。Ondriftは各社と提携していません。',
     },
     demo: {
       before: '会議の文字起こしを議事録にまとめて',
@@ -307,12 +307,12 @@ Turn the transcript below into actionable meeting notes.
   zh: {
     meta: {
       title: 'Ondrift — 发送前先打磨你的提示词',
-      description: '一款本地优先的 Chrome 扩展程序,在 ChatGPT、Claude、Gemini 和 Perplexity 中为提示词打分并重写,使用你自己的 AI 提供商 API 密钥。',
+      description: '一款本地优先的 Chrome 扩展程序,在 ChatGPT、Claude、Gemini、Perplexity 和 Grok 中为提示词打分并重写,使用你自己的 AI 提供商 API 密钥。',
     },
     nav: { how: '工作原理', privacy: '隐私', faq: '常见问题', install: '添加到 Chrome', languageLabel: '页面语言', systemLanguage: '系统语言' },
     hero: {
       eyebrow: '本地优先的提示词工具', line1: '先写一次,', line2: '发送前更进一步。',
-      body: '在 ChatGPT、Claude、Gemini 和 Perplexity 的输入框中检查提示词,查看评分和理由,然后一键重写。无需账号,也没有 Ondrift 服务器 — 只需要你自己的 AI 提供商 API 密钥。',
+      body: '在 ChatGPT、Claude、Gemini、Perplexity 和 Grok 的输入框中检查提示词,查看评分和理由,然后一键重写。无需账号,也没有 Ondrift 服务器 — 只需要你自己的 AI 提供商 API 密钥。',
       install: '添加到 Chrome(免费)', how: '查看工作原理',
       meta: 'Chrome 扩展程序 · 默认英文 · 支持韩语、日语与中文 · 需要 AI 提供商 API 密钥',
     },
@@ -320,7 +320,7 @@ Turn the transcript below into actionable meeting notes.
     how: {
       eyebrow: '工作原理', title: '只需三步',
       steps: [
-        { n: '01', title: '照常输入', body: '像往常一样在 ChatGPT、Claude、Gemini 或 Perplexity 中输入提示词。Ondrift 不会打扰你。' },
+        { n: '01', title: '照常输入', body: '像往常一样在 ChatGPT、Claude、Gemini、Perplexity 或 Grok 中输入提示词。Ondrift 不会打扰你。' },
         { n: '02', title: '评分并重写', body: '让 Ondrift 小组件检查清晰度、上下文和限制条件,它会返回评分、理由和改进后的版本。' },
         { n: '03', title: '检查并应用', body: '一键应用重写结果,忽略它,或直接在输入框中继续编辑。主导权始终在你手中。' },
       ],
@@ -340,7 +340,7 @@ Turn the transcript below into actionable meeting notes.
       items: [
         { q: 'Ondrift 是免费的吗?', a: '是的。Ondrift 本身是免费且开源的。你只需要直接向 AI 提供商支付 API 使用费用 — Ondrift 不收取任何费用,也不运行自己的服务器。' },
         { q: 'Ondrift 会把我的提示词发送到服务器吗?', a: '不会。Ondrift 没有后端服务器。当你要求重写提示词时,浏览器会使用你自己的 API 密钥,把提示词直接发送给你配置的 AI 提供商。' },
-        { q: 'Ondrift 支持哪些聊天网站和 AI 提供商?', a: 'Ondrift 可在 ChatGPT、Claude、Gemini 和 Perplexity 中使用,目前使用你自己的 Gemini API 密钥来重写提示词。' },
+        { q: 'Ondrift 支持哪些聊天网站和 AI 提供商?', a: 'Ondrift 可在 ChatGPT、Claude、Gemini、Perplexity 和 Grok 中使用,目前使用你自己的 Gemini API 密钥来重写提示词。' },
         { q: '如何安装 Ondrift?它上架 Chrome 网上应用店了吗?', a: '是的,Ondrift 已上架 Chrome 网上应用店。点击上方的「添加到 Chrome」按钮添加扩展程序,并配置你的 AI 提供商 API 密钥即可开始使用。' },
         { q: '我的 API 密钥安全吗?', a: '你的密钥保存在本地的 chrome.storage.local 中,只有在直接调用你的 AI 提供商时才会被发送。和任何 API 密钥一样,安全保管的责任在于你自己。' },
         { q: '可以保留提示词重写的历史记录吗?', a: '可以,这是可选的。历史记录只保存在浏览器本地的 IndexedDB 中 — 绝不会上传到服务器 — 你可以随时在 Options 页面中清除它。' },
@@ -364,7 +364,7 @@ Turn the transcript below into actionable meeting notes.
     },
     footer: {
       privacy: '隐私政策', guide: '安装指南', contact: '联系我们',
-      note: 'Google、Gemini、ChatGPT、Claude 和 Perplexity 是其各自所有者的商标。Ondrift 与它们没有从属关系。',
+      note: 'Google、Gemini、ChatGPT、Claude、Perplexity 和 Grok 是其各自所有者的商标。Ondrift 与它们没有从属关系。',
     },
     demo: {
       before: '把这段会议记录整理成笔记',

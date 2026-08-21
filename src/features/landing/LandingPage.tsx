@@ -24,7 +24,7 @@ const LANGUAGE_STORAGE_KEY = 'ondrift-landing-language'
 const LANGUAGE_SYSTEM = 'system'
 type LanguagePreference = LandingLanguage | typeof LANGUAGE_SYSTEM
 
-const SITES = ['ChatGPT', 'Claude', 'Gemini', 'Perplexity']
+const SITES = ['ChatGPT', 'Claude', 'Gemini', 'Perplexity', 'Grok']
 const PRIVACY_ICONS = [Database, ShieldOff, KeyRound]
 
 function detectBrowserLanguage(): LandingLanguage {
