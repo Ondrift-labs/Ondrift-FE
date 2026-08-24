@@ -19,6 +19,6 @@
   // `wrangler pages secret put`; never commit that secret to this file.
   "vars": {
     "FREE_TIER_DAILY_BUDGET": "2000",
-    "ALLOWED_EXTENSION_ORIGINS": "chrome-extension://REPLACE_WITH_PUBLISHED_EXTENSION_ID"
+    "ALLOWED_EXTENSION_ORIGINS": "chrome-extension://aonkgefdmgjcnhopbkeehmoacncpkeje,chrome-extension://lbefokebdhapaaglokdpaghopihlhagg"
   }
 }
