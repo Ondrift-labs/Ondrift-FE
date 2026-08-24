@@ -13,12 +13,19 @@
     {
       "binding": "ONDRIFT_FREE_TIER_QUOTA",
       "id": "0f2a1551829848e3a4486d4f5aa33221"
+    },
+    {
+      "binding": "ONDRIFT_LICENSES",
+      "id": "8a1aa1a19c1b4b1797061acb564ac63f"
     }
   ],
-  // These are non-secret runtime variables. Set GEMINI_API_KEY separately with
-  // `wrangler pages secret put`; never commit that secret to this file.
+  // These are non-secret runtime variables. Set GEMINI_API_KEY, STRIPE_SECRET_KEY, and
+  // STRIPE_WEBHOOK_SECRET separately with `wrangler pages secret put`; never commit those
+  // secrets to this file. STRIPE_PRICE_ID is the recurring $2.99/mo Price id from the
+  // Stripe Dashboard -- not secret, safe to keep here (fill in once the Price exists).
   "vars": {
     "FREE_TIER_DAILY_BUDGET": "2000",
-    "ALLOWED_EXTENSION_ORIGINS": "chrome-extension://aonkgefdmgjcnhopbkeehmoacncpkeje,chrome-extension://lbefokebdhapaaglokdpaghopihlhagg"
+    "ALLOWED_EXTENSION_ORIGINS": "chrome-extension://aonkgefdmgjcnhopbkeehmoacncpkeje,chrome-extension://lbefokebdhapaaglokdpaghopihlhagg",
+    "STRIPE_PRICE_ID": ""
   }
 }
