@@ -8,5 +8,11 @@
       "binding": "LANDING_ANALYTICS",
       "dataset": "ondrift_landing_events"
     }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "ONDRIFT_FREE_TIER_QUOTA",
+      "id": "0f2a1551829848e3a4486d4f5aa33221"
+    }
   ]
 }
