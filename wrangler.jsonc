@@ -14,5 +14,11 @@
       "binding": "ONDRIFT_FREE_TIER_QUOTA",
       "id": "0f2a1551829848e3a4486d4f5aa33221"
     }
-  ]
+  ],
+  // These are non-secret runtime variables. Set GEMINI_API_KEY separately with
+  // `wrangler pages secret put`; never commit that secret to this file.
+  "vars": {
+    "FREE_TIER_DAILY_BUDGET": "2000",
+    "ALLOWED_EXTENSION_ORIGINS": "chrome-extension://REPLACE_WITH_PUBLISHED_EXTENSION_ID"
+  }
 }
