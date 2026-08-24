@@ -3,23 +3,47 @@
 English | [한국어](docs/README.ko.md)
 
 The current Ondrift Free MVP is a local-first Chrome extension for ChatGPT,
-Claude, Gemini, and Perplexity. It rewrites and scores prompts with the user's
-own Gemini API key and lets the user apply an improved prompt in one click.
+Claude, Gemini, and Perplexity. It rewrites and scores prompts through either
+the free-tier proxy or the user's own Gemini API key and lets the user apply an
+improved prompt in one click.
 
 ## Current product
 
 - Manifest V3 Chrome extension
 - Prompt-editor integrations for ChatGPT, Claude, Gemini, and Perplexity
 - Prompt rewriting, clarity score, rationale, and one-click apply
-- User-supplied Gemini API key
+- Optional user-supplied Gemini API key (BYOK)
 - API key and settings stored in `chrome.storage.local`
 - Prompt history and usage metadata stored locally in IndexedDB
-- No Ondrift account, backend, or cloud sync in the Free MVP
+- No Ondrift account or cloud sync; the free-tier rewrite proxy is the only
+  prompt-processing backend
 - No collection or storage of AI response bodies
 
 The active product source and installation guide are in the
 [Ondrift-Extension](https://github.com/Ondrift-labs/Ondrift-Extension)
 repository.
+
+## Free-tier rewrite proxy
+
+[`functions/api/rewrite.js`](functions/api/rewrite.js) is a Cloudflare Pages
+Function that gives extension installations without their own Gemini key up to
+three successful rewrites per UTC day. It validates extension origins and
+requests, enforces per-install, abuse-backstop, and global quotas in the
+`ONDRIFT_FREE_TIER_QUOTA` KV namespace, and calls Gemini with Ondrift's key kept
+server-side.
+
+The KV binding and the non-secret `FREE_TIER_DAILY_BUDGET` and
+`ALLOWED_EXTENSION_ORIGINS` variables are configured in `wrangler.jsonc`. Set
+the API key separately as a Cloudflare Pages secret; it must not be added to
+the Wrangler config:
+
+```bash
+npx wrangler@4.123.0 pages secret put GEMINI_API_KEY --project-name ondrift
+```
+
+BYOK usage is unchanged: when a user supplies their own key, the extension
+continues calling Gemini directly and never sends that request through this
+endpoint.
 
 ## Status of this repository
 
