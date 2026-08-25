@@ -103,6 +103,29 @@ async function fetchPaddleResource(baseUrl, path, apiKey) {
   return payload?.data ?? null
 }
 
+const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds))
+
+// The client redirects here the instant Paddle.js fires `checkout.completed`, but the
+// transaction resource on Paddle's side can briefly still read a pre-"completed" status
+// (e.g. "billed") until settlement finishes propagating. Poll a few times with backoff
+// before giving up, rather than erroring out on what's usually just a race.
+async function fetchCompletedTransaction(baseUrl, transactionId, apiKey) {
+  const delaysMs = [0, 400, 800, 1600]
+  let transaction = null
+
+  for (const delay of delaysMs) {
+    if (delay) await wait(delay)
+    transaction = await fetchPaddleResource(
+      baseUrl,
+      `/transactions/${encodeURIComponent(transactionId)}`,
+      apiKey,
+    )
+    if (transaction?.status === 'completed') return transaction
+  }
+
+  return transaction
+}
+
 async function linkCustomerEmail(licenses, email, code) {
   if (!email) return
 
@@ -127,11 +150,7 @@ export async function onRequest({ request, env }) {
   const baseUrl = paddleApiBase(env.PADDLE_ENVIRONMENT)
   let transaction
   try {
-    transaction = await fetchPaddleResource(
-      baseUrl,
-      `/transactions/${encodeURIComponent(transactionId)}`,
-      env.PADDLE_API_KEY,
-    )
+    transaction = await fetchCompletedTransaction(baseUrl, transactionId, env.PADDLE_API_KEY)
   } catch {
     console.error('Ondrift Paddle transaction lookup failed')
     return errorPage()
@@ -143,7 +162,7 @@ export async function onRequest({ request, env }) {
   }
 
   if (transaction.status !== 'completed') {
-    console.error('Ondrift Paddle transaction is not completed')
+    console.error('Ondrift Paddle transaction is not completed', { status: transaction.status })
     return errorPage()
   }
 
