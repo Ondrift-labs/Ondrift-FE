@@ -1,4 +1,13 @@
-const STRIPE_CHECKOUT_ENDPOINT = 'https://api.stripe.com/v1/checkout/sessions'
+const PADDLE_API_BASES = {
+  production: 'https://api.paddle.com',
+  sandbox: 'https://sandbox-api.paddle.com',
+}
+
+function paddleApiBase(environment) {
+  return environment === 'production'
+    ? PADDLE_API_BASES.production
+    : PADDLE_API_BASES.sandbox
+}
 
 function pageResponse(content, title = 'Ondrift Pro') {
   return new Response(`<!doctype html>
@@ -77,6 +86,21 @@ function parseRecord(value) {
   }
 }
 
+function usablePeriodEnd(value) {
+  return typeof value === 'string' && Number.isFinite(Date.parse(value)) ? value : null
+}
+
+async function fetchPaddleResource(baseUrl, path, apiKey) {
+  const paddleResponse = await fetch(`${baseUrl}${path}`, {
+    headers: { authorization: `Bearer ${apiKey}` },
+  })
+
+  if (!paddleResponse.ok) return null
+
+  const payload = await paddleResponse.json()
+  return payload?.data ?? null
+}
+
 export async function onRequest({ request, env }) {
   if (request.method !== 'GET') {
     return new Response('Method not allowed', {
@@ -85,81 +109,87 @@ export async function onRequest({ request, env }) {
     })
   }
 
-  const sessionId = new URL(request.url).searchParams.get('session_id')
-  if (!sessionId || !env.STRIPE_SECRET_KEY || !env.ONDRIFT_LICENSES) return errorPage()
+  const transactionId = new URL(request.url).searchParams.get('transaction_id')
+  if (!transactionId || !env.PADDLE_API_KEY || !env.ONDRIFT_LICENSES) return errorPage()
 
-  let stripeResponse
+  const baseUrl = paddleApiBase(env.PADDLE_ENVIRONMENT)
+  let transaction
   try {
-    const url = `${STRIPE_CHECKOUT_ENDPOINT}/${encodeURIComponent(sessionId)}?expand[]=subscription`
-    stripeResponse = await fetch(url, {
-      headers: { authorization: `Bearer ${env.STRIPE_SECRET_KEY}` },
-    })
+    transaction = await fetchPaddleResource(
+      baseUrl,
+      `/transactions/${encodeURIComponent(transactionId)}`,
+      env.PADDLE_API_KEY,
+    )
   } catch {
-    console.error('Ondrift checkout lookup failed')
+    console.error('Ondrift Paddle transaction lookup failed')
     return errorPage()
   }
 
-  if (!stripeResponse.ok) {
-    console.error('Ondrift checkout lookup returned an error', stripeResponse.status)
+  if (!transaction) {
+    console.error('Ondrift Paddle transaction lookup returned an error')
     return errorPage()
   }
 
-  let session
-  try {
-    session = await stripeResponse.json()
-  } catch {
-    console.error('Ondrift checkout lookup response was invalid')
+  if (transaction.status !== 'completed') {
+    console.error('Ondrift Paddle transaction is not completed')
     return errorPage()
   }
 
-  if (session?.payment_status !== 'paid') {
-    console.error('Ondrift checkout session is not paid')
-    return errorPage()
-  }
-
-  const sessionKey = `session:${sessionId}`
+  const transactionKey = `transaction:${transactionId}`
 
   try {
-    const existingCode = await env.ONDRIFT_LICENSES.get(sessionKey)
+    const existingCode = await env.ONDRIFT_LICENSES.get(transactionKey)
     if (existingCode) {
       const existingRecord = parseRecord(
         await env.ONDRIFT_LICENSES.get(`license:${existingCode}`),
       )
       if (!existingRecord) {
-        console.error('Ondrift license record is missing for an issued checkout session')
+        console.error('Ondrift license record is missing for an issued Paddle transaction')
         return errorPage()
       }
       return successPage(existingCode, existingRecord)
     }
 
-    const subscription =
-      session.subscription && typeof session.subscription === 'object'
-        ? session.subscription
-        : null
-    const subscriptionId = subscription?.id
-    const customerId =
-      typeof session.customer === 'string' ? session.customer : session.customer?.id
-    const currentPeriodEndSeconds = subscription?.current_period_end
+    const subscriptionId = transaction.subscription_id
+    const customerId = transaction.customer_id
+    let currentPeriodEnd = usablePeriodEnd(transaction.billing_period?.ends_at)
+
+    if (!currentPeriodEnd && typeof subscriptionId === 'string' && subscriptionId) {
+      let subscription
+      try {
+        subscription = await fetchPaddleResource(
+          baseUrl,
+          `/subscriptions/${encodeURIComponent(subscriptionId)}`,
+          env.PADDLE_API_KEY,
+        )
+      } catch {
+        console.error('Ondrift Paddle subscription lookup failed')
+        return errorPage()
+      }
+      currentPeriodEnd = usablePeriodEnd(subscription?.current_billing_period?.ends_at)
+    }
 
     if (
       typeof subscriptionId !== 'string' ||
+      !subscriptionId ||
       typeof customerId !== 'string' ||
-      !Number.isFinite(currentPeriodEndSeconds)
+      !customerId ||
+      !currentPeriodEnd
     ) {
-      console.error('Ondrift checkout session is missing subscription details')
+      console.error('Ondrift Paddle transaction is missing subscription details')
       return errorPage()
     }
 
     const code = generateLicenseCode()
     const record = {
       status: 'active',
-      stripeCustomerId: customerId,
-      stripeSubscriptionId: subscriptionId,
-      currentPeriodEnd: new Date(currentPeriodEndSeconds * 1000).toISOString(),
+      customerId,
+      subscriptionId,
+      currentPeriodEnd,
     }
 
     await Promise.all([
-      env.ONDRIFT_LICENSES.put(sessionKey, code),
+      env.ONDRIFT_LICENSES.put(transactionKey, code),
       env.ONDRIFT_LICENSES.put(`license:${code}`, JSON.stringify(record)),
       env.ONDRIFT_LICENSES.put(`subscription:${subscriptionId}`, code),
     ])

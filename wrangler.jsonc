@@ -19,13 +19,15 @@
       "id": "8a1aa1a19c1b4b1797061acb564ac63f"
     }
   ],
-  // These are non-secret runtime variables. Set GEMINI_API_KEY, STRIPE_SECRET_KEY, and
-  // STRIPE_WEBHOOK_SECRET separately with `wrangler pages secret put`; never commit those
-  // secrets to this file. STRIPE_PRICE_ID is the recurring $2.99/mo Price id from the
-  // Stripe Dashboard -- not secret, safe to keep here (fill in once the Price exists).
+  // These are non-secret runtime variables. Set GEMINI_API_KEY, PADDLE_API_KEY, and
+  // PADDLE_WEBHOOK_SECRET separately with `wrangler pages secret put`; never commit those
+  // secrets to this file. Fill in the Paddle price id and client token for the selected
+  // environment before enabling Pro checkout.
   "vars": {
     "FREE_TIER_DAILY_BUDGET": "2000",
     "ALLOWED_EXTENSION_ORIGINS": "chrome-extension://aonkgefdmgjcnhopbkeehmoacncpkeje,chrome-extension://lbefokebdhapaaglokdpaghopihlhagg",
-    "STRIPE_PRICE_ID": ""
+    "PADDLE_PRICE_ID": "",
+    "PADDLE_CLIENT_TOKEN": "",
+    "PADDLE_ENVIRONMENT": "sandbox"
   }
 }

@@ -1,4 +1,5 @@
-const PAGE = `<!doctype html>
+function pageResponse(content, script = '') {
+  return new Response(`<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -11,20 +12,31 @@ const PAGE = `<!doctype html>
     main { width: min(100%, 440px); padding: 40px; text-align: center; background: #151c32; border: 1px solid #2b3659; border-radius: 20px; box-shadow: 0 20px 60px #05081780; }
     h1 { margin: 0 0 12px; font-size: 2rem; }
     p { margin: 0 0 28px; color: #b9c2dc; line-height: 1.6; }
-    a { display: inline-block; padding: 13px 22px; color: #0b1020; background: #a8b8ff; border-radius: 10px; font-weight: 750; text-decoration: none; }
-    a:hover { background: #c1ccff; }
+    button { padding: 13px 22px; border: 0; color: #0b1020; background: #a8b8ff; border-radius: 10px; font: inherit; font-weight: 750; cursor: pointer; }
+    button:hover { background: #c1ccff; }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Ondrift Pro</h1>
-    <p>Rewrite up to 100 prompts per day with Ondrift's hosted Gemini service.</p>
-    <a href="/api/checkout">Subscribe $2.99/mo</a>
-  </main>
+  <main>${content}</main>
+  ${script}
 </body>
-</html>`
+</html>`, {
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'cache-control': 'no-store',
+    },
+  })
+}
 
-export function onRequest({ request }) {
+function paddleEnvironment(value) {
+  return value === 'production' ? 'production' : 'sandbox'
+}
+
+function scriptValue(value) {
+  return JSON.stringify(value).replaceAll('<', '\\u003c')
+}
+
+export function onRequest({ request, env }) {
   if (request.method !== 'GET') {
     return new Response('Method not allowed', {
       status: 405,
@@ -32,10 +44,37 @@ export function onRequest({ request }) {
     })
   }
 
-  return new Response(PAGE, {
-    headers: {
-      'content-type': 'text/html; charset=utf-8',
-      'cache-control': 'no-store',
-    },
-  })
+  const clientToken =
+    typeof env.PADDLE_CLIENT_TOKEN === 'string' ? env.PADDLE_CLIENT_TOKEN.trim() : ''
+  const priceId = typeof env.PADDLE_PRICE_ID === 'string' ? env.PADDLE_PRICE_ID.trim() : ''
+
+  if (!clientToken || !priceId) {
+    return pageResponse(
+      '<h1>Ondrift Pro</h1><p>Pro checkout isn\'t configured yet. Please check back later.</p>',
+    )
+  }
+
+  const environment = paddleEnvironment(env.PADDLE_ENVIRONMENT)
+  const script = `<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+  <script>
+    Paddle.Environment.set(${scriptValue(environment)});
+    Paddle.Initialize({
+      token: ${scriptValue(clientToken)},
+      eventCallback: function (event) {
+        if (event.name === 'checkout.completed' && event.data && event.data.transaction_id) {
+          window.location.href = '/upgrade/success?transaction_id=' + encodeURIComponent(event.data.transaction_id);
+        }
+      },
+    });
+    document.getElementById('subscribe-button').addEventListener('click', function () {
+      Paddle.Checkout.open({ items: [{ priceId: ${scriptValue(priceId)}, quantity: 1 }] });
+    });
+  </script>`
+
+  return pageResponse(
+    `<h1>Ondrift Pro</h1>
+    <p>Rewrite up to 100 prompts per day with Ondrift's hosted Gemini service.</p>
+    <button type="button" id="subscribe-button">Subscribe $2.99/mo</button>`,
+    script,
+  )
 }

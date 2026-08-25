@@ -1,4 +1,4 @@
-const SIGNATURE_TOLERANCE_SECONDS = 5 * 60
+const SIGNATURE_TOLERANCE_SECONDS = 5
 
 function toHex(bytes) {
   return Array.from(new Uint8Array(bytes), (byte) => byte.toString(16).padStart(2, '0')).join(
@@ -15,7 +15,7 @@ function constantTimeEqual(left, right) {
   return difference === 0
 }
 
-export async function verifyStripeSignature(
+export async function verifyPaddleSignature(
   rawBody,
   signatureHeader,
   webhookSecret,
@@ -32,14 +32,14 @@ export async function verifyStripeSignature(
 
   let timestamp
   const signatures = []
-  for (const part of signatureHeader.split(',')) {
+  for (const part of signatureHeader.split(';')) {
     const separator = part.indexOf('=')
     if (separator < 1) continue
     const name = part.slice(0, separator).trim()
     const value = part.slice(separator + 1).trim()
-    if (name === 't' && timestamp === undefined && /^\d+$/.test(value)) {
+    if (name === 'ts' && timestamp === undefined && /^\d+$/.test(value)) {
       timestamp = Number(value)
-    } else if (name === 'v1' && /^[0-9a-f]{64}$/i.test(value)) {
+    } else if (name === 'h1' && /^[0-9a-f]{64}$/i.test(value)) {
       signatures.push(value.toLowerCase())
     }
   }
@@ -65,7 +65,7 @@ export async function verifyStripeSignature(
   const digest = await crypto.subtle.sign(
     'HMAC',
     key,
-    encoder.encode(`${timestamp}.${rawBody}`),
+    encoder.encode(`${timestamp}:${rawBody}`),
   )
   const expected = toHex(digest)
 
@@ -100,9 +100,13 @@ async function updateLicense(env, subscriptionId, update) {
   await env.ONDRIFT_LICENSES.put(licenseKey, JSON.stringify(update(record)))
 }
 
+function getEventType(event) {
+  return event?.event_type ?? event?.type
+}
+
 export async function onRequest({ request, env }) {
   if (request.method !== 'POST') return response(405)
-  if (!env.STRIPE_WEBHOOK_SECRET || !env.ONDRIFT_LICENSES) return response(400)
+  if (!env.PADDLE_WEBHOOK_SECRET || !env.ONDRIFT_LICENSES) return response(400)
 
   let rawBody
   try {
@@ -110,15 +114,16 @@ export async function onRequest({ request, env }) {
   } catch {
     return response(400)
   }
+
   let verified = false
   try {
-    verified = await verifyStripeSignature(
+    verified = await verifyPaddleSignature(
       rawBody,
-      request.headers.get('Stripe-Signature'),
-      env.STRIPE_WEBHOOK_SECRET,
+      request.headers.get('Paddle-Signature'),
+      env.PADDLE_WEBHOOK_SECRET,
     )
   } catch {
-    console.error('Ondrift Stripe signature verification failed')
+    console.error('Ondrift Paddle signature verification failed')
   }
   if (!verified) return response(400)
 
@@ -129,34 +134,51 @@ export async function onRequest({ request, env }) {
     return response(400)
   }
 
+  const eventType = getEventType(event)
+  if (
+    eventType !== 'transaction.completed' &&
+    eventType !== 'subscription.canceled' &&
+    eventType !== 'subscription.updated'
+  ) {
+    return response(200)
+  }
+
   try {
-    if (event.type === 'invoice.paid') {
-      const invoice = event.data?.object
-      const periodEnd = invoice?.lines?.data?.[0]?.period?.end
-      await updateLicense(env, invoice?.subscription, (record) => ({
+    if (eventType === 'transaction.completed') {
+      const transaction = event.data
+      const periodEnd = transaction?.billing_period?.ends_at
+      await updateLicense(env, transaction?.subscription_id, (record) => ({
         ...record,
         status: 'active',
-        ...(Number.isFinite(periodEnd)
-          ? { currentPeriodEnd: new Date(periodEnd * 1000).toISOString() }
+        ...(typeof periodEnd === 'string' && periodEnd
+          ? { currentPeriodEnd: periodEnd }
           : {}),
       }))
-    } else if (event.type === 'customer.subscription.deleted') {
-      const subscription = event.data?.object
-      await updateLicense(env, subscription?.id, (record) => ({
+    } else if (eventType === 'subscription.canceled') {
+      await updateLicense(env, event.data?.id, (record) => ({
         ...record,
         status: 'revoked',
       }))
-    } else if (event.type === 'customer.subscription.updated') {
-      const subscription = event.data?.object
-      if (['canceled', 'unpaid', 'incomplete_expired'].includes(subscription?.status)) {
+    } else {
+      const subscription = event.data
+      if (['canceled', 'past_due', 'paused'].includes(subscription?.status)) {
         await updateLicense(env, subscription?.id, (record) => ({
           ...record,
           status: 'revoked',
         }))
+      } else if (['active', 'trialing'].includes(subscription?.status)) {
+        const periodEnd = subscription?.current_billing_period?.ends_at
+        await updateLicense(env, subscription?.id, (record) => ({
+          ...record,
+          status: 'active',
+          ...(typeof periodEnd === 'string' && periodEnd
+            ? { currentPeriodEnd: periodEnd }
+            : {}),
+        }))
       }
     }
   } catch (error) {
-    console.error('Ondrift Stripe webhook processing failed', error)
+    console.error('Ondrift Paddle webhook processing failed', error)
     return response(500)
   }
 
