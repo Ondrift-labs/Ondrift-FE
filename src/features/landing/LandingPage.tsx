@@ -143,6 +143,7 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
         </a>
         <nav className="landing-nav-links">
           <a href="#how">{copy.nav.how}</a>
+          <a href="#pricing">{copy.nav.pricing}</a>
           <a href="#privacy">{copy.nav.privacy}</a>
           <a href="#faq">{copy.nav.faq}</a>
           <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub<ArrowUpRight size={13} /></a>
@@ -202,6 +203,31 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
                 <span className="landing-step-n">{step.n}</span>
                 <h3>{step.title}</h3>
                 <p>{step.body}</p>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section id="pricing" className="landing-section">
+          <Reveal className="landing-section-head">
+            <span className="ui-eyebrow">{copy.pricing.eyebrow}</span>
+            <h2>{copy.pricing.title}</h2>
+            <p>{copy.pricing.body}</p>
+          </Reveal>
+          <div className="landing-pricing-grid">
+            {copy.pricing.tiers.map((tier, index) => (
+              <Reveal key={tier.name} delay={index * 120} className={`landing-pricing-card ${index === 1 ? 'landing-pricing-card--highlight' : ''}`}>
+                <span className="landing-pricing-name">{tier.name}</span>
+                <div className="landing-pricing-amount"><strong>{tier.price}</strong><span>{tier.period}</span></div>
+                <p className="landing-pricing-desc">{tier.description}</p>
+                <ul className="landing-pricing-features">
+                  {tier.features.map((feature) => <li key={feature}><Check size={14} aria-hidden="true" />{feature}</li>)}
+                </ul>
+                {index === 1 && (
+                  <a className="ui-button ui-button--primary" href="https://ondrift.pages.dev/upgrade" onClick={() => trackLandingCta('pricing_upgrade')}>
+                    {copy.pricing.cta}<ArrowRight size={15} />
+                  </a>
+                )}
               </Reveal>
             ))}
           </div>

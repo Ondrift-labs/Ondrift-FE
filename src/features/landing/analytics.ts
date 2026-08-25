@@ -6,6 +6,7 @@ export type LandingCta =
   | 'how_it_works'
   | 'install_final'
   | 'guide_final'
+  | 'pricing_upgrade'
   | 'contact_bug'
   | 'contact_feature'
   | 'contact_question'

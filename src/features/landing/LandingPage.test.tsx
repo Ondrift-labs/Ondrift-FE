@@ -69,6 +69,14 @@ describe('LandingPage language switcher', () => {
     expect(window.location.pathname).toBe('/zh/')
   })
 
+  it('lists a pricing section reachable from the nav, with the Pro tier linking to the upgrade page', () => {
+    render(<LandingPage />)
+
+    expect(screen.getByRole('link', { name: 'Pricing' })).toHaveAttribute('href', '#pricing')
+    expect(screen.getByText('Free by default. Pro when you need more.')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Upgrade to Pro/ })).toHaveAttribute('href', 'https://ondrift.pages.dev/upgrade')
+  })
+
   it('lists an FAQ section reachable from the nav', () => {
     render(<LandingPage />)
 

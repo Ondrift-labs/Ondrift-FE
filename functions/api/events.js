@@ -8,6 +8,7 @@ const ALLOWED_TARGETS = new Set([
   'how_it_works',
   'install_final',
   'guide_final',
+  'pricing_upgrade',
 ])
 
 function response(status) {

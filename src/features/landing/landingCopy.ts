@@ -3,13 +3,23 @@ import { LANGUAGES, type LanguageId } from 'ondrift-i18n'
 export type LandingLanguage = LanguageId
 
 interface ContactCard { title: string; body: string; action: string; note: string }
+interface PricingTier { name: string; price: string; period: string; description: string; features: string[] }
 
 export interface LandingCopy {
   meta: { title: string; description: string }
-  nav: { how: string; privacy: string; faq: string; install: string; languageLabel: string; systemLanguage: string }
+  nav: { how: string; pricing: string; privacy: string; faq: string; install: string; languageLabel: string; systemLanguage: string }
   hero: { eyebrow: string; line1: string; line2: string; body: string; install: string; how: string; meta: string }
   supportedSites: string
   how: { eyebrow: string; title: string; steps: Array<{ n: string; title: string; body: string }> }
+  pricing: {
+    eyebrow: string
+    title: string
+    body: string
+    // Position is meaningful, same reasoning as privacy.points/contact.cards below: LandingPage
+    // applies the "highlighted" treatment and the upgrade CTA to index 1 (Pro) specifically.
+    tiers: [PricingTier, PricingTier, PricingTier]
+    cta: string
+  }
   // A fixed-length tuple, not `string[]`: LandingPage pairs each point with one of 3 fixed
   // icons positionally (PRIVACY_ICONS[index]), so a locale with a different count would
   // silently render `undefined` for the extra/missing icon -- the tuple type catches that
@@ -57,7 +67,7 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
       title: 'Ondrift — A clearer prompt before you send',
       description: 'A free Chrome extension that makes rough prompts clearer and more specific before you send them in ChatGPT, Claude, Gemini, Perplexity, or Grok.',
     },
-    nav: { how: 'How it works', privacy: 'Privacy', faq: 'FAQ', install: 'Add to Chrome', languageLabel: 'Page language', systemLanguage: 'System' },
+    nav: { how: 'How it works', pricing: 'Pricing', privacy: 'Privacy', faq: 'FAQ', install: 'Add to Chrome', languageLabel: 'Page language', systemLanguage: 'System' },
     hero: {
       eyebrow: 'A CLEARER PROMPT, RIGHT WHERE YOU TYPE', line1: 'Start with a rough prompt.', line2: 'Send a clearer one.',
       body: 'Write as usual in ChatGPT, Claude, Gemini, Perplexity, or Grok. Ondrift highlights what is missing, explains the score, and lets you apply a clearer version in one click. No account or Ondrift server required.',
@@ -72,6 +82,16 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
         { n: '02', title: 'Score and rewrite', body: 'Ask the Ondrift widget to review clarity, context, and constraints. It returns a score, rationale, and an improved version.' },
         { n: '03', title: 'Review and apply', body: 'Apply the rewrite with one click, ignore it, or keep editing directly in the prompt box. You stay in control.' },
       ],
+    },
+    pricing: {
+      eyebrow: 'PRICING', title: 'Free by default. Pro when you need more.',
+      body: 'Three ways to use Ondrift, depending on how often you rewrite and whether you’d rather bring your own API key.',
+      tiers: [
+        { name: 'Free', price: '$0', period: '/mo', description: 'For occasional rewrites, no setup required.', features: ['3 rewrites per day', 'Runs on Ondrift’s hosted Gemini', 'No API key needed'] },
+        { name: 'Pro', price: '$2.99', period: '/mo', description: 'For daily use, still no API key to manage.', features: ['100 rewrites per day', 'Runs on Ondrift’s hosted Gemini', 'No API key needed'] },
+        { name: 'Bring your own key', price: '$0', period: '/mo', description: 'For unlimited use with your own Gemini key.', features: ['Unlimited rewrites', 'Requests go straight to Google', 'Your key, your usage'] },
+      ],
+      cta: 'Upgrade to Pro',
     },
     privacy: {
       eyebrow: 'WHY NO SERVER?', title: 'No account. No Ondrift server.',
@@ -141,7 +161,7 @@ Turn the transcript below into actionable meeting notes.
       title: 'Ondrift — 보내기 전에 더 명확한 프롬프트로',
       description: '대충 쓴 프롬프트도 ChatGPT, Claude, Gemini, Perplexity, Grok에 보내기 전에 더 명확하고 구체적으로 개선하는 무료 Chrome 확장 프로그램입니다.',
     },
-    nav: { how: '동작 방식', privacy: '프라이버시', faq: '자주 묻는 질문', install: 'Chrome에 추가', languageLabel: '페이지 언어', systemLanguage: '시스템 언어' },
+    nav: { how: '동작 방식', pricing: '요금제', privacy: '프라이버시', faq: '자주 묻는 질문', install: 'Chrome에 추가', languageLabel: '페이지 언어', systemLanguage: '시스템 언어' },
     hero: {
       eyebrow: '쓰던 입력창에서 바로 더 명확하게', line1: '대충 써도 괜찮습니다.', line2: '보내기 전에 더 명확하게.',
       body: 'ChatGPT, Claude, Gemini, Perplexity, Grok에서 평소처럼 작성하세요. Ondrift가 빠진 내용을 짚고 점수의 이유를 설명한 뒤, 더 명확한 프롬프트를 한 번에 적용해 줍니다. 계정이나 Ondrift 서버는 필요 없습니다.',
@@ -156,6 +176,16 @@ Turn the transcript below into actionable meeting notes.
         { n: '02', title: '점수와 재작성', body: 'Ondrift 위젯이 명확성·맥락·제약을 검토해 점수, 근거, 다시 쓴 버전을 함께 보여줍니다.' },
         { n: '03', title: '검토 후 적용', body: '마음에 들면 한 클릭으로 적용하고, 아니면 무시하거나 입력창에서 계속 수정할 수 있습니다.' },
       ],
+    },
+    pricing: {
+      eyebrow: '요금제', title: '기본은 무료. 더 필요할 땐 Pro.',
+      body: '하루에 몇 번 재작성하는지, 직접 API 키를 관리하고 싶은지에 따라 세 가지 방식으로 Ondrift를 쓸 수 있습니다.',
+      tiers: [
+        { name: '무료', price: '$0', period: '/월', description: '가끔 재작성한다면, 별도 설정 없이.', features: ['하루 3회 재작성', 'Ondrift가 운영하는 Gemini 사용', 'API 키 필요 없음'] },
+        { name: 'Pro', price: '$2.99', period: '/월', description: '매일 쓰더라도 API 키 관리는 필요 없습니다.', features: ['하루 100회 재작성', 'Ondrift가 운영하는 Gemini 사용', 'API 키 필요 없음'] },
+        { name: '내 API 키 사용', price: '$0', period: '/월', description: '내 Gemini 키로 무제한 사용.', features: ['무제한 재작성', '요청이 Google로 직접 전송됨', '내 키, 내 사용량'] },
+      ],
+      cta: 'Pro로 업그레이드',
     },
     privacy: {
       eyebrow: '왜 서버가 없나요', title: '계정도, Ondrift 서버도 없습니다',
@@ -225,7 +255,7 @@ Turn the transcript below into actionable meeting notes.
       title: 'Ondrift — 送信前に、もっと明確なプロンプトへ',
       description: 'ラフなプロンプトも、ChatGPT、Claude、Gemini、Perplexity、Grokへ送信する前に、より明確で具体的に改善できる無料のChrome拡張機能です。',
     },
-    nav: { how: '仕組み', privacy: 'プライバシー', faq: 'よくある質問', install: 'Chromeに追加', languageLabel: 'ページの言語', systemLanguage: 'システム言語' },
+    nav: { how: '仕組み', pricing: '料金', privacy: 'プライバシー', faq: 'よくある質問', install: 'Chromeに追加', languageLabel: 'ページの言語', systemLanguage: 'システム言語' },
     hero: {
       eyebrow: 'いつもの入力欄で、もっと明確に', line1: 'ラフに書いても大丈夫。', line2: '送信前に、もっと明確に。',
       body: 'ChatGPT、Claude、Gemini、Perplexity、Grokでいつも通り入力してください。Ondriftが不足している内容とスコアの理由を示し、より明確なプロンプトをワンクリックで適用します。アカウントもOndriftサーバーも不要です。',
@@ -240,6 +270,16 @@ Turn the transcript below into actionable meeting notes.
         { n: '02', title: '評価して改善', body: 'Ondriftが明確さ、文脈、制約を確認し、スコア、根拠、改善案を表示します。' },
         { n: '03', title: '確認して適用', body: '気に入ればワンクリックで適用。無視することも、入力欄でさらに編集することもできます。' },
       ],
+    },
+    pricing: {
+      eyebrow: '料金プラン', title: '基本は無料。もっと使うならPro。',
+      body: '1日にどれくらい改善するか、自分のAPIキーを管理したいかによって、3つの使い方があります。',
+      tiers: [
+        { name: '無料', price: '$0', period: '/月', description: 'たまに使うなら、設定不要で。', features: ['1日3回まで改善', 'Ondriftが運用するGeminiを使用', 'APIキー不要'] },
+        { name: 'Pro', price: '$2.99', period: '/月', description: '毎日使ってもAPIキーの管理は不要です。', features: ['1日100回まで改善', 'Ondriftが運用するGeminiを使用', 'APIキー不要'] },
+        { name: '自分のAPIキーを使う', price: '$0', period: '/月', description: '自分のGeminiキーで無制限に使用。', features: ['無制限の改善', 'リクエストはGoogleへ直接送信', '自分のキー、自分の使用量'] },
+      ],
+      cta: 'Proにアップグレード',
     },
     privacy: {
       eyebrow: 'なぜサーバーがないのか', title: 'アカウントもOndriftサーバーも不要',
@@ -309,7 +349,7 @@ Turn the transcript below into actionable meeting notes.
       title: 'Ondrift — 发送前先打磨你的提示词',
       description: '一款本地优先的 Chrome 扩展程序,在 ChatGPT、Claude、Gemini、Perplexity 和 Grok 中为提示词打分并重写,使用你自己的 AI 提供商 API 密钥。',
     },
-    nav: { how: '工作原理', privacy: '隐私', faq: '常见问题', install: '添加到 Chrome', languageLabel: '页面语言', systemLanguage: '系统语言' },
+    nav: { how: '工作原理', pricing: '价格', privacy: '隐私', faq: '常见问题', install: '添加到 Chrome', languageLabel: '页面语言', systemLanguage: '系统语言' },
     hero: {
       eyebrow: '本地优先的提示词工具', line1: '先写一次,', line2: '发送前更进一步。',
       body: '在 ChatGPT、Claude、Gemini、Perplexity 和 Grok 的输入框中检查提示词,查看评分和理由,然后一键重写。无需账号,也没有 Ondrift 服务器 — 只需要你自己的 AI 提供商 API 密钥。',
@@ -324,6 +364,16 @@ Turn the transcript below into actionable meeting notes.
         { n: '02', title: '评分并重写', body: '让 Ondrift 小组件检查清晰度、上下文和限制条件,它会返回评分、理由和改进后的版本。' },
         { n: '03', title: '检查并应用', body: '一键应用重写结果,忽略它,或直接在输入框中继续编辑。主导权始终在你手中。' },
       ],
+    },
+    pricing: {
+      eyebrow: '价格', title: '默认免费,需要更多时升级 Pro。',
+      body: '根据你每天重写的次数,以及是否愿意自行管理 API 密钥,Ondrift 提供三种使用方式。',
+      tiers: [
+        { name: '免费', price: '$0', period: '/月', description: '偶尔使用,无需任何设置。', features: ['每天 3 次重写', '使用 Ondrift 托管的 Gemini', '无需 API 密钥'] },
+        { name: 'Pro', price: '$2.99', period: '/月', description: '每天使用也无需管理 API 密钥。', features: ['每天 100 次重写', '使用 Ondrift 托管的 Gemini', '无需 API 密钥'] },
+        { name: '使用你自己的密钥', price: '$0', period: '/月', description: '用你自己的 Gemini 密钥无限使用。', features: ['无限次重写', '请求直接发送到 Google', '你的密钥,你的用量'] },
+      ],
+      cta: '升级到 Pro',
     },
     privacy: {
       eyebrow: '为什么没有服务器', title: '无需账号,也没有 Ondrift 服务器',
