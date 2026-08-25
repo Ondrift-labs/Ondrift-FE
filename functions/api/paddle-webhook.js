@@ -1,4 +1,9 @@
-const SIGNATURE_TOLERANCE_SECONDS = 5
+// Paddle's own SDKs default to a 5-second tolerance, but that assumes an always-warm
+// origin. Cloudflare Pages Functions can add cold-start + edge latency on top of normal
+// network delivery time, which was pushing legitimate, correctly-signed webhooks past a
+// 5-second window in practice. 60 seconds is still tight enough to be a meaningful replay
+// defense while giving real deliveries enough slack to land.
+const SIGNATURE_TOLERANCE_SECONDS = 60
 
 function toHex(bytes) {
   return Array.from(new Uint8Array(bytes), (byte) => byte.toString(16).padStart(2, '0')).join(
@@ -27,6 +32,7 @@ export async function verifyPaddleSignature(
     typeof webhookSecret !== 'string' ||
     !webhookSecret
   ) {
+    console.error('Ondrift Paddle webhook rejected: missing body/header/secret')
     return false
   }
 
@@ -44,13 +50,20 @@ export async function verifyPaddleSignature(
     }
   }
 
-  if (!Number.isSafeInteger(timestamp) || signatures.length === 0) return false
+  if (!Number.isSafeInteger(timestamp) || signatures.length === 0) {
+    console.error('Ondrift Paddle webhook rejected: could not parse ts/h1 from Paddle-Signature', {
+      signatureHeader,
+    })
+    return false
+  }
 
   const nowSeconds = Math.floor(Number(now) / 1000)
-  if (
-    !Number.isFinite(nowSeconds) ||
-    Math.abs(nowSeconds - timestamp) > SIGNATURE_TOLERANCE_SECONDS
-  ) {
+  const driftSeconds = Number.isFinite(nowSeconds) ? nowSeconds - timestamp : null
+  if (driftSeconds === null || Math.abs(driftSeconds) > SIGNATURE_TOLERANCE_SECONDS) {
+    console.error('Ondrift Paddle webhook rejected: timestamp outside tolerance', {
+      driftSeconds,
+      toleranceSeconds: SIGNATURE_TOLERANCE_SECONDS,
+    })
     return false
   }
 
@@ -69,7 +82,11 @@ export async function verifyPaddleSignature(
   )
   const expected = toHex(digest)
 
-  return signatures.some((signature) => constantTimeEqual(expected, signature))
+  const matched = signatures.some((signature) => constantTimeEqual(expected, signature))
+  if (!matched) {
+    console.error('Ondrift Paddle webhook rejected: signature mismatch (check PADDLE_WEBHOOK_SECRET)')
+  }
+  return matched
 }
 
 function response(status) {

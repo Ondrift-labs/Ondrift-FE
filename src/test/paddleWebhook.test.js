@@ -39,9 +39,9 @@ describe('verifyPaddleSignature', () => {
     ).resolves.toBe(false)
   })
 
-  it('rejects a timestamp outside the five-second tolerance', async () => {
+  it('rejects a timestamp outside the tolerance window', async () => {
     await expect(
-      verifyPaddleSignature(body, header, secret, now + 6_000),
+      verifyPaddleSignature(body, header, secret, now + 65_000),
     ).resolves.toBe(false)
   })
 })
