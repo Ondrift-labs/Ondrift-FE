@@ -1,7 +1,7 @@
 import { createHmac, webcrypto } from 'node:crypto'
 import { beforeAll, describe, expect, it } from 'vitest'
 
-import { verifyPaddleSignature } from '../../functions/api/paddle-webhook.js'
+import { onRequest, verifyPaddleSignature } from '../../functions/api/paddle-webhook.js'
 
 beforeAll(() => {
   if (!globalThis.crypto?.subtle) {
@@ -43,5 +43,91 @@ describe('verifyPaddleSignature', () => {
     await expect(
       verifyPaddleSignature(body, header, secret, now + 65_000),
     ).resolves.toBe(false)
+  })
+})
+
+function createLicenseStore(initial) {
+  const store = new Map(Object.entries(initial))
+  return {
+    async get(key) {
+      return store.has(key) ? store.get(key) : null
+    },
+    async put(key, value) {
+      store.set(key, value)
+    },
+    read(key) {
+      return store.get(key)
+    },
+  }
+}
+
+function webhookRequest(body, secret, timestamp = Math.floor(Date.now() / 1000)) {
+  const signature = signatureFor(timestamp, body, secret)
+  return new Request('https://ondrift.pages.dev/api/paddle-webhook', {
+    method: 'POST',
+    body,
+    headers: { 'Paddle-Signature': `ts=${timestamp};h1=${signature}` },
+  })
+}
+
+describe('onRequest adjustment handling', () => {
+  const secret = 'pdl_ntfset_test_secret'
+
+  function baseEnv() {
+    return {
+      PADDLE_WEBHOOK_SECRET: secret,
+      ONDRIFT_LICENSES: createLicenseStore({
+        'subscription:sub_123': 'ONDR-AAAA-BBBB',
+        'license:ONDR-AAAA-BBBB': JSON.stringify({
+          status: 'active',
+          currentPeriodEnd: '2026-09-24T00:00:00.000Z',
+        }),
+      }),
+    }
+  }
+
+  it('revokes the license when a refund adjustment is approved', async () => {
+    const env = baseEnv()
+    const body = JSON.stringify({
+      event_type: 'adjustment.updated',
+      data: { action: 'refund', status: 'approved', subscription_id: 'sub_123' },
+    })
+
+    const result = await onRequest({ request: webhookRequest(body, secret), env })
+
+    expect(result.status).toBe(200)
+    expect(JSON.parse(env.ONDRIFT_LICENSES.read('license:ONDR-AAAA-BBBB')).status).toBe(
+      'revoked',
+    )
+  })
+
+  it('leaves the license alone while a refund adjustment is still pending approval', async () => {
+    const env = baseEnv()
+    const body = JSON.stringify({
+      event_type: 'adjustment.created',
+      data: { action: 'refund', status: 'pending_approval', subscription_id: 'sub_123' },
+    })
+
+    const result = await onRequest({ request: webhookRequest(body, secret), env })
+
+    expect(result.status).toBe(200)
+    expect(JSON.parse(env.ONDRIFT_LICENSES.read('license:ONDR-AAAA-BBBB')).status).toBe(
+      'active',
+    )
+  })
+
+  it('ignores a credit adjustment', async () => {
+    const env = baseEnv()
+    const body = JSON.stringify({
+      event_type: 'adjustment.updated',
+      data: { action: 'credit', status: 'approved', subscription_id: 'sub_123' },
+    })
+
+    const result = await onRequest({ request: webhookRequest(body, secret), env })
+
+    expect(result.status).toBe(200)
+    expect(JSON.parse(env.ONDRIFT_LICENSES.read('license:ONDR-AAAA-BBBB')).status).toBe(
+      'active',
+    )
   })
 })

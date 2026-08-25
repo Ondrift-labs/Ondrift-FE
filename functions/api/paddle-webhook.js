@@ -155,7 +155,9 @@ export async function onRequest({ request, env }) {
   if (
     eventType !== 'transaction.completed' &&
     eventType !== 'subscription.canceled' &&
-    eventType !== 'subscription.updated'
+    eventType !== 'subscription.updated' &&
+    eventType !== 'adjustment.created' &&
+    eventType !== 'adjustment.updated'
   ) {
     return response(200)
   }
@@ -176,6 +178,17 @@ export async function onRequest({ request, env }) {
         ...record,
         status: 'revoked',
       }))
+    } else if (eventType === 'adjustment.created' || eventType === 'adjustment.updated') {
+      // Paddle models refunds as Adjustments, not a transaction/subscription status
+      // change. An approved refund adjustment should revoke Pro the same way a
+      // cancellation does; pending/rejected/reversed adjustments are left alone.
+      const adjustment = event.data
+      if (adjustment?.action === 'refund' && adjustment?.status === 'approved') {
+        await updateLicense(env, adjustment?.subscription_id, (record) => ({
+          ...record,
+          status: 'revoked',
+        }))
+      }
     } else {
       const subscription = event.data
       if (['canceled', 'past_due', 'paused'].includes(subscription?.status)) {
