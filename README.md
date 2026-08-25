@@ -45,6 +45,28 @@ BYOK usage is unchanged: when a user supplies their own key, the extension
 continues calling Gemini directly and never sends that request through this
 endpoint.
 
+## Pro-tier subscription and licenses
+
+Ondrift Pro adds a Stripe-hosted subscription flow and license verification on
+top of the free-tier infrastructure. `/upgrade` renders the subscription page,
+`/api/checkout` creates the Stripe Checkout Session, and `/upgrade/success`
+issues an idempotent license after payment. Stripe sends renewal and
+cancellation events to `/api/stripe-webhook`, while the extension validates a
+saved code through `/api/verify-license` and sends it to `/api/rewrite` for the
+100-rewrites-per-day Pro quota.
+
+`STRIPE_PRICE_ID` is a non-secret variable configured in `wrangler.jsonc`. Set
+the two Stripe secrets separately in Cloudflare Pages; do not commit them:
+
+```bash
+npx wrangler@4.123.0 pages secret put STRIPE_SECRET_KEY --project-name ondrift
+npx wrangler@4.123.0 pages secret put STRIPE_WEBHOOK_SECRET --project-name ondrift
+```
+
+Pro rewrites still use Ondrift's own `GEMINI_API_KEY`, just like the free tier;
+the active license raises the per-user daily limit while retaining the shared
+global budget safeguard.
+
 ## Status of this repository
 
 The React web dashboard in this repository is an earlier prototype and is not
