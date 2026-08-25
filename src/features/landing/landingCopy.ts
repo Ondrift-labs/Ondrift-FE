@@ -35,7 +35,7 @@ export interface LandingCopy {
     cards: [ContactCard, ContactCard, ContactCard]
   }
   cta: { title: string; steps: string[]; release: string; guide: string; note: string }
-  footer: { privacy: string; guide: string; contact: string; note: string }
+  footer: { privacy: string; terms: string; refund: string; guide: string; contact: string; note: string }
   demo: {
     before: string
     after: string
@@ -131,7 +131,7 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
       note: 'Free to install · No account required.',
     },
     footer: {
-      privacy: 'Privacy policy', guide: 'Install guide', contact: 'Contact',
+      privacy: 'Privacy policy', terms: 'Terms of service', refund: 'Refund policy', guide: 'Install guide', contact: 'Contact',
       note: 'Google, Gemini, ChatGPT, Claude, Perplexity, and Grok are trademarks of their respective owners. Ondrift is not affiliated with them.',
     },
     demo: {
@@ -225,7 +225,7 @@ Turn the transcript below into actionable meeting notes.
       note: '무료 설치 · 계정이 필요 없습니다.',
     },
     footer: {
-      privacy: '개인정보 처리방침', guide: '설치 가이드', contact: '문의하기',
+      privacy: '개인정보 처리방침', terms: '이용약관', refund: '환불 정책', guide: '설치 가이드', contact: '문의하기',
       note: 'Google, Gemini, ChatGPT, Claude, Perplexity, Grok은 각 소유자의 상표이며 Ondrift와 제휴 관계가 없습니다.',
     },
     demo: {
@@ -319,7 +319,7 @@ Turn the transcript below into actionable meeting notes.
       note: '無料でインストール · アカウント不要。',
     },
     footer: {
-      privacy: 'プライバシーポリシー', guide: 'インストールガイド', contact: 'お問い合わせ',
+      privacy: 'プライバシーポリシー', terms: '利用規約', refund: '返金ポリシー', guide: 'インストールガイド', contact: 'お問い合わせ',
       note: 'Google、Gemini、ChatGPT、Claude、Perplexity、Grokは各社の商標です。Ondriftは各社と提携していません。',
     },
     demo: {
@@ -413,7 +413,7 @@ Turn the transcript below into actionable meeting notes.
       note: '免费安装 · 无需账号。',
     },
     footer: {
-      privacy: '隐私政策', guide: '安装指南', contact: '联系我们',
+      privacy: '隐私政策', terms: '服务条款', refund: '退款政策', guide: '安装指南', contact: '联系我们',
       note: 'Google、Gemini、ChatGPT、Claude、Perplexity 和 Grok 是其各自所有者的商标。Ondrift 与它们没有从属关系。',
     },
     demo: {

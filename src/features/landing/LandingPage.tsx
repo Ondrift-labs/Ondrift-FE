@@ -337,6 +337,8 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
         <nav className="landing-footer-links">
           <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub</a>
           <a href={`${REPO_URL}/blob/main/PRIVACY.md`} target="_blank" rel="noreferrer">{copy.footer.privacy}</a>
+          <a href={`${REPO_URL}/blob/main/TERMS.md`} target="_blank" rel="noreferrer">{copy.footer.terms}</a>
+          <a href={`${REPO_URL}/blob/main/REFUND.md`} target="_blank" rel="noreferrer">{copy.footer.refund}</a>
           <a href={`${REPO_URL}#install-from-a-github-zip`} target="_blank" rel="noreferrer">{copy.footer.guide}</a>
           <a href="#contact">{copy.footer.contact}</a>
         </nav>
