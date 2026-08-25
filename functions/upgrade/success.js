@@ -1,3 +1,5 @@
+import { normalizeEmail } from '../_shared/email.js'
+
 const PADDLE_API_BASES = {
   production: 'https://api.paddle.com',
   sandbox: 'https://sandbox-api.paddle.com',
@@ -101,6 +103,16 @@ async function fetchPaddleResource(baseUrl, path, apiKey) {
   return payload?.data ?? null
 }
 
+async function linkCustomerEmail(licenses, email, code) {
+  if (!email) return
+
+  try {
+    await licenses.put(`email:${email}`, code)
+  } catch {
+    console.error('Ondrift customer email linking failed')
+  }
+}
+
 export async function onRequest({ request, env }) {
   if (request.method !== 'GET') {
     return new Response('Method not allowed', {
@@ -135,6 +147,22 @@ export async function onRequest({ request, env }) {
     return errorPage()
   }
 
+  const customerId = transaction.customer_id
+  let customerEmail = null
+
+  if (typeof customerId === 'string' && customerId) {
+    try {
+      const customer = await fetchPaddleResource(
+        baseUrl,
+        `/customers/${encodeURIComponent(customerId)}`,
+        env.PADDLE_API_KEY,
+      )
+      customerEmail = normalizeEmail(customer?.email)
+    } catch {
+      console.error('Ondrift Paddle customer lookup failed')
+    }
+  }
+
   const transactionKey = `transaction:${transactionId}`
 
   try {
@@ -147,11 +175,11 @@ export async function onRequest({ request, env }) {
         console.error('Ondrift license record is missing for an issued Paddle transaction')
         return errorPage()
       }
+      await linkCustomerEmail(env.ONDRIFT_LICENSES, customerEmail, existingCode)
       return successPage(existingCode, existingRecord)
     }
 
     const subscriptionId = transaction.subscription_id
-    const customerId = transaction.customer_id
     let currentPeriodEnd = usablePeriodEnd(transaction.billing_period?.ends_at)
 
     if (!currentPeriodEnd && typeof subscriptionId === 'string' && subscriptionId) {
@@ -193,6 +221,8 @@ export async function onRequest({ request, env }) {
       env.ONDRIFT_LICENSES.put(`license:${code}`, JSON.stringify(record)),
       env.ONDRIFT_LICENSES.put(`subscription:${subscriptionId}`, code),
     ])
+
+    await linkCustomerEmail(env.ONDRIFT_LICENSES, customerEmail, code)
 
     return successPage(code, record)
   } catch {

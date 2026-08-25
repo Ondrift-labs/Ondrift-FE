@@ -55,6 +55,16 @@ and subscription lifecycle events to `/api/paddle-webhook`. The extension
 validates a saved code through `/api/verify-license` and sends it to
 `/api/rewrite` for the 100-rewrites-per-day Pro quota.
 
+Buyers who lose their code can open `/upgrade/recover`; its form posts to
+`/api/recover-license`, which rate-limits recovery attempts and sends a matching
+license by email without revealing whether an address was found. Configure the
+non-secret `RESEND_FROM_EMAIL` sender in `wrangler.jsonc` and set the Resend API
+key as a Cloudflare Pages secret:
+
+```bash
+npx wrangler@4.123.0 pages secret put RESEND_API_KEY --project-name ondrift
+```
+
 Configure the non-secret `PADDLE_PRICE_ID`, `PADDLE_CLIENT_TOKEN`, and
 `PADDLE_ENVIRONMENT` (`sandbox` or `production`) variables in `wrangler.jsonc`.
 Set the two Paddle secrets separately in Cloudflare Pages; do not commit them:
@@ -67,7 +77,10 @@ npx wrangler@4.123.0 pages secret put PADDLE_WEBHOOK_SECRET --project-name ondri
 Before checkout will work, register the `/upgrade` page as the account's
 default payment link and ensure its domain is approved in the Paddle dashboard.
 Paddle sandbox and production are fully separate environments, so each needs
-its own keys, secrets, price, and webhook destination.
+its own keys, secrets, price, and webhook destination. The Paddle API key also
+needs the **Customers: Read** permission so `/upgrade/success` can capture the
+buyer's email for license recovery; license issuance still succeeds if that
+optional capture fails.
 
 Pro rewrites still use Ondrift's own `GEMINI_API_KEY`, just like the free tier;
 the active license raises the per-user daily limit while retaining the shared

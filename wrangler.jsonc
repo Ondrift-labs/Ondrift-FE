@@ -19,15 +19,17 @@
       "id": "8a1aa1a19c1b4b1797061acb564ac63f"
     }
   ],
-  // These are non-secret runtime variables. Set GEMINI_API_KEY, PADDLE_API_KEY, and
-  // PADDLE_WEBHOOK_SECRET separately with `wrangler pages secret put`; never commit those
-  // secrets to this file. Fill in the Paddle price id and client token for the selected
-  // environment before enabling Pro checkout.
+  // These are non-secret runtime variables. Set GEMINI_API_KEY, PADDLE_API_KEY,
+  // PADDLE_WEBHOOK_SECRET, and RESEND_API_KEY separately with
+  // `wrangler pages secret put`; never commit those secrets to this file. Fill in the
+  // Paddle price id and client token for the selected environment before enabling Pro
+  // checkout.
   "vars": {
     "FREE_TIER_DAILY_BUDGET": "2000",
     "ALLOWED_EXTENSION_ORIGINS": "chrome-extension://aonkgefdmgjcnhopbkeehmoacncpkeje,chrome-extension://lbefokebdhapaaglokdpaghopihlhagg",
     "PADDLE_PRICE_ID": "pri_01m0v931j54nvtg2c7v01ye6b2",
     "PADDLE_CLIENT_TOKEN": "test_990f9a5aa3fc8cae3d209361322",
-    "PADDLE_ENVIRONMENT": "sandbox"
+    "PADDLE_ENVIRONMENT": "sandbox",
+    "RESEND_FROM_EMAIL": "Ondrift <onboarding@resend.dev>"
   }
 }

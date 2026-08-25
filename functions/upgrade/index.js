@@ -14,6 +14,9 @@ function pageResponse(content, script = '') {
     p { margin: 0 0 28px; color: #b9c2dc; line-height: 1.6; }
     button { padding: 13px 22px; border: 0; color: #0b1020; background: #a8b8ff; border-radius: 10px; font: inherit; font-weight: 750; cursor: pointer; }
     button:hover { background: #c1ccff; }
+    .secondary { margin: 24px 0 0; color: #8793b4; font-size: .85rem; }
+    .secondary a { color: #9ca8c8; }
+    .secondary a:hover { color: #c1ccff; }
   </style>
 </head>
 <body>
@@ -74,7 +77,8 @@ export function onRequest({ request, env }) {
   return pageResponse(
     `<h1>Ondrift Pro</h1>
     <p>Rewrite up to 100 prompts per day with Ondrift's hosted Gemini service.</p>
-    <button type="button" id="subscribe-button">Subscribe $2.99/mo</button>`,
+    <button type="button" id="subscribe-button">Subscribe $2.99/mo</button>
+    <p class="secondary">Lost your code? <a href="/upgrade/recover">Recover it</a></p>`,
     script,
   )
 }
