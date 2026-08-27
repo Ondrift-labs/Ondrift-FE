@@ -52,15 +52,14 @@ function seoHead(data) {
         applicationCategory: 'BrowserApplication',
         operatingSystem: 'Chrome',
         image: `${data.siteOrigin}/assets/ondrift-share-20260813.jpg`,
-        downloadUrl: `${data.siteRepositoryUrl}/releases/latest`,
+        downloadUrl: data.siteChromeStoreUrl,
         softwareRequirements: 'Google Chrome with an API key for a supported AI provider',
         isPartOf: { '@id': `${data.siteOrigin}/#website` },
         publisher: { '@id': organizationId },
-        offers: {
-          '@type': 'Offer',
-          price: '0',
-          priceCurrency: 'USD',
-        },
+        offers: [
+          { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Pro', price: '2.99', priceCurrency: 'USD' },
+        ],
         sameAs: [data.siteRepositoryUrl],
       },
       {

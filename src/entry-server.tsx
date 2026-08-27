@@ -1,7 +1,7 @@
 import { renderToString } from 'react-dom/server'
 import { App } from './app/App'
 import { LANDING_COPY, type LandingLanguage } from './features/landing/landingCopy'
-import { LANGUAGE_PATHS, SITE_LOGO_URL, SITE_NAME, SITE_ORIGIN, SITE_REPOSITORY_URL, languageUrl } from './features/landing/seo'
+import { LANGUAGE_PATHS, SITE_CHROME_STORE_URL, SITE_LOGO_URL, SITE_NAME, SITE_ORIGIN, SITE_REPOSITORY_URL, languageUrl } from './features/landing/seo'
 
 const OPEN_GRAPH_LOCALES: Record<LandingLanguage, string> = {
   en: 'en_US',
@@ -28,6 +28,7 @@ export function getSeoData(language: LandingLanguage) {
     siteOrigin: SITE_ORIGIN,
     siteLogoUrl: SITE_LOGO_URL,
     siteRepositoryUrl: SITE_REPOSITORY_URL,
+    siteChromeStoreUrl: SITE_CHROME_STORE_URL,
     faqItems: copy.faq.items,
   }
 }

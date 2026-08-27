@@ -5,12 +5,12 @@ import { ArchitectureDiagram } from './ArchitectureDiagram'
 import { PromptDemo } from './PromptDemo'
 import { trackLandingCta, trackLandingPageView } from './analytics'
 import { LANDING_COPY, LANGUAGE_OPTIONS, type LandingLanguage } from './landingCopy'
-import { LANGUAGE_PATHS, SITE_REPOSITORY_URL, languageFromPathname, languageUrl } from './seo'
+import { LANGUAGE_PATHS, SITE_CHROME_STORE_URL, SITE_REPOSITORY_URL, languageFromPathname, languageUrl } from './seo'
 import { useReveal } from './useReveal'
 import './landing.css'
 
 const REPO_URL = SITE_REPOSITORY_URL
-const CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/aonkgefdmgjcnhopbkeehmoacncpkeje'
+const CHROME_STORE_URL = SITE_CHROME_STORE_URL
 const CONTACT_CHANNELS = [
   { href: `${REPO_URL}/issues/new?template=bug_report.yml`, icon: Bug, target: 'contact_bug' as const },
   { href: `${REPO_URL}/issues/new?template=feature_request.yml`, icon: Lightbulb, target: 'contact_feature' as const },

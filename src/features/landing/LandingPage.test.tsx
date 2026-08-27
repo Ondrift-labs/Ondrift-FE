@@ -82,7 +82,7 @@ describe('LandingPage language switcher', () => {
 
     expect(screen.getByRole('link', { name: 'FAQ' })).toHaveAttribute('href', '#faq')
     expect(screen.getByText('Is Ondrift free to use?')).toBeInTheDocument()
-    expect(screen.getByText(/Ondrift itself is free and open source/)).toBeInTheDocument()
+    expect(screen.getByText(/Ondrift includes a free tier/)).toBeInTheDocument()
   })
 
   it('offers free GitHub channels for bugs, feature requests, and questions', () => {
