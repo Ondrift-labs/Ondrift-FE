@@ -73,6 +73,26 @@ function setAttr(selector: string, attr: string, value: string): void {
   document.querySelector(selector)?.setAttribute(attr, value)
 }
 
+// A plain div/button pair instead of <details>/<summary>: browsers toggle a <details>'s
+// content in and out of the render tree on their own schedule, which raced our CSS
+// transition unpredictably after the first open/close (animated once, then snapped
+// instantly). Owning the open state ourselves means the answer panel is always
+// display: grid, so the grid-template-rows trick in landing.css runs the same way
+// on every toggle.
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="landing-faq-item" data-open={open || undefined}>
+      <button type="button" className="landing-faq-summary" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
+        {q}
+      </button>
+      <div className="landing-faq-answer">
+        <p>{a}</p>
+      </div>
+    </div>
+  )
+}
+
 function RisingBars() {
   return (
     <div className="rising-bars" aria-hidden="true">
@@ -266,12 +286,7 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
           </Reveal>
           <div className="landing-faq-list">
             {copy.faq.items.map((item) => (
-              <details key={item.q}>
-                <summary>{item.q}</summary>
-                <div className="landing-faq-answer">
-                  <p>{item.a}</p>
-                </div>
-              </details>
+              <FaqItem key={item.q} q={item.q} a={item.a} />
             ))}
           </div>
         </section>

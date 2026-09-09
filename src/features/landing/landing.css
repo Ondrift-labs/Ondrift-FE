@@ -220,17 +220,30 @@ html[lang='ja'] .landing h1, html[lang='ja'] .landing h2, html[lang='ja'] .landi
 
 /* faq */
 .landing-faq-list { display: grid; gap: 1px; max-width: 760px; background: var(--line); border: 1px solid var(--line); }
-.landing-faq-list details { background: var(--paper); padding: 16px 20px; }
-.landing-faq-list summary { cursor: pointer; font-weight: 650; font-size: 15px; list-style: none; }
-.landing-faq-list summary::-webkit-details-marker { display: none; }
-.landing-faq-list summary::before { content: '+'; display: inline-block; width: 1em; color: var(--accent); transition: transform 260ms ease-in; }
-.landing-faq-list details[open] summary::before { transform: rotate(45deg); transition: transform 300ms ease-out; }
-/* Grid-rows trick: animates from 0fr to 1fr so open/close smoothly resizes the answer
-   instead of the browser's default instant show/hide for <details>. Padding-top (not the
-   <p>'s own margin) carries the 10px gap so it grows in step with the row instead of
-   snapping in immediately; opacity is layered on top so the text fades rather than getting
-   revealed mid-clip. Closing uses ease-in (quick start, slow settle) and opening uses
-   ease-out (slow start, quick settle) -- the same curve for both directions read as stiff. */
+.landing-faq-item { background: var(--paper); padding: 16px 20px; }
+.landing-faq-summary {
+  all: unset;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+  font-size: 15px;
+  color: inherit;
+}
+.landing-faq-summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 2px; }
+.landing-faq-summary::before { content: '+'; display: inline-block; width: 1em; color: var(--accent); transition: transform 260ms ease-in; }
+.landing-faq-item[data-open] .landing-faq-summary::before { transform: rotate(45deg); transition: transform 300ms ease-out; }
+/* Grid-rows trick: animates from 0fr to 1fr so open/close smoothly resizes the answer.
+   This panel is a plain div driven by React state -- not a <details>, whose native
+   open/close raced our CSS transition unpredictably after the first toggle (animated
+   once, then snapped instantly) because the browser can swap its content in and out of
+   the render tree on its own schedule. Padding-top (not the <p>'s own margin) carries the
+   10px gap so it grows in step with the row instead of snapping in immediately; opacity is
+   layered on top so the text fades rather than getting revealed mid-clip. Closing uses
+   ease-in (quick start, slow settle) and opening uses ease-out (slow start, quick settle)
+   -- the same curve for both directions read as stiff. */
 .landing-faq-answer {
   display: grid;
   grid-template-rows: 0fr;
@@ -238,7 +251,7 @@ html[lang='ja'] .landing h1, html[lang='ja'] .landing h2, html[lang='ja'] .landi
   opacity: 0;
   transition: grid-template-rows 260ms ease-in, padding-top 260ms ease-in, opacity 180ms ease-in;
 }
-.landing-faq-list details[open] .landing-faq-answer {
+.landing-faq-item[data-open] .landing-faq-answer {
   grid-template-rows: 1fr;
   padding-top: 10px;
   opacity: 1;
