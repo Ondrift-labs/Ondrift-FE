@@ -268,7 +268,9 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
             {copy.faq.items.map((item) => (
               <details key={item.q}>
                 <summary>{item.q}</summary>
-                <p>{item.a}</p>
+                <div className="landing-faq-answer">
+                  <p>{item.a}</p>
+                </div>
               </details>
             ))}
           </div>

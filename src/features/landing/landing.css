@@ -223,9 +223,14 @@ html[lang='ja'] .landing h1, html[lang='ja'] .landing h2, html[lang='ja'] .landi
 .landing-faq-list details { background: var(--paper); padding: 16px 20px; }
 .landing-faq-list summary { cursor: pointer; font-weight: 650; font-size: 15px; list-style: none; }
 .landing-faq-list summary::-webkit-details-marker { display: none; }
-.landing-faq-list summary::before { content: '+'; display: inline-block; width: 1em; color: var(--accent); }
-.landing-faq-list details[open] summary::before { content: '−'; }
-.landing-faq-list p { margin: 10px 0 0 1em; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.landing-faq-list summary::before { content: '+'; display: inline-block; width: 1em; color: var(--accent); transition: transform 280ms ease; }
+.landing-faq-list details[open] summary::before { transform: rotate(45deg); }
+/* Grid-rows trick: animates from 0fr to 1fr so open/close smoothly resizes the answer
+   instead of the browser's default instant show/hide for <details>. The inner <p> carries
+   overflow: hidden so its text stays clipped while the row is still collapsing. */
+.landing-faq-answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 320ms cubic-bezier(0.4, 0, 0.2, 1); }
+.landing-faq-list details[open] .landing-faq-answer { grid-template-rows: 1fr; }
+.landing-faq-list p { margin: 10px 0 0 1em; color: var(--muted); font-size: 14px; line-height: 1.55; overflow: hidden; }
 
 /* contact */
 .landing-contact-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
