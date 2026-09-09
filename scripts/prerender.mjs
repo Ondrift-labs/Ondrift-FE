@@ -56,10 +56,12 @@ function seoHead(data) {
         softwareRequirements: 'Google Chrome with an API key for a supported AI provider',
         isPartOf: { '@id': `${data.siteOrigin}/#website` },
         publisher: { '@id': organizationId },
-        offers: [
-          { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
-          { '@type': 'Offer', name: 'Pro', price: '2.99', priceCurrency: 'USD' },
-        ],
+        // A single free offer -- Ondrift has no paid tier. This used to list a second
+        // "Pro" $2.99 offer, which went stale the moment the Pro subscription was removed
+        // from the product: Google's Rich Results validator flags an Offer that doesn't
+        // match anything sellable on the page, and a search snippet showing a fake price
+        // actively works against getting people to install for free.
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         sameAs: [data.siteRepositoryUrl],
       },
       {
