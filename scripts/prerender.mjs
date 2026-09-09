@@ -121,6 +121,9 @@ function notFoundPage(siteOrigin) {
     <link rel="icon" href="/favicon.ico" sizes="128x128" />
     <link rel="icon" type="image/png" href="/ondrift-mark.png" sizes="128x128" />
     <link rel="home" href="${siteOrigin}/" />
+    <!-- Cloudflare Web Analytics -->
+    <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "f69f3aa300764557aa62a9d26e8ae752"}'></script>
+    <!-- End Cloudflare Web Analytics -->
     <title>Page not found — Ondrift</title>
     <style>
       :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #17342b; background: #f7f6f1; }
