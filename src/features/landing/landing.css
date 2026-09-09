@@ -146,7 +146,7 @@ html[lang='ja'] .landing h1, html[lang='ja'] .landing h2, html[lang='ja'] .landi
 @media (max-width: 860px) { .landing-steps { grid-template-columns: 1fr; } }
 
 /* pricing */
-.landing-pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
+.landing-pricing-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
 .landing-pricing-card {
   display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 12px; padding: 28px 24px; background: var(--paper);
   transition: box-shadow 200ms ease, border-color 200ms ease;

@@ -1,11 +1,3 @@
-import {
-  computeLicenseUsageKey,
-  evaluateLicenseQuota,
-  isLicenseActive,
-  LICENSE_DAILY_LIMIT,
-  normalizeLicenseKey,
-} from '../_shared/license.js'
-
 const ALLOWED_SERVICES = new Set([
   'chatgpt',
   'claude',
@@ -13,7 +5,7 @@ const ALLOWED_SERVICES = new Set([
   'perplexity',
   'grok',
 ])
-const INSTALL_DAILY_LIMIT = 3
+const INSTALL_DAILY_LIMIT = 10
 const IP_DAILY_LIMIT = 20
 const DEFAULT_GLOBAL_DAILY_BUDGET = 2000
 const QUOTA_EXPIRATION_TTL = 90000
@@ -79,12 +71,10 @@ function response(status, cors, body) {
   return new Response(JSON.stringify(body), { status, headers })
 }
 
-export { LICENSE_DAILY_LIMIT }
-
 export function parseAndValidateBody(payload) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return null
 
-  const { prompt, service, persona, language, installId, licenseKey } = payload
+  const { prompt, service, persona, language, installId } = payload
 
   if (typeof prompt !== 'string' || !prompt.trim() || prompt.length > 2000) return null
   if (typeof service !== 'string' || !ALLOWED_SERVICES.has(service)) return null
@@ -92,15 +82,12 @@ export function parseAndValidateBody(payload) {
   if (persona !== undefined && typeof persona !== 'string') return null
   if (language !== undefined && typeof language !== 'string') return null
 
-  const normalizedLicenseKey = normalizeLicenseKey(licenseKey)
-
   return {
     prompt,
     service,
     installId: installId.toLowerCase(),
     ...(persona ? { persona } : {}),
     ...(language ? { language } : {}),
-    ...(normalizedLicenseKey ? { licenseKey: normalizedLicenseKey } : {}),
   }
 }
 
@@ -229,59 +216,24 @@ async function handleRewrite(request, env, cors) {
   let installCount
   let ipCount
   let globalCount
-  let licenseCount
-  let activeLicenseKey = null
 
-  if (input.licenseKey && env.ONDRIFT_LICENSES) {
-    try {
-      const value = await env.ONDRIFT_LICENSES.get(`license:${input.licenseKey}`)
-      const record = value ? JSON.parse(value) : null
-      if (isLicenseActive(record)) activeLicenseKey = input.licenseKey
-    } catch {
-      activeLicenseKey = null
-    }
+  try {
+    const values = await Promise.all([
+      env.ONDRIFT_FREE_TIER_QUOTA.get(quotaWindow.installKey),
+      env.ONDRIFT_FREE_TIER_QUOTA.get(quotaWindow.ipKey),
+      env.ONDRIFT_FREE_TIER_QUOTA.get(quotaWindow.globalKey),
+    ])
+    ;[installCount, ipCount, globalCount] = values.map(parseCounter)
+  } catch {
+    return response(503, cors, { code: 'service_unavailable' })
   }
 
-  const licenseUsageKey = activeLicenseKey
-    ? computeLicenseUsageKey(activeLicenseKey, quotaNow)
-    : null
-  let quotaDecision
-
-  if (activeLicenseKey) {
-    try {
-      const values = await Promise.all([
-        env.ONDRIFT_FREE_TIER_QUOTA.get(licenseUsageKey),
-        env.ONDRIFT_FREE_TIER_QUOTA.get(quotaWindow.globalKey),
-      ])
-      ;[licenseCount, globalCount] = values.map(parseCounter)
-    } catch {
-      return response(503, cors, { code: 'service_unavailable' })
-    }
-
-    quotaDecision = evaluateLicenseQuota(
-      licenseCount,
-      globalCount,
-      parseDailyBudget(env.FREE_TIER_DAILY_BUDGET),
-    )
-  } else {
-    try {
-      const values = await Promise.all([
-        env.ONDRIFT_FREE_TIER_QUOTA.get(quotaWindow.installKey),
-        env.ONDRIFT_FREE_TIER_QUOTA.get(quotaWindow.ipKey),
-        env.ONDRIFT_FREE_TIER_QUOTA.get(quotaWindow.globalKey),
-      ])
-      ;[installCount, ipCount, globalCount] = values.map(parseCounter)
-    } catch {
-      return response(503, cors, { code: 'service_unavailable' })
-    }
-
-    quotaDecision = evaluateQuota(
-      installCount,
-      ipCount,
-      globalCount,
-      parseDailyBudget(env.FREE_TIER_DAILY_BUDGET),
-    )
-  }
+  const quotaDecision = evaluateQuota(
+    installCount,
+    ipCount,
+    globalCount,
+    parseDailyBudget(env.FREE_TIER_DAILY_BUDGET),
+  )
 
   if (quotaDecision === 'daily_limit_reached') {
     return response(429, cors, {
@@ -322,30 +274,19 @@ async function handleRewrite(request, env, cors) {
   const data = extractGeminiData(interaction)
   if (!data) return response(502, cors, { code: 'invalid_response' })
 
-  const newUsageCount = activeLicenseKey ? licenseCount + 1 : installCount + 1
+  const newUsageCount = installCount + 1
   try {
-    if (activeLicenseKey) {
-      await Promise.all([
-        env.ONDRIFT_FREE_TIER_QUOTA.put(licenseUsageKey, String(newUsageCount), {
-          expirationTtl: QUOTA_EXPIRATION_TTL,
-        }),
-        env.ONDRIFT_FREE_TIER_QUOTA.put(quotaWindow.globalKey, String(globalCount + 1), {
-          expirationTtl: QUOTA_EXPIRATION_TTL,
-        }),
-      ])
-    } else {
-      await Promise.all([
-        env.ONDRIFT_FREE_TIER_QUOTA.put(quotaWindow.installKey, String(newUsageCount), {
-          expirationTtl: QUOTA_EXPIRATION_TTL,
-        }),
-        env.ONDRIFT_FREE_TIER_QUOTA.put(quotaWindow.ipKey, String(ipCount + 1), {
-          expirationTtl: QUOTA_EXPIRATION_TTL,
-        }),
-        env.ONDRIFT_FREE_TIER_QUOTA.put(quotaWindow.globalKey, String(globalCount + 1), {
-          expirationTtl: QUOTA_EXPIRATION_TTL,
-        }),
-      ])
-    }
+    await Promise.all([
+      env.ONDRIFT_FREE_TIER_QUOTA.put(quotaWindow.installKey, String(newUsageCount), {
+        expirationTtl: QUOTA_EXPIRATION_TTL,
+      }),
+      env.ONDRIFT_FREE_TIER_QUOTA.put(quotaWindow.ipKey, String(ipCount + 1), {
+        expirationTtl: QUOTA_EXPIRATION_TTL,
+      }),
+      env.ONDRIFT_FREE_TIER_QUOTA.put(quotaWindow.globalKey, String(globalCount + 1), {
+        expirationTtl: QUOTA_EXPIRATION_TTL,
+      }),
+    ])
   } catch {
     return response(503, cors, { code: 'service_unavailable' })
   }
@@ -353,10 +294,7 @@ async function handleRewrite(request, env, cors) {
   return response(200, cors, {
     ok: true,
     data,
-    remaining: Math.max(
-      0,
-      (activeLicenseKey ? LICENSE_DAILY_LIMIT : INSTALL_DAILY_LIMIT) - newUsageCount,
-    ),
+    remaining: Math.max(0, INSTALL_DAILY_LIMIT - newUsageCount),
   })
 }
 

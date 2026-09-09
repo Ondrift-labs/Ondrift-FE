@@ -27,7 +27,7 @@ repository.
 
 [`functions/api/rewrite.js`](functions/api/rewrite.js) is a Cloudflare Pages
 Function that gives extension installations without their own Gemini key up to
-three successful rewrites per UTC day. It validates extension origins and
+ten successful rewrites per UTC day. It validates extension origins and
 requests, enforces per-install, abuse-backstop, and global quotas in the
 `ONDRIFT_FREE_TIER_QUOTA` KV namespace, and calls Gemini with Ondrift's key kept
 server-side.
@@ -44,47 +44,6 @@ npx wrangler@4.123.0 pages secret put GEMINI_API_KEY --project-name ondrift
 BYOK usage is unchanged: when a user supplies their own key, the extension
 continues calling Gemini directly and never sends that request through this
 endpoint.
-
-## Pro-tier subscription and licenses
-
-Ondrift Pro uses Paddle Billing for subscription checkout and license
-verification on top of the free-tier infrastructure. `/upgrade` opens Paddle's
-overlay checkout through Paddle.js, `/upgrade/success` issues an idempotent
-license after confirming the completed transaction, and Paddle sends payment
-and subscription lifecycle events to `/api/paddle-webhook`. The extension
-validates a saved code through `/api/verify-license` and sends it to
-`/api/rewrite` for the 100-rewrites-per-day Pro quota.
-
-Buyers who lose their code can open `/upgrade/recover`; its form posts to
-`/api/recover-license`, which rate-limits recovery attempts and sends a matching
-license by email without revealing whether an address was found. Configure the
-non-secret `RESEND_FROM_EMAIL` sender in `wrangler.jsonc` and set the Resend API
-key as a Cloudflare Pages secret:
-
-```bash
-npx wrangler@4.123.0 pages secret put RESEND_API_KEY --project-name ondrift
-```
-
-Configure the non-secret `PADDLE_PRICE_ID`, `PADDLE_CLIENT_TOKEN`, and
-`PADDLE_ENVIRONMENT` (`sandbox` or `production`) variables in `wrangler.jsonc`.
-Set the two Paddle secrets separately in Cloudflare Pages; do not commit them:
-
-```bash
-npx wrangler@4.123.0 pages secret put PADDLE_API_KEY --project-name ondrift
-npx wrangler@4.123.0 pages secret put PADDLE_WEBHOOK_SECRET --project-name ondrift
-```
-
-Before checkout will work, register the `/upgrade` page as the account's
-default payment link and ensure its domain is approved in the Paddle dashboard.
-Paddle sandbox and production are fully separate environments, so each needs
-its own keys, secrets, price, and webhook destination. The Paddle API key also
-needs the **Customers: Read** permission so `/upgrade/success` can capture the
-buyer's email for license recovery; license issuance still succeeds if that
-optional capture fails.
-
-Pro rewrites still use Ondrift's own `GEMINI_API_KEY`, just like the free tier;
-the active license raises the per-user daily limit while retaining the shared
-global budget safeguard.
 
 ## Status of this repository
 

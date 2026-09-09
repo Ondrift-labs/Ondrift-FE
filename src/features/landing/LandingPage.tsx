@@ -223,11 +223,6 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
                 <ul className="landing-pricing-features">
                   {tier.features.map((feature) => <li key={feature}><Check size={14} aria-hidden="true" />{feature}</li>)}
                 </ul>
-                {index === 1 && (
-                  <a className="ui-button ui-button--primary" href="https://ondrift.pages.dev/upgrade" onClick={() => trackLandingCta('pricing_upgrade')}>
-                    {copy.pricing.cta}<ArrowRight size={15} />
-                  </a>
-                )}
               </Reveal>
             ))}
           </div>
@@ -338,7 +333,6 @@ export function LandingPage({ initialLanguage }: { initialLanguage?: LandingLang
           <a href={REPO_URL} target="_blank" rel="noreferrer">GitHub</a>
           <a href={`${REPO_URL}/blob/main/PRIVACY.md`} target="_blank" rel="noreferrer">{copy.footer.privacy}</a>
           <a href={`${REPO_URL}/blob/main/TERMS.md`} target="_blank" rel="noreferrer">{copy.footer.terms}</a>
-          <a href={`${REPO_URL}/blob/main/REFUND.md`} target="_blank" rel="noreferrer">{copy.footer.refund}</a>
           <a href={`${REPO_URL}#install`} target="_blank" rel="noreferrer">{copy.footer.guide}</a>
           <a href="#contact">{copy.footer.contact}</a>
         </nav>

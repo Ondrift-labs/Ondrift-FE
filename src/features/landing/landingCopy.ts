@@ -16,9 +16,8 @@ export interface LandingCopy {
     title: string
     body: string
     // Position is meaningful, same reasoning as privacy.points/contact.cards below: LandingPage
-    // applies the "highlighted" treatment and the upgrade CTA to index 1 (Pro) specifically.
-    tiers: [PricingTier, PricingTier, PricingTier]
-    cta: string
+    // applies the "highlighted" treatment to index 1 (bring-your-own-key) specifically.
+    tiers: [PricingTier, PricingTier]
   }
   // A fixed-length tuple, not `string[]`: LandingPage pairs each point with one of 3 fixed
   // icons positionally (PRIVACY_ICONS[index]), so a locale with a different count would
@@ -35,7 +34,7 @@ export interface LandingCopy {
     cards: [ContactCard, ContactCard, ContactCard]
   }
   cta: { title: string; steps: string[]; release: string; guide: string; note: string }
-  footer: { privacy: string; terms: string; refund: string; guide: string; contact: string; note: string }
+  footer: { privacy: string; terms: string; guide: string; contact: string; note: string }
   demo: {
     before: string
     after: string
@@ -84,21 +83,19 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
       ],
     },
     pricing: {
-      eyebrow: 'PRICING', title: 'Free by default. Pro when you need more.',
-      body: 'Three ways to use Ondrift, depending on how often you rewrite and whether you’d rather bring your own API key.',
+      eyebrow: 'PRICING', title: 'Free by default. Bring your own key for more.',
+      body: 'Two ways to use Ondrift, depending on whether you’d rather bring your own API key.',
       tiers: [
-        { name: 'Free', price: '$0', period: '/mo', description: 'For occasional rewrites, no setup required.', features: ['3 rewrites per day', 'Runs on Ondrift’s hosted Gemini', 'No API key needed'] },
-        { name: 'Pro', price: '$2.99', period: '/mo', description: 'For daily use, still no API key to manage.', features: ['100 rewrites per day', 'Runs on Ondrift’s hosted Gemini', 'No API key needed'] },
+        { name: 'Free', price: '$0', period: '/mo', description: 'For occasional rewrites, no setup required.', features: ['10 rewrites per day', 'Runs on Ondrift’s hosted Gemini', 'No API key needed'] },
         { name: 'Bring your own key', price: '$0', period: '/mo', description: 'For unlimited use with your own Gemini key.', features: ['Unlimited rewrites', 'Requests go straight to Google', 'Your key, your usage'] },
       ],
-      cta: 'Upgrade to Pro',
     },
     privacy: {
       eyebrow: 'PRIVACY BY DESIGN', title: 'Minimal by default. No server with your own key.',
-      body: 'Bring your own Gemini API key and your browser calls Google directly — no Ondrift-operated server sits in between. Free and Pro rewrites are relayed through Ondrift’s own lightweight proxy solely to call Gemini on your behalf, and are never logged.',
+      body: 'Bring your own Gemini API key and your browser calls Google directly — no Ondrift-operated server sits in between. Free-tier rewrites are relayed through Ondrift’s own lightweight proxy solely to call Gemini on your behalf, and are never logged.',
       points: [
         'Settings stay in chrome.storage.local. Optional history stays in your browser’s local IndexedDB.',
-        'Only prompts you explicitly ask to rewrite are ever sent — directly to Google with your own key, or through Ondrift’s proxy on Free/Pro. AI response content is never collected or stored.',
+        'Only prompts you explicitly ask to rewrite are ever sent — directly to Google with your own key, or through Ondrift’s proxy on the free tier. AI response content is never collected or stored.',
         'Your AI provider API key, when you use one, stays under your control — and keeping it secure remains your responsibility.',
       ],
     },
@@ -106,9 +103,9 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
     faq: {
       eyebrow: 'FAQ', title: 'Common questions',
       items: [
-        { q: 'Is Ondrift free to use?', a: 'Yes. Ondrift includes a free tier (3 rewrites a day, no setup), a $2.99/mo Pro tier for heavier use, and unlimited use at no cost if you bring your own Gemini API key.' },
-        { q: 'Does Ondrift send my prompts to a server?', a: 'Only on the Free or Pro tier — there, the prompt you ask to rewrite passes through Ondrift’s own Cloudflare proxy solely to call Gemini on your behalf, and is never logged or stored. If you bring your own Gemini API key, your browser calls Google directly and no Ondrift server is involved.' },
-        { q: 'Which chat sites and AI providers does Ondrift support?', a: 'Ondrift works inside ChatGPT, Claude, Gemini, Perplexity, and Grok, rewriting prompts with your own Gemini API key or with Ondrift’s Free/Pro tiers.' },
+        { q: 'Is Ondrift free to use?', a: 'Yes. Ondrift includes a free tier (10 rewrites a day, no setup), and unlimited use at no cost if you bring your own Gemini API key.' },
+        { q: 'Does Ondrift send my prompts to a server?', a: 'Only on the free tier — there, the prompt you ask to rewrite passes through Ondrift’s own Cloudflare proxy solely to call Gemini on your behalf, and is never logged or stored. If you bring your own Gemini API key, your browser calls Google directly and no Ondrift server is involved.' },
+        { q: 'Which chat sites and AI providers does Ondrift support?', a: 'Ondrift works inside ChatGPT, Claude, Gemini, Perplexity, and Grok, rewriting prompts with your own Gemini API key or with Ondrift’s free tier.' },
         { q: 'How do I install Ondrift? Is it on the Chrome Web Store?', a: 'Yes — Ondrift is on the Chrome Web Store. Click Add to Chrome above, pin the extension, and start rewriting for free — add your own Gemini API key anytime for unlimited use.' },
         { q: 'Is my API key safe?', a: 'Your key is stored locally in chrome.storage.local and is only ever sent in direct calls to your AI provider. Keeping it secure remains your responsibility, the same as any API key.' },
         { q: 'Can I keep a history of my prompt rewrites?', a: 'Yes, optionally. History is stored locally in your browser’s IndexedDB only — never on a server — and you can clear it anytime from the Options page.' },
@@ -131,7 +128,7 @@ export const LANDING_COPY: Record<LandingLanguage, LandingCopy> = {
       note: 'Free to install · No account required.',
     },
     footer: {
-      privacy: 'Privacy policy', terms: 'Terms of service', refund: 'Refund policy', guide: 'Install guide', contact: 'Contact',
+      privacy: 'Privacy policy', terms: 'Terms of service', guide: 'Install guide', contact: 'Contact',
       note: 'Google, Gemini, ChatGPT, Claude, Perplexity, and Grok are trademarks of their respective owners. Ondrift is not affiliated with them.',
     },
     demo: {
@@ -152,7 +149,7 @@ Turn the transcript below into actionable meeting notes.
       status: { draft: 'Drafting', scoring: 'Ondrift is reviewing…', typing: 'Writing the improved prompt…', result: 'Rewrite complete · Ready to apply' },
     },
     architecture: {
-      label: 'With your own API key, the extension calls your selected AI provider directly from the browser — no Ondrift server in the data path. (Free and Pro rewrites instead go through Ondrift’s own proxy — see Pricing above.) Settings and optional history always stay in local storage.',
+      label: 'With your own API key, the extension calls your selected AI provider directly from the browser — no Ondrift server in the data path. (Free-tier rewrites instead go through Ondrift’s own proxy — see Pricing above.) Settings and optional history always stay in local storage.',
       noServer: 'No Ondrift server (own-key path)', prompt: 'Prompt', editor: 'editor', provider: 'AI provider', providerSub: 'Your API key', storage: 'Local storage', storageSub: 'storage · IndexedDB',
     },
   },
@@ -178,21 +175,19 @@ Turn the transcript below into actionable meeting notes.
       ],
     },
     pricing: {
-      eyebrow: '요금제', title: '기본은 무료. 더 필요할 땐 Pro.',
-      body: '하루에 몇 번 재작성하는지, 직접 API 키를 관리하고 싶은지에 따라 세 가지 방식으로 Ondrift를 쓸 수 있습니다.',
+      eyebrow: '요금제', title: '기본은 무료. 더 필요하면 내 API 키로.',
+      body: '직접 API 키를 관리하고 싶은지에 따라 두 가지 방식으로 Ondrift를 쓸 수 있습니다.',
       tiers: [
-        { name: '무료', price: '$0', period: '/월', description: '가끔 재작성한다면, 별도 설정 없이.', features: ['하루 3회 재작성', 'Ondrift가 운영하는 Gemini 사용', 'API 키 필요 없음'] },
-        { name: 'Pro', price: '$2.99', period: '/월', description: '매일 쓰더라도 API 키 관리는 필요 없습니다.', features: ['하루 100회 재작성', 'Ondrift가 운영하는 Gemini 사용', 'API 키 필요 없음'] },
+        { name: '무료', price: '$0', period: '/월', description: '가끔 재작성한다면, 별도 설정 없이.', features: ['하루 10회 재작성', 'Ondrift가 운영하는 Gemini 사용', 'API 키 필요 없음'] },
         { name: '내 API 키 사용', price: '$0', period: '/월', description: '내 Gemini 키로 무제한 사용.', features: ['무제한 재작성', '요청이 Google로 직접 전송됨', '내 키, 내 사용량'] },
       ],
-      cta: 'Pro로 업그레이드',
     },
     privacy: {
       eyebrow: '프라이버시 설계', title: '기본은 최소한으로. 내 키를 쓰면 서버 없음.',
-      body: '내 Gemini API 키를 사용하면 브라우저가 Google에 직접 요청합니다 — Ondrift가 운영하는 서버는 개입하지 않습니다. 무료·Pro 재작성은 Gemini 호출만을 위해 Ondrift의 경량 프록시를 거치며, 로그로 남기지 않습니다.',
+      body: '내 Gemini API 키를 사용하면 브라우저가 Google에 직접 요청합니다 — Ondrift가 운영하는 서버는 개입하지 않습니다. 무료 티어 재작성은 Gemini 호출만을 위해 Ondrift의 경량 프록시를 거치며, 로그로 남기지 않습니다.',
       points: [
         '설정은 chrome.storage.local에, 선택한 경우의 기록은 브라우저의 로컬 IndexedDB에만 남습니다.',
-        '재작성을 요청한 프롬프트만 전송됩니다 — 내 키를 쓰면 Google로 직접, 무료·Pro에서는 Ondrift의 프록시를 거쳐서요. AI 응답 본문은 수집하거나 저장하지 않습니다.',
+        '재작성을 요청한 프롬프트만 전송됩니다 — 내 키를 쓰면 Google로 직접, 무료 티어에서는 Ondrift의 프록시를 거쳐서요. AI 응답 본문은 수집하거나 저장하지 않습니다.',
         'AI 제공자 API 키를 사용하는 경우 그 키는 사용자가 직접 관리하며, 안전하게 보관할 책임도 사용자에게 있습니다.',
       ],
     },
@@ -200,9 +195,9 @@ Turn the transcript below into actionable meeting notes.
     faq: {
       eyebrow: '자주 묻는 질문', title: '궁금한 점',
       items: [
-        { q: 'Ondrift는 무료인가요?', a: 'Ondrift는 하루 3회 재작성이 가능한 무료 티어(설정 불필요), 더 자주 쓰는 사용자를 위한 월 $2.99 Pro 티어, 그리고 직접 Gemini API 키를 사용하면 무제한 무료 이용을 지원합니다.' },
-        { q: 'Ondrift가 제 프롬프트를 서버로 전송하나요?', a: '무료·Pro 티어를 사용할 때만 그렇습니다 — 이 경우 재작성을 요청한 프롬프트가 Gemini 호출만을 위해 Ondrift의 Cloudflare 프록시를 거치며, 로그로 남기거나 저장하지 않습니다. 직접 Gemini API 키를 사용하면 브라우저가 Google에 바로 요청하며 Ondrift 서버는 개입하지 않습니다.' },
-        { q: 'Ondrift는 어떤 사이트와 AI 제공자를 지원하나요?', a: 'ChatGPT, Claude, Gemini, Perplexity, Grok 안에서 동작하며, 사용자의 Gemini API 키 또는 Ondrift의 무료·Pro 티어로 프롬프트를 재작성합니다.' },
+        { q: 'Ondrift는 무료인가요?', a: 'Ondrift는 하루 10회 재작성이 가능한 무료 티어(설정 불필요)와, 직접 Gemini API 키를 사용하면 무제한 무료 이용을 지원합니다.' },
+        { q: 'Ondrift가 제 프롬프트를 서버로 전송하나요?', a: '무료 티어를 사용할 때만 그렇습니다 — 이 경우 재작성을 요청한 프롬프트가 Gemini 호출만을 위해 Ondrift의 Cloudflare 프록시를 거치며, 로그로 남기거나 저장하지 않습니다. 직접 Gemini API 키를 사용하면 브라우저가 Google에 바로 요청하며 Ondrift 서버는 개입하지 않습니다.' },
+        { q: 'Ondrift는 어떤 사이트와 AI 제공자를 지원하나요?', a: 'ChatGPT, Claude, Gemini, Perplexity, Grok 안에서 동작하며, 사용자의 Gemini API 키 또는 Ondrift의 무료 티어로 프롬프트를 재작성합니다.' },
         { q: 'Ondrift는 어떻게 설치하나요? 크롬 웹 스토어에 있나요?', a: '네, Ondrift는 Chrome 웹 스토어에 있습니다. 위의 "Chrome에 추가" 버튼을 눌러 확장 프로그램을 추가하면 무료로 바로 사용할 수 있고, 내 Gemini API 키를 등록하면 무제한으로 이용할 수 있습니다.' },
         { q: '제 API 키는 안전한가요?', a: 'API 키는 chrome.storage.local에 로컬로 저장되며, 선택한 AI 제공자로 직접 전송될 때만 사용됩니다. 다른 API 키와 마찬가지로 안전하게 보관하는 책임은 사용자에게 있습니다.' },
         { q: '재작성 기록을 남길 수 있나요?', a: '네, 선택 사항입니다. 기록은 서버가 아닌 브라우저의 로컬 IndexedDB에만 저장되며, Options 페이지에서 언제든 삭제할 수 있습니다.' },
@@ -225,7 +220,7 @@ Turn the transcript below into actionable meeting notes.
       note: '무료 설치 · 계정이 필요 없습니다.',
     },
     footer: {
-      privacy: '개인정보 처리방침', terms: '이용약관', refund: '환불 정책', guide: '설치 가이드', contact: '문의하기',
+      privacy: '개인정보 처리방침', terms: '이용약관', guide: '설치 가이드', contact: '문의하기',
       note: 'Google, Gemini, ChatGPT, Claude, Perplexity, Grok은 각 소유자의 상표이며 Ondrift와 제휴 관계가 없습니다.',
     },
     demo: {
@@ -246,7 +241,7 @@ Turn the transcript below into actionable meeting notes.
       status: { draft: '작성 중', scoring: 'Ondrift가 검토하는 중…', typing: '개선된 프롬프트 작성 중…', result: '재작성 완료 · 적용 대기' },
     },
     architecture: {
-      label: '내 API 키를 사용할 때는 확장 프로그램이 브라우저에서 선택한 AI 제공자를 직접 호출합니다 — 이 경로에는 Ondrift 서버가 없습니다. (무료·Pro 재작성은 Ondrift의 프록시를 거칩니다 — 위 요금제 참고.) 설정과 기록은 항상 로컬 저장소에만 남습니다.',
+      label: '내 API 키를 사용할 때는 확장 프로그램이 브라우저에서 선택한 AI 제공자를 직접 호출합니다 — 이 경로에는 Ondrift 서버가 없습니다. (무료 티어 재작성은 Ondrift의 프록시를 거칩니다 — 위 요금제 참고.) 설정과 기록은 항상 로컬 저장소에만 남습니다.',
       noServer: 'Ondrift 서버 없음 (내 키 사용 시)', prompt: '프롬프트', editor: '편집기', provider: 'AI 제공자', providerSub: '내 API 키', storage: '로컬 저장소', storageSub: 'storage · IndexedDB',
     },
   },
@@ -272,21 +267,19 @@ Turn the transcript below into actionable meeting notes.
       ],
     },
     pricing: {
-      eyebrow: '料金プラン', title: '基本は無料。もっと使うならPro。',
-      body: '1日にどれくらい改善するか、自分のAPIキーを管理したいかによって、3つの使い方があります。',
+      eyebrow: '料金プラン', title: '基本は無料。もっと使うなら自分のAPIキーで。',
+      body: '自分のAPIキーを管理したいかによって、2つの使い方があります。',
       tiers: [
-        { name: '無料', price: '$0', period: '/月', description: 'たまに使うなら、設定不要で。', features: ['1日3回まで改善', 'Ondriftが運用するGeminiを使用', 'APIキー不要'] },
-        { name: 'Pro', price: '$2.99', period: '/月', description: '毎日使ってもAPIキーの管理は不要です。', features: ['1日100回まで改善', 'Ondriftが運用するGeminiを使用', 'APIキー不要'] },
+        { name: '無料', price: '$0', period: '/月', description: 'たまに使うなら、設定不要で。', features: ['1日10回まで改善', 'Ondriftが運用するGeminiを使用', 'APIキー不要'] },
         { name: '自分のAPIキーを使う', price: '$0', period: '/月', description: '自分のGeminiキーで無制限に使用。', features: ['無制限の改善', 'リクエストはGoogleへ直接送信', '自分のキー、自分の使用量'] },
       ],
-      cta: 'Proにアップグレード',
     },
     privacy: {
       eyebrow: 'プライバシー設計', title: '最小限が基本。自分のキーを使えばサーバーなし。',
-      body: '自分のGemini APIキーを使えば、ブラウザからGoogleへ直接リクエストします — Ondriftが運営するサーバーは介在しません。無料・Proプランの改善は、Geminiを呼び出すためだけにOndrift自身の軽量プロキシを経由し、ログには残しません。',
+      body: '自分のGemini APIキーを使えば、ブラウザからGoogleへ直接リクエストします — Ondriftが運営するサーバーは介在しません。無料プランの改善は、Geminiを呼び出すためだけにOndrift自身の軽量プロキシを経由し、ログには残しません。',
       points: [
         '設定はchrome.storage.localに、任意の履歴はブラウザのIndexedDBにのみ保存されます。',
-        '改善を依頼したプロンプトだけを送信します — 自分のキーを使う場合はGoogleへ直接、無料・ProプランではOndriftのプロキシ経由です。AIの回答本文は収集・保存しません。',
+        '改善を依頼したプロンプトだけを送信します — 自分のキーを使う場合はGoogleへ直接、無料プランではOndriftのプロキシ経由です。AIの回答本文は収集・保存しません。',
         'APIキーを使う場合、そのキーはユーザー自身が管理し、安全に保管する責任もユーザーにあります。',
       ],
     },
@@ -294,9 +287,9 @@ Turn the transcript below into actionable meeting notes.
     faq: {
       eyebrow: 'よくある質問', title: 'よくある質問',
       items: [
-        { q: 'Ondriftは無料ですか？', a: 'Ondriftには1日3回まで使える無料プラン(設定不要)、より多く使う人向けの月額$2.99のProプラン、そして自分のGemini APIキーを使えば無料で無制限に使える方法があります。' },
-        { q: 'Ondriftはプロンプトをサーバーに送信しますか？', a: '無料・Proプランを使う場合のみ送信されます — その場合、改善を依頼したプロンプトはGeminiを呼び出すためだけにOndrift自身のCloudflareプロキシを経由し、ログにも保存にも残しません。自分のGemini APIキーを使う場合は、ブラウザがGoogleへ直接リクエストし、Ondriftのサーバーは介在しません。' },
-        { q: 'Ondriftはどのサイトとプロバイダーに対応していますか？', a: 'ChatGPT、Claude、Gemini、Perplexity、Grokの中で動作し、自分のGemini APIキー、またはOndriftの無料・Proプランでプロンプトを改善します。' },
+        { q: 'Ondriftは無料ですか？', a: 'Ondriftには1日10回まで使える無料プラン(設定不要)と、自分のGemini APIキーを使えば無料で無制限に使える方法があります。' },
+        { q: 'Ondriftはプロンプトをサーバーに送信しますか？', a: '無料プランを使う場合のみ送信されます — その場合、改善を依頼したプロンプトはGeminiを呼び出すためだけにOndrift自身のCloudflareプロキシを経由し、ログにも保存にも残しません。自分のGemini APIキーを使う場合は、ブラウザがGoogleへ直接リクエストし、Ondriftのサーバーは介在しません。' },
+        { q: 'Ondriftはどのサイトとプロバイダーに対応していますか？', a: 'ChatGPT、Claude、Gemini、Perplexity、Grokの中で動作し、自分のGemini APIキー、またはOndriftの無料プランでプロンプトを改善します。' },
         { q: 'Ondriftはどうやってインストールしますか？Chromeウェブストアにありますか？', a: 'はい、OndriftはChromeウェブストアで公開されています。上の「Chromeに追加」ボタンから追加すれば無料ですぐに使え、自分のGemini APIキーを登録すれば無制限に利用できます。' },
         { q: 'APIキーは安全ですか？', a: 'APIキーはchrome.storage.localにローカル保存され、選択したAIプロバイダーへの直接通信でのみ使用されます。他のAPIキーと同様、安全な管理はユーザーの責任です。' },
         { q: '改善履歴を残せますか？', a: 'はい、任意で残せます。履歴はサーバーではなくブラウザのローカルIndexedDBにのみ保存され、Optionsページからいつでも削除できます。' },
@@ -319,7 +312,7 @@ Turn the transcript below into actionable meeting notes.
       note: '無料でインストール · アカウント不要。',
     },
     footer: {
-      privacy: 'プライバシーポリシー', terms: '利用規約', refund: '返金ポリシー', guide: 'インストールガイド', contact: 'お問い合わせ',
+      privacy: 'プライバシーポリシー', terms: '利用規約', guide: 'インストールガイド', contact: 'お問い合わせ',
       note: 'Google、Gemini、ChatGPT、Claude、Perplexity、Grokは各社の商標です。Ondriftは各社と提携していません。',
     },
     demo: {
@@ -340,7 +333,7 @@ Turn the transcript below into actionable meeting notes.
       status: { draft: '入力中', scoring: 'Ondriftが確認中…', typing: '改善したプロンプトを作成中…', result: '改善完了 · 適用可能' },
     },
     architecture: {
-      label: '自分のAPIキーを使う場合、拡張機能はブラウザから選択したAIプロバイダーを直接呼び出します — この経路にOndriftサーバーは介在しません。(無料・ProプランはOndriftのプロキシを経由します。上の料金プランを参照。)設定と履歴は常にローカルにのみ保存されます。',
+      label: '自分のAPIキーを使う場合、拡張機能はブラウザから選択したAIプロバイダーを直接呼び出します — この経路にOndriftサーバーは介在しません。(無料プランはOndriftのプロキシを経由します。上の料金プランを参照。)設定と履歴は常にローカルにのみ保存されます。',
       noServer: 'Ondriftサーバーなし(自分のキー利用時)', prompt: 'プロンプト', editor: 'エディター', provider: 'AIプロバイダー', providerSub: '自分のAPIキー', storage: 'ローカル保存', storageSub: 'storage · IndexedDB',
     },
   },
@@ -366,21 +359,19 @@ Turn the transcript below into actionable meeting notes.
       ],
     },
     pricing: {
-      eyebrow: '价格', title: '默认免费,需要更多时升级 Pro。',
-      body: '根据你每天重写的次数,以及是否愿意自行管理 API 密钥,Ondrift 提供三种使用方式。',
+      eyebrow: '价格', title: '默认免费,需要更多时使用你自己的 API 密钥。',
+      body: '根据你是否愿意自行管理 API 密钥,Ondrift 提供两种使用方式。',
       tiers: [
-        { name: '免费', price: '$0', period: '/月', description: '偶尔使用,无需任何设置。', features: ['每天 3 次重写', '使用 Ondrift 托管的 Gemini', '无需 API 密钥'] },
-        { name: 'Pro', price: '$2.99', period: '/月', description: '每天使用也无需管理 API 密钥。', features: ['每天 100 次重写', '使用 Ondrift 托管的 Gemini', '无需 API 密钥'] },
+        { name: '免费', price: '$0', period: '/月', description: '偶尔使用,无需任何设置。', features: ['每天 10 次重写', '使用 Ondrift 托管的 Gemini', '无需 API 密钥'] },
         { name: '使用你自己的密钥', price: '$0', period: '/月', description: '用你自己的 Gemini 密钥无限使用。', features: ['无限次重写', '请求直接发送到 Google', '你的密钥,你的用量'] },
       ],
-      cta: '升级到 Pro',
     },
     privacy: {
       eyebrow: '隐私设计', title: '默认最小化。使用自己的密钥则完全没有服务器。',
-      body: '使用你自己的 Gemini API 密钥时,浏览器会直接向 Google 发起请求 — Ondrift 运营的服务器不会介入。免费版和 Pro 版的重写请求会经过 Ondrift 自己的轻量代理,仅用于调用 Gemini,且不会被记录。',
+      body: '使用你自己的 Gemini API 密钥时,浏览器会直接向 Google 发起请求 — Ondrift 运营的服务器不会介入。免费版的重写请求会经过 Ondrift 自己的轻量代理,仅用于调用 Gemini,且不会被记录。',
       points: [
         '设置保存在 chrome.storage.local 中,可选的历史记录只保存在浏览器本地的 IndexedDB 中。',
-        '只有你明确要求重写的提示词才会被发送 — 使用自己的密钥时直接发给 Google,免费版和 Pro 版则经过 Ondrift 的代理。AI 的回复内容不会被收集或存储。',
+        '只有你明确要求重写的提示词才会被发送 — 使用自己的密钥时直接发给 Google,免费版则经过 Ondrift 的代理。AI 的回复内容不会被收集或存储。',
         '如果你使用 AI 提供商的 API 密钥,该密钥由你自己保管,安全责任也在于你。',
       ],
     },
@@ -388,9 +379,9 @@ Turn the transcript below into actionable meeting notes.
     faq: {
       eyebrow: '常见问题', title: '常见问题',
       items: [
-        { q: 'Ondrift 是免费的吗?', a: 'Ondrift 提供每天 3 次重写的免费版(无需设置)、面向重度使用者的每月 $2.99 Pro 版,以及使用你自己的 Gemini API 密钥即可无限免费使用。' },
-        { q: 'Ondrift 会把我的提示词发送到服务器吗?', a: '只有在使用免费版或 Pro 版时才会 — 此时,你要求重写的提示词会经过 Ondrift 自己的 Cloudflare 代理,仅用于调用 Gemini,不会被记录或存储。如果你使用自己的 Gemini API 密钥,浏览器会直接向 Google 发起请求,Ondrift 的服务器不会介入。' },
-        { q: 'Ondrift 支持哪些聊天网站和 AI 提供商?', a: 'Ondrift 可在 ChatGPT、Claude、Gemini、Perplexity 和 Grok 中使用,可以用你自己的 Gemini API 密钥,也可以使用 Ondrift 的免费版或 Pro 版来重写提示词。' },
+        { q: 'Ondrift 是免费的吗?', a: 'Ondrift 提供每天 10 次重写的免费版(无需设置),以及使用你自己的 Gemini API 密钥即可无限免费使用。' },
+        { q: 'Ondrift 会把我的提示词发送到服务器吗?', a: '只有在使用免费版时才会 — 此时,你要求重写的提示词会经过 Ondrift 自己的 Cloudflare 代理,仅用于调用 Gemini,不会被记录或存储。如果你使用自己的 Gemini API 密钥,浏览器会直接向 Google 发起请求,Ondrift 的服务器不会介入。' },
+        { q: 'Ondrift 支持哪些聊天网站和 AI 提供商?', a: 'Ondrift 可在 ChatGPT、Claude、Gemini、Perplexity 和 Grok 中使用,可以用你自己的 Gemini API 密钥,也可以使用 Ondrift 的免费版来重写提示词。' },
         { q: '如何安装 Ondrift?它上架 Chrome 网上应用店了吗?', a: '是的,Ondrift 已上架 Chrome 网上应用店。点击上方的「添加到 Chrome」按钮即可免费直接开始使用,配置你自己的 Gemini API 密钥后可无限使用。' },
         { q: '我的 API 密钥安全吗?', a: '你的密钥保存在本地的 chrome.storage.local 中,只有在直接调用你的 AI 提供商时才会被发送。和任何 API 密钥一样,安全保管的责任在于你自己。' },
         { q: '可以保留提示词重写的历史记录吗?', a: '可以,这是可选的。历史记录只保存在浏览器本地的 IndexedDB 中 — 绝不会上传到服务器 — 你可以随时在 Options 页面中清除它。' },
@@ -413,7 +404,7 @@ Turn the transcript below into actionable meeting notes.
       note: '免费安装 · 无需账号。',
     },
     footer: {
-      privacy: '隐私政策', terms: '服务条款', refund: '退款政策', guide: '安装指南', contact: '联系我们',
+      privacy: '隐私政策', terms: '服务条款', guide: '安装指南', contact: '联系我们',
       note: 'Google、Gemini、ChatGPT、Claude、Perplexity 和 Grok 是其各自所有者的商标。Ondrift 与它们没有从属关系。',
     },
     demo: {
@@ -434,7 +425,7 @@ Turn the transcript below into actionable meeting notes.
       status: { draft: '起草中', scoring: 'Ondrift 正在审查…', typing: '正在撰写改进后的提示词…', result: '重写完成 · 可以应用' },
     },
     architecture: {
-      label: '使用自己的 API 密钥时,扩展程序会直接从浏览器调用你选择的 AI 提供商 — 这条路径中没有 Ondrift 服务器。(免费版和 Pro 版的重写会经过 Ondrift 的代理,详见上方价格。)设置和历史记录始终只保存在本地存储中。',
+      label: '使用自己的 API 密钥时,扩展程序会直接从浏览器调用你选择的 AI 提供商 — 这条路径中没有 Ondrift 服务器。(免费版的重写会经过 Ondrift 的代理,详见上方价格。)设置和历史记录始终只保存在本地存储中。',
       noServer: '没有 Ondrift 服务器(使用自己密钥时)', prompt: '提示词', editor: '编辑器', provider: 'AI 提供商', providerSub: '你的 API 密钥', storage: '本地存储', storageSub: 'storage · IndexedDB',
     },
   },
